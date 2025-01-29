@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entertainment Hub</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/swiper-bundle.min.css" />
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+    * {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --main-color: rgb(255, 180, 58);
+      --hover-color: rgb(255, 228, 131);
+      --body-color: rgb(30, 30, 42);
+      --container-color: rgb(45, 46, 55);
+      --text-color: rgb(252, 254, 255);
+    }
+
+    body {
+      background-color: var(--body-color);
+      color: var(--text-color);
+    }
+
+    header {
+      background: rgb(10, 17, 17);
+      color: var(--text-color);
+      padding: 1em 0;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1em;
+    }
+
+    nav .logo {
+      font-size: 1.5em;
+    }
+
+    .navbutton {
+      list-style: none;
+      display: flex;
+      gap: 1em;
+    }
+
+    .navbutton a {
+      color: var(--text-color);
+      text-decoration: none;
+      padding: 20px;
+    }
+
+    .navbutton a:hover {
+      background-color: var(--main-color);
+      color: black;
+      font-weight: 600;
+    }
+
+    .hero {
+      background: url('images/cast/backgroundpic.jpg');
+      background-size: 1550px 1000px;
+      background-repeat: no-repeat;
+      color: var(--text-color);
+      text-align: center;
+      padding: 100px 1em 200px;
+      margin-top: 60px;
+    }
+
+    .hero h1 {
+      font-size: 3em;
+    }
+
+    .hero button {
+      background: var(--main-color);
+      color: var(--body-color);
+      border: none;
+      padding: 1em 2em;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 1em;
+      font-weight: 600;
+      border-radius: 10px;
+    }
+
+    .hero button::after {
+      content: " ⪼";
+      font-weight: bolder;
+
+      color: var(--body-color);
+    }
+
+    .hero button:hover {
+      background: var(--hover-color);
+      color: var(--body-color);
+      font-weight: 600;
+    }
+
+    .main-points {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1em;
+      padding: 50px 1em;
+      background-color: var(--container-color);
+    }
+
+    .main-point {
+      background-color: var(--body-color);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      width: calc(50% - 1em);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .main-point img {
+      height: 250px;
+      width: 400px;
+      border-radius: 10px;
+
+    }
+
+    .main-point h3 {
+      margin-bottom: 0.5em;
+      color: var(--main-color);
+    }
+
+    .main-point p {
+      font-size: 1em;
+      line-height: 1.5;
+    }
+
+    .main-point:hover {
+      transform: scale(1.05);
+    }
+
+    .features {
+      padding-top: 400px;
+      text-align: center;
+    }
+
+    .features h2 {
+      color: white;
+      font-weight: 1000;
+      font-size: 2.5em;
+      margin-bottom: 1em;
+    }
+
+    .feature {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1em;
+    }
+
+    .feature a {
+      background-color: var(--main-color);
+      padding: 20px;
+      margin: 0.5em;
+      color: var(--text-color);
+      text-decoration: none;
+      border-radius: 10px;
+      color: var(--body-color);
+      font-weight: 600;
+      flex: 1 1 200px;
+      text-align: center;
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .feature a::after {
+      content: " ➦";
+      font-weight: 900;
+      color: var(--body-color);
+    }
+
+    .feature a:hover {
+      background-color: var(--hover-color);
+      color: var(--body-color);
+      font-weight: 600;
+      transform: scale(1.05);
+    }
+
+    .cta {
+      padding: 10px 70px;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: 2em;
+      margin-bottom: 1em;
+      color: var(--main-color);
+    }
+
+    .cta button {
+      background: var(--main-color);
+      color: var(--body-color);
+      border: none;
+      padding: 1em 2em;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 1em;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .cta button::after {
+      content: " ⪼";
+      font-weight: bold;
+    }
+
+    .cta button:hover {
+      background: var(--hover-color);
+    }
+
+    footer {
+      background: var(--container-color);
+      color: var(--text-color);
+      text-align: center;
+      padding: 1em 0;
+      margin-top: 2em;
+    }
+
+    span {
+      color: var(--main-color);
+    }
+  </style>
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none;">
+
+    <header>
+      <nav>
+        <div class="logo">ENTERTAINMENT<span>HUB</span></div>
+        <div class="navbutton">
+          <a href="#features">FEATURES</a>
+          <a href="#cta">SIGN UP</a>
+          <a href="/contact/contactus.html">CONTACT</a>
+          <a href="/aboutus.html">ABOUT US</a>
+        </div>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>WELCOME TO<br>ENTERTAINMENT<span>HUB</span></h1>
+      <p>YOUR ULTIMATE DESTINATION FOR ENTERTAINMENT</p>
+      <button onclick="scrollToSection('cta')">Get Started</button>
+
+      <section id="features" class="features">
+        <h2><span>⫷</span> FEATURES <span>⫸</span></h2>
+        <div class="feature">
+          <a href="/#">Home</a>
+          <a href="/#">Movies</a>
+          <a href="/#">Anime</a>
+          <a href="/#">Series</a>
+          <a href="/#">Franchises</a>
+          <a href="/#">About</a>
+        </div>
+      </section>
+
+    </section>
+
+    <section class="main-points">
+      <div class="main-point">
+        <br>
+        <h3>UNLIMITED MOVIES</h3><br>
+        <p>Welcome to our vast collection of movies! Dive into<br> a world where entertainment knows no bounds. Whether
+          you're a fan of timeless classics, thrilling blockbusters, or indie gems waiting to be discovered, our library
+          has something for everyone. Enjoy a vast collection of movies from different genres and eras. Find your
+          favorites and discover new ones.</p>
+      </div>
+      <div class="main-point">
+        <img src="images/cast/Designer.png" alt="Feature 3">
+      </div>
+      <div class="main-point">
+        <img src="images/cast/Designer2.png" alt="Feature 3">
+      </div>
+      <div class="main-point">
+        <br>
+        <h3>EXCLUSIVE SERIES</h3><br>
+        <p>Discover a world of captivating storytelling,<br> where each episode unfolds with intrigue and excitement.
+          Our
+          curated selection features original productions you won't find anywhere else, offering a glimpse into
+          imaginative worlds and unforgettable charactersWatch exclusive series and TV shows that you won't find
+          anywhere
+          else. Binge-watch to your heart's content.</p>
+      </div>
+      <div class="main-point">
+        <br>
+        <h3>AMAZING ANIME</h3><br>
+        <p>Embark on a journey into the captivating world of anime,<br> where imagination knows no bounds. Dive into a
+          kaleidoscope of vibrant visuals, rich storytelling, and unforgettable characters. Our collection brings
+          together
+          the latest and most beloved anime series, spanning across genres and themes to cater to every taste.Stream the
+          latest and most popular anime series. Enjoy high-quality content with subtitles and dubbing options.</p>
+      </div>
+      <div class="main-point">
+        <img src="images/cast/Designer3.png" alt="Feature 3">
+      </div>
+    </section>
+
+    <section id="cta" class="cta">
+      <br><br>
+      <h2><span style="color:white">⫷</span> JOIN US TODAY <span style="color:white">⫸</span></h2>
+      <p>SIGN UP NOW AND START ENJOYING THE BEST IN ENTERTAINMENT.</p>
+      <a href="/login/login.html"><button onclick="signIn()">LOG IN</button></a>
+    </section>
+
+    <footer class="copyright">
+      <p>Contact us at: entertainmenthub892@gmail.com</p>
+      <p>&copy;MegYaSuKri All rights reserved &centerdot; 2024</p>
+    </footer>
+  </div>
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      // Check if the user is signed in
+      if (localStorage.getItem('signedIn') === 'true') {
+        // Redirect to the homepage if signed in
+        window.location.href = 'home.html';
+      }
+    });
+
+    function signIn() {
+      // Simulate sign-in process
+      localStorage.setItem('signedIn', 'true');
+      window.location.href = 'home.html';
+    }
+  </script> -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Show the preloader
+      document.getElementById("preloader").style.display = "block";
+
+      // Simulate content loading (replace this with your actual content loading logic)
+      setTimeout(function () {
+        // Hide the preloader
+        document.getElementById("preloader").style.display = "none";
+        // Show the main content
+        document.getElementById("main-content").style.display = "block";
+      }, 1000);
+    });
+
+    function scrollToSection(sectionId) {
+      document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+
+</html>

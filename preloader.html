@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      *
+      {
+        transition: 0.8s;
+      }
+      body
+      {
+        background: rgb(33, 33, 33);
+      }
+      .loader
+      {
+        animation: rotate 1.5s linear reverse both running infinite;
+        background: rgb(255, 180, 58);
+        border-radius: 50%;
+        height: 120px;
+        width: 120px;
+      }
+      .loader:before
+      {
+        background: rgb(255, 180, 58);
+        border-radius: 50%;
+        content: '';
+        display: block;
+        height: 0.5em;
+        width: 0.5em;
+        z-index: 2;
+      }
+      .loader:after {
+        background: #262E2A;
+        border-radius: 50%;
+        box-shadow:
+          0em -2.60em #262E2A,
+          2.25em -4.02em rgb(33, 33, 33),
+          2.25em -1.25em #262E2A,
+          4.60em 0em rgb(33, 33, 33),
+          2.25em 1.25em #262E2A,
+          2.25em 4.02em rgb(33, 33, 33),
+          0em 2.60em #262E2A,
+          -2.25em 4.02em rgb(33, 33, 33),
+          -2.25em 1.25em #262E2A,
+          -4.60em 0em rgb(33, 33, 33),
+          -2.25em -1.25em #262E2A,
+          -2.25em -4.02em rgb(33, 33, 33);
+        content: '';
+        display: block;
+        height: 2em;
+        width: 2em;
+      }
+      .inner
+      {
+        box-shadow:
+          0em -2.60em rgba(255, 228, 131, 1),
+          2.25em -1.25em rgba(255, 228, 131, 0.9),
+          2.25em 1.25em rgba(255, 228, 131, 0.75),
+          0em 2.60em rgba(255, 228, 131, 0.6),
+          -2.25em 1.25em rgba(255, 228, 131, 0.45),
+          -2.25em -1.25em rgba(255, 228, 131, 0.3);
+        border: solid 1px rgb(255, 180, 58);
+        border-radius: 50%;
+        height: 1.75em;
+        width: 1.75em;
+        z-index: 1;
+      }
+      .loader,
+      .loader:before,
+      .loader:after,
+      .inner
+      {
+        bottom: 0;
+        left: 0;
+        margin: auto;
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      @keyframes rotate
+      {
+        0%
+        {
+          transform: rotate(0deg);
+        }
+        100%
+        {
+          transform: rotate(359deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loader">
+      <div class="inner">
+      </div>
+    </div> 
+  </body>
+</html>

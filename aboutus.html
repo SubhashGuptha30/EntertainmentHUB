@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainment Hub</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: transparent;
+      z-index: 9999;
+    }
+
+    .total {
+      margin: 150px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .main {
+      padding: 50px;
+      background-color: rgb(42, 42, 64);
+    }
+
+    .main1 {
+      padding-left: 90px;
+      padding-right: 90px;
+      line-height: 40px;
+      background-color: rgb(42, 42, 64);
+    }
+
+    .main h1 {
+      text-align: center;
+      color: var(--main-color);
+    }
+
+    .main1 h2 {
+      text-align: center;
+      color: var(--main-color);
+    }
+
+    #yearRange {
+      cursor: pointer;
+      margin-left: 60%;
+      width: 100%;
+    }
+
+    .range-container {
+      width: 80%;
+      max-width: 500px;
+      text-align: center;
+      justify-content: center;
+    }
+
+    #selectedYear {
+      font-size: 1.5em;
+      margin: 10px 0;
+    }
+
+    #movieImageContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 150%;
+      box-sizing: border-box;
+      padding: 20px;
+    }
+
+    #movieImage {
+      max-width: 100%;
+      height: auto;
+      margin-left: 600px;
+    }
+
+    @media screen and (max-width: 992px) {
+      .total {
+        margin-top: 90px;
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .main1 {
+        width: 100%;
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      #yearRange {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .range-container {
+        width: 100%;
+        max-width: 100%;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+
+    @media screen and (max-width: 600px) {
+      #movieImage {
+        width: 100%;
+        height: 400px;
+        margin-left: 0;
+      }
+    }
+
+    .info-section,
+    .ourmission,
+    .ourvalues {
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 8px;
+      background-color: var(--body-color);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .info-section:hover,
+    .ourmission:hover,
+    .ourvalues:hover {
+      transform: scale(1.05);
+    }
+
+    .info-section h3,
+    .team-member h3 {
+      margin-bottom: 15px;
+      font-size: 24px;
+      color: var(--main-color);
+    }
+
+    .info-section h4,
+    .team-member p {
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .info-section ul,
+    .ourmission ul,
+    .ourvalues ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .info-section ul li,
+    .ourmission ul li,
+    .ourvalues ul li {
+      padding: 5px 0;
+    }
+
+    .info-section ul li::before,
+    .ourmission ul li::before,
+    .ourvalues ul li::before {
+      content: "✨";
+      margin-right: 10px;
+    }
+
+    .team-members {
+      display: grid;
+      grid-template-columns: repeat(1, 80%);
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .team-member {
+      text-align: center;
+      background-color: var(--body-color);
+      display: flex;
+      padding: 40px;
+      border-radius: 100px;
+      justify-content: space-around;
+    }
+
+    .team-member img {
+      width: 30%;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .team-member img:hover {
+      transform: scale(1.1);
+    }
+
+    .memberinfo {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .team-member h3 {
+      margin-top: 10px;
+      font-size: 20px;
+      text-transform: uppercase;
+      color: var(--main-color);
+    }
+
+    .team-member p {
+      margin-top: 5px;
+      font-size: 16px;
+      color: var(--main-color);
+    }
+  </style>
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none;">
+    <header>
+      <div class="nav container">
+        <a href="/index.html" class="logo" title="Entertainment Hub">
+          Entertainment<span>Hub</span>
+        </a>
+        <div class="search">
+          <div class="search-box">
+            <input type="search" title="Search" id="search-input" placeholder="Search here..." />
+            <i class="bx bx-search"></i>
+          </div>
+          <div class="search-result"></div>
+        </div>
+        <a href="/profile.html" class="user">
+          <img src="/images/user.png" alt="user profile" title="User Profile" class="user-img" />
+        </a>
+        <div class="navbar">
+          <a href="/index.html" class="nav-link" title="Home">
+            <i class="bx bx-home-alt-2"></i>
+            <span class="nav-link-title">Home</span>
+          </a>
+          <a href="/movies.html" class="nav-link" title="Movies">
+            <i class="bx bx-camera-movie"></i>
+            <span class="nav-link-title">Movies</span>
+          </a>
+          <a href="/anime.html" class="nav-link" title="Anime">
+            <i class="bx bx-child"></i>
+            <span class="nav-link-title">Anime</span>
+          </a>
+          <a href="/web-series.html" class="nav-link" title="Web Series">
+            <i class="bx bx-tv"></i>
+            <span class="nav-link-title">Series</span>
+          </a>
+          <a href="/franchises.html" class="nav-link" title="Franchises">
+            <i class="bx bx-list-ul"></i>
+            <span class="nav-link-title">Franchises</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="total container">
+      <div class="main">
+        <h1>ABOUT US</h1>
+      </div>
+      <div class="main1">
+        <p>Welcome to <strong>ENTERTAINMENT HUB</strong>, your ultimate destination for everything related to movies!
+          Our mission is to bring the magic of cinema to your fingertips by providing comprehensive, up-to-date, and
+          engaging content about your favorite films and the ones you’re eagerly anticipating.
+
+          At <strong>ENTERTAINMENT HUB</strong> we cater to movie enthusiasts of all kinds, whether you're a casual
+          viewer looking for a great film to watch tonight or a cinephile eager to dive deep into the latest releases
+          and classic masterpieces. Here’s what you can expect from our platform:</p>
+
+        <h2>Our History</h2><br>
+        <div class="range-container">
+          <input type="range" id="yearRange" min="1999" max="2023" step="3" value="1999">
+          <div id="selectedYear">1999</div>
+          <div id="movieImageContainer">
+            <img id="movieImage" src="/images/cast/eh2.png" alt="Movie 1999">
+          </div>
+        </div>
+
+        <h2>Information</h2>
+        <div class="info-section">
+          <h3>Discover the Magic of Cinema</h3>
+          <h4>At <strong>Entertainment<span>Hub</span> </strong>, we bring you:</h4>
+          <ul>
+            <li>The latest news and updates on upcoming movies</li>
+            <li>In-depth reviews and analyses of your favorite films</li>
+            <li>Exclusive interviews with actors, directors, and industry experts</li>
+            <li>Curated lists and recommendations tailored to your tastes</li>
+            <li>A vibrant community of fellow movie enthusiasts</li>
+          </ul>
+        </div><br>
+
+        <h2>Our Mission</h2>
+        <div class="ourmission">
+          <p>Our mission at <strong>ENTERTAINMENT HUB</strong> is to be the go-to platform for movie lovers around the
+            globe. We aim to:</p>
+          <ul>
+            <li>Provide accurate and timely information on the latest movies and industry trends.</li>
+            <li>Foster a community where movie enthusiasts can connect, share, and discuss their passion for cinema.
+            </li>
+            <li>Deliver high-quality enhances the movie-watching experience, from detailed reviews behind-the-scenes
+              insights.</li>
+            <li>Support and promote diverse voices and stories in the film industry.</li>
+          </ul>
+        </div><br>
+
+        <h2>Our Values</h2>
+        <div class="ourvalues">
+          <ul>
+            <li><strong>Integrity:</strong> We uphold the highest standards of honesty and transparency in all our
+              content and interactions.</li>
+            <li><strong>Customer Focus:</strong> Our readers are at the heart of everything we do. We are committed to
+              providing them with valuable and engaging content.</li>
+            <li><strong>Innovation:</strong> We embrace creativity and strive to bring fresh perspectives and innovative
+              ideas to our platform.</li>
+            <li><strong>Teamwork:</strong> Collaboration and mutual respect are the cornerstones of our work culture,
+              driving us to achieve common goals.</li>
+          </ul>
+        </div>
+
+        <h2>Our Team</h2><br>
+        <div class="team-members">
+          <div class="team-member">
+            <img src="/images/cast/ninjacast4.png" alt="Team Member 1">
+            <div class="memberinfo">
+              <h3>P. Yeashwanth Reddy</h3>
+              <p>Role: CEO</p>
+            </div>
+          </div>
+          <div class="team-member">
+            <div class="memberinfo">
+              <h3>B. Meghana Reddy</h3>
+              <p>Role: CTO</p>
+            </div>
+            <img src="/images/cast/ninjacast4.png" alt="Team Member 2">
+          </div>
+          <div class="team-member">
+            <img src="/images/cast/ninjacast4.png" alt="Team Member 3">
+            <div class="memberinfo">
+              <h3>G. Subhash Gupta</h3>
+              <p>Role: Creative Director</p>
+            </div>
+          </div>
+          <div class="team-member">
+            <div class="memberinfo">
+              <h3>P. Krishna Murthy</h3>
+              <p>Role: Marketing Manager</p>
+            </div>
+            <img src="/images/cast/ninjacast4.png" alt="Team Member 4">
+          </div>
+        </div>
+        <footer class="copyright">
+          <p>&copy; MegYaSuKri All rights reserved &centerdot; 2024</p>
+        </footer>
+      </div>
+    </div>
+  </div>
+  <script src="/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const yearRange = document.getElementById('yearRange');
+      const selectedYear = document.getElementById('selectedYear');
+      const movieImage = document.getElementById('movieImage');
+
+      const images = {
+        1999: '/images/cast/eh2.png',
+        2002: '/images/cast/eh1.png',
+        2005: '/images/cast/eh3.jpg',
+        2008: '/images/cast/eh4.png',
+        2011: '/images/cast/eh5.jpg',
+        2014: '/images/cast/eh6.png',
+        2017: '/images/cast/eh7.jpg',
+        2020: '/images/cast/eh9.jpg',
+        2023: '/images/cast/eh8.jpg'
+      };
+
+      yearRange.addEventListener('input', () => {
+        const year = yearRange.value;
+        selectedYear.textContent = year;
+
+        // Update the image source only if the year has a corresponding image
+        if (images[year]) {
+          movieImage.src = images[year];
+          movieImage.alt = `Movie ${year}`;
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainnment hub</title>
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+    * {
+      font-family: "poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+      box-sizing: border-box;
+      scroll-padding-top: 2rem;
+    }
+
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: transparent;
+      z-index: 9999;
+    }
+
+    :root {
+      --main-color: rgb(255, 180, 58);
+      --hover-color: rgb(255, 228, 131);
+      --body-color: rgb(30, 30, 42);
+      --container-color: rgb(45, 46, 55);
+      --text-color: rgb(252, 254, 255);
+    }
+
+    .search-result::-webkit-scrollbar,
+    html::-webkit-scrollbar {
+      width: 0.5rem;
+      background: transparent;
+    }
+
+    .search-result::-webkit-scrollbar-thumb,
+    html::-webkit-scrollbar-thumb {
+      background: var(--main-color);
+      border-radius: 10%;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+
+    li {
+      list-style: none;
+    }
+
+    section {
+      padding: 3rem 0 2rem;
+    }
+
+    img {
+      width: 100%;
+    }
+
+    body {
+      background: var(--body-color);
+      color: var(--text-color);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgb(10, 17, 17);
+      z-index: 100;
+    }
+
+    .container {
+      width: 100%;
+    }
+
+    .logo {
+      color: var(--text-color);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin: 0 auto 0 0;
+    }
+
+    .logo span {
+      color: var(--main-color);
+    }
+
+    .search-box {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      column-gap: 0.7rem;
+      padding: 8px 15px;
+      background: var(--container-color);
+      border-radius: 4rem;
+    }
+
+    .search-result {
+      position: absolute;
+      top: 100%;
+      z-index: 1000;
+      max-width: 100%;
+      max-height: 200px;
+      overflow-y: auto;
+      border-radius: 5%;
+    }
+
+    .search-result ul {
+      background: rgb(50, 46, 42);
+      margin-top: 1rem;
+      padding: 1%;
+      list-style: none;
+    }
+
+    .search-result li {
+      padding: 2% 5%;
+      border-radius: 5%;
+      cursor: pointer;
+    }
+
+    .search-result li:hover {
+      background: var(--main-color);
+      transition: 0.6s;
+    }
+
+    .search-result li:last-child {
+      border-bottom: none;
+    }
+
+    .bx {
+      cursor: pointer;
+    }
+
+    .search-box .bx:hover {
+      color: var(--main-color);
+    }
+
+    #search-input {
+      width: 100%;
+      border: none;
+      outline: none;
+      color: var(--text-color);
+      background: transparent;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 20px 0;
+    }
+
+    .user {
+      display: flex;
+      margin: 0 0 0 15px;
+    }
+
+    .user-img {
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      left: -10px;
+      display: flex;
+      flex-direction: column;
+      border-radius: 5%;
+      background: linear-gradient(0deg,
+          rgba(18, 17, 17, 1) 44%,
+          rgba(18, 17, 17, 0.737) 100%);
+    }
+
+    .nav-link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 115%;
+      color: rgb(183, 183, 183);
+      transition: color 0.6s, transform 0.6s;
+    }
+
+    .nav-link:hover {
+      color: var(--text-color);
+      transform: scale(1.2);
+      transition: 0.8s;
+    }
+
+    .copyright {
+      text-align: center;
+      padding: 1rem 0;
+      background: #222;
+      color: #888;
+      font-size: 0.875rem;
+    }
+
+    .copyright p {
+      margin: 0;
+    }
+
+    .copyright {
+      text-align: center;
+      padding: 30px;
+    }
+
+
+    .franchises-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0;
+    }
+
+    .franchise-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background: #333;
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .franchise-card:hover {
+      transform: translateY(-10px);
+    }
+
+    .franchise-img {
+      width: 100%;
+      height: 150px;
+      border-radius: 5%;
+      object-fit: cover;
+    }
+
+    .franchise-card h3 {
+      margin: 20px 0 10px;
+      text-align: center;
+    }
+
+    .franchise-card p {
+      margin: 0 0 20px;
+      text-align: center;
+    }
+
+    .view-btn {
+      background: #e50914;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .view-btn:hover {
+      background: #7a050b;
+    }
+
+    @media (max-width: 2560px) {
+      .container {
+        max-width: 2200px;
+        margin: auto 250px;
+      }
+
+      .head-box {
+        height: 1080px;
+      }
+
+      .logo {
+        font-size: 3rem;
+      }
+
+      .search-box {
+        max-width: 500px;
+        height: 60px;
+      }
+
+      .search-box .bx {
+        font-size: 2rem;
+      }
+
+      #search-input {
+        font-size: 1.6rem;
+      }
+
+      .search-result {
+        min-width: 5%;
+        min-height: 500px;
+      }
+
+      .search-result li {
+        font-size: 1.6rem;
+      }
+
+      .navbar {
+        padding: 100% 1%;
+        row-gap: 6rem;
+      }
+
+      .nav-link .bx {
+        font-size: 3rem;
+      }
+
+      .link-active {
+        border-radius: 5%;
+        padding: 4%;
+        background: var(--main-color);
+        color: white;
+      }
+
+      .link-active:hover {
+        transform: scale(1);
+        transition: 0.5s;
+      }
+
+      .nav-link-title {
+        font-size: 1.2rem;
+      }
+
+      .user-img {
+        height: 65px;
+        width: 65px;
+      }
+
+      .copyright {
+        font-size: 3rem;
+      }
+
+      .franchises-section {
+        margin-top: 8rem;
+      }
+    }
+
+    @media (max-width: 1600px) {
+      .container {
+        max-width: 1300px;
+        margin: auto 120px;
+      }
+
+      .logo {
+        font-size: 1.1rem;
+      }
+
+      .search-box {
+        max-width: 300px;
+        height: 35px;
+      }
+
+      .search-box .bx {
+        font-size: 1.3rem;
+      }
+
+      #search-input {
+        font-size: 1.1rem;
+      }
+
+      .search-result {
+        min-width: 2%;
+        min-height: 300px;
+      }
+
+      .search-result li {
+        font-size: 1rem;
+      }
+
+      .navbar {
+        padding: 100% 1%;
+        row-gap: 2rem;
+      }
+
+      .nav-link .bx {
+        font-size: 1.2rem;
+      }
+
+      .nav-link-title {
+        font-size: 0.82rem;
+      }
+
+      .user-img {
+        height: 35px;
+        width: 35px;
+      }
+
+      .copyright {
+        font-size: 1.4rem;
+      }
+
+      .franchises-section {
+        margin-top: 4rem;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .search-result {
+        min-width: 30%;
+        min-height: 300px;
+      }
+
+      .search-result li {
+        font-size: 0.8rem;
+      }
+
+      .container {
+        margin: 0 auto;
+        width: 95%;
+      }
+
+      .navbar {
+        margin: 0 auto;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        top: auto;
+        transform: translateY(0);
+        flex-direction: row;
+        justify-content: space-evenly;
+        row-gap: 1px;
+        padding: 10px;
+        background: linear-gradient(0deg,
+            rgba(18, 17, 17, 1) 44%,
+            rgba(18, 17, 17, 0.737) 100%);
+      }
+
+      .link-active {
+        border-radius: 5%;
+        padding: 1% 1% 0;
+        margin: 0;
+      }
+
+      .franchises-section {
+        margin-top: 4rem;
+      }
+
+      .copyright {
+        margin-bottom: 3rem;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .navbar {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 780px) {
+      .logo {
+        font-size: 1.2rem;
+      }
+
+      section {
+        padding: 2rem 0;
+      }
+
+      .copyright {
+        font-size: 1.2rem;
+        margin-bottom: 2.8rem;
+      }
+
+      .search-result {
+        min-width: 40%;
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      section {
+        padding: 10px 0;
+      }
+
+      * {
+        scroll-padding-top: 5rem;
+      }
+
+      .nav {
+        flex-direction: row;
+      }
+
+      .nav .logo {
+        order: 1;
+      }
+
+      .nav .user {
+        order: 2;
+        margin-top: 10px;
+      }
+
+      .nav .search {
+        order: 3;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .search-box {
+        max-width: 100%;
+        width: 100%;
+        border-radius: 4px;
+        grid-column-start: 1;
+        grid-column-end: 3;
+      }
+
+      .franchises-section {
+        margin-top: 8rem;
+      }
+
+      .copyright {
+        font-size: 0.7rem;
+      }
+
+      .search-result {
+        min-width: 90%;
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none">
+    <header>
+      <div class="nav container">
+        <a href="/home.html" class="logo" title="Entertainment Hub">
+          Entertainnment<span>Hub</span>
+        </a>
+        <div class="search">
+          <div class="search-box">
+            <input type="search" title="Search" id="search-input" placeholder="Search here..." />
+            <i class="bx bx-search"></i>
+          </div>
+          <div class="search-result"></div>
+        </div>
+        <a href="/profile.html" class="user">
+          <img src="/images/user.png" alt="user profile" title="User Profile" class="user-img" />
+        </a>
+        <div class="navbar">
+          <a href="/home.html" class="nav-link" title="Home">
+            <i class="bx bx-home-alt-2"></i>
+            <span class="nav-link-title">Home</span>
+          </a>
+          <a href="/movies.html" class="nav-link" title="Movies">
+            <i class="bx bx-camera-movie"></i>
+            <span class="nav-link-title">Movies</span>
+          </a>
+          <a href="/anime.html" class="nav-link" title="Anime">
+            <i class="bx bx-child"></i>
+            <span class="nav-link-title">Anime</span>
+          </a>
+          <a href="/web-series.html" class="nav-link" title="Web Series">
+            <i class="bx bx-tv"></i>
+            <span class="nav-link-title">Series</span>
+          </a>
+          <a href="/franchises.html" class="nav-link link-active" title="Franchises">
+            <i class="bx bx-list-ul"></i>
+            <span class="nav-link-title">Franchises</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Franchises Section -->
+    <section class="franchises-section container">
+      <!-- Franchise cards -->
+    </section>
+    <!-- End of Franchises Section -->
+
+    <!--Copyright-->
+    <footer class="copyright">
+      <p>&copy; MegYaSuKri All rights reserved &centerdot; 2024</p>
+    </footer>
+    <!--copyright-->
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/franchise.js"></script>
+</body>
+
+</html>
