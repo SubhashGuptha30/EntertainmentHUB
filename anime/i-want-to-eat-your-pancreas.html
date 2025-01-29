@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainnment hub</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/playpage.css" />
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none">
+    <header>
+      <div class="nav container">
+        <a href="/home.html" class="logo" title="Entertainment Hub">
+          Entertainnment<span>Hub</span>
+        </a>
+        <div class="search">
+          <div class="search-box">
+            <input type="search" title="Search" id="search-input" placeholder="Search here..." />
+            <i class="bx bx-search"></i>
+          </div>
+          <div class="search-result"></div>
+        </div>
+        <a href="/profile.html" class="user">
+          <img src="/images/user.png" alt="user profile" title="User Profile" class="user-img" />
+        </a>
+        <div class="navbar">
+          <a href="/home.html" class="nav-link" title="Home">
+            <i class="bx bx-home-alt-2"></i>
+            <span class="nav-link-title">Home</span>
+          </a>
+          <a href="/movies.html" class="nav-link" title="Movies">
+            <i class="bx bx-camera-movie"></i>
+            <span class="nav-link-title">Movies</span>
+          </a>
+          <a href="/anime.html" class="nav-link" title="Anime">
+            <i class="bx bx-child"></i>
+            <span class="nav-link-title">Anime</span>
+          </a>
+          <a href="/web-series.html" class="nav-link" title="Web Series">
+            <i class="bx bx-tv"></i>
+            <span class="nav-link-title">Series</span>
+          </a>
+          <a href="/franchises.html" class="nav-link" title="Franchises">
+            <i class="bx bx-list-ul"></i>
+            <span class="nav-link-title">Franchises</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- movie head -->
+    <section class="play-container container head">
+      <div class="play-img-container">
+        <img src="/images/horizontal/i-want-to-eat-your-pancreas.jpg" alt="Home Image" class="play-img">
+        <div class="play-info head-text">
+          <div class="play-text">
+            <h2>I Want To Eat Your Pancreas</h2>
+            <div class="rating">
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class="bx bxs-star-half"></i>
+            </div><br>
+            <div class="tags">
+              <span>Anime</span>
+              <span>Romance</span>
+              <span>Drama</span>
+              <span>Slice of Life</span>
+            </div>
+          </div>
+          <!-- Play button inside play-img-container -->
+          <div class="play-buton">
+            <button class="play-button">
+              <i class='bx bx-play'></i>
+            </button>
+            <div class="video-overlay" id="video-overlay">
+              <iframe id="video-iframe" src="https://www.youtube.com/embed/MmoBvmJA9XI?si=cS8LJAUtgNwIcU-3"
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- movie head -->
+
+    <!-- movie information -->
+    <section class="about-movie container">
+      <div class="description">
+        <h2>I Want To Eat Your Pancreas</h2>
+        <p>
+          "I Want to Eat Your Pancreas" is a Japanese animated film based on the novel of the same name by Yoru Sumino.
+          The story follows an introverted high school boy who discovers the diary of his classmate, Sakura Yamauchi,
+          and learns that she is suffering from a terminal pancreatic illness. Despite their contrasting
+          personalities—Sakura being cheerful and outgoing, while the protagonist is reserved and indifferent—they form
+          an unlikely friendship. As they spend more time together, they grow closer, and the protagonist learns to
+          embrace life and human connections.
+        </p>
+        <p>
+          The film explores themes of mortality, friendship, and the impact of relationships. It delves into how two
+          people can change each other's lives profoundly even in a short amount of time.
+        </p>
+      </div>
+      <div class="movie-cast">
+        <h2 class="cast-heading">Cast </h2>
+        <div class="cast">
+          <div class="cast-box">
+            <img src="/images/cast/mahiro-takasugi.jpeg" alt="" class="cast-img">
+            <span class="cast-title">Mahiro Takasugi</span>
+            <div class="character-box">Haruki Shiga</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/lynn.jpg" alt="" class="cast-img">
+            <span class="cast-title">Lynn</span>
+            <div class="character-box">Sakura Yamauchi</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/yukiyo-fujii.webp" alt="" class="cast-img">
+            <span class="cast-title">Yukiyo Fujii</span>
+            <div class="character-box">Kyoko Takimoto</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/yuma-uchida.webp" alt="" class="cast-img">
+            <span class="cast-title">Yuma Uchida</span>
+            <div class="character-box">Takahiro</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/jun-fukushima.jpeg" alt="" class="cast-img">
+            <span class="cast-title">Jun Fukushima</span>
+            <div class="character-box">Gum-kun (Issei Miyata)</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/atsuko-tanaka.webp" alt="" class="cast-img">
+            <span class="cast-title">Atsuko Tanaka</span>
+            <div class="character-box">Haruki's Mother</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/shinichiro-miki.jpg" alt="" class="cast-img">
+            <span class="cast-title">Shin-ichiro Miki</span>
+            <div class="character-box">Sakura's Father</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- movie information -->
+
+    <!-- watch options -->
+    <section class="watch-here container">
+      <h2 class="watch-title">Watch Options</h2>
+      <div class="watch-links">
+        <div class="watch-link">
+          <img src="/images/watch/crunchyroll.png" alt="Crunchyroll">
+          <a href="/redirect.html">Crunchyroll</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/netflix.png" alt="Netflix">
+          <a href="/redirect.html">Netflix</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/playstore.png" alt="Playstore">
+          <a href="/redirect.html">Play Store</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/primevideo.png" alt="Amazon Prime Video">
+          <a href="/redirect.html">Amazon Prime Video</a>
+        </div>
+      </div>
+    </section>
+    <!-- watch options -->
+
+    <!--Copyright-->
+    <footer class="copyright">
+      <p>&copy; MegYaSuKri All rights reserved &centerdot; 2024</p>
+    </footer>
+    <!--copyright-->
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/playpage.js"></script>
+</body>
+
+</html>

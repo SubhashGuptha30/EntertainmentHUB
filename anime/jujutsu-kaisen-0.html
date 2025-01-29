@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainnment hub</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/playpage.css" />
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none">
+    <header>
+      <div class="nav container">
+        <a href="/home.html" class="logo" title="Entertainment Hub">
+          Entertainnment<span>Hub</span>
+        </a>
+        <div class="search">
+          <div class="search-box">
+            <input type="search" title="Search" id="search-input" placeholder="Search here..." />
+            <i class="bx bx-search"></i>
+          </div>
+          <div class="search-result"></div>
+        </div>
+        <a href="/profile.html" class="user">
+          <img src="/images/user.png" alt="user profile" title="User Profile" class="user-img" />
+        </a>
+        <div class="navbar">
+          <a href="/home.html" class="nav-link" title="Home">
+            <i class="bx bx-home-alt-2"></i>
+            <span class="nav-link-title">Home</span>
+          </a>
+          <a href="/movies.html" class="nav-link" title="Movies">
+            <i class="bx bx-camera-movie"></i>
+            <span class="nav-link-title">Movies</span>
+          </a>
+          <a href="/anime.html" class="nav-link" title="Anime">
+            <i class="bx bx-child"></i>
+            <span class="nav-link-title">Anime</span>
+          </a>
+          <a href="/web-series.html" class="nav-link" title="Web Series">
+            <i class="bx bx-tv"></i>
+            <span class="nav-link-title">Series</span>
+          </a>
+          <a href="/franchises.html" class="nav-link" title="Franchises">
+            <i class="bx bx-list-ul"></i>
+            <span class="nav-link-title">Franchises</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- movie head -->
+    <section class="play-container container head">
+      <div class="play-img-container">
+        <img src="/images/horizontal/jujutsu-kaisen-0.jpg" alt="Home Image" class="play-img">
+        <div class="play-info head-text">
+          <div class="play-text">
+            <h2>Jujutsu Kaisen 0</h2>
+            <div class="rating">
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class="bx bxs-star-half"></i>
+            </div><br>
+            <div class="tags">
+              <span>Anime</span>
+              <span>Action</span>
+              <span>Dark Fantasy</span>
+              <span>Supernatural</span>
+              <span>Thriller</span>
+            </div>
+          </div>
+          <!-- Play button inside play-img-container -->
+          <div class="play-buton">
+            <button class="play-button">
+              <i class='bx bx-play'></i>
+            </button>
+            <div class="video-overlay" id="video-overlay">
+              <iframe id="video-iframe" src="https://www.youtube.com/embed/UPRqnFnnrr8?si=E_erdoM7fjXXX_U3"
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- movie head -->
+
+    <!-- movie information -->
+    <section class="about-movie container">
+      <div class="description">
+        <h2>Jujutsu Kaisen 0</h2>
+        <p>
+          "Jujutsu Kaisen 0" is a Japanese animated film based on the manga series "Jujutsu Kaisen 0: Tokyo Metropolitan
+          Magic Technical School" by Gege Akutami, which serves as a prequel to the main "Jujutsu Kaisen" series. The
+          story centers on Yuta Okkotsu, a high school student plagued by the curse of his childhood friend, Rika
+          Orimoto, who died in a tragic accident and transformed into a powerful, vengeful spirit that haunts him.
+          Rika's curse causes harm to those around Yuta, leading him to live in isolation.
+        </p>
+        <p>
+          Yuta's life takes a turn when he meets Satoru Gojo, a teacher at the Tokyo Metropolitan Magic Technical
+          School, who offers to help him control Rika's curse. Yuta enrolls in the school and learns to harness his own
+          innate abilities to combat curses. Alongside his classmates, including Maki Zenin, Toge Inumaki, and Panda,
+          Yuta embarks on a journey to break Rika's curse and confront dark, supernatural threats.
+        </p>
+      </div>
+      <div class="movie-cast">
+        <h2 class="cast-heading">Cast </h2>
+        <div class="cast">
+          <div class="cast-box">
+            <img src="/images/cast/megumi-ogata.jpg" alt="" class="cast-img">
+            <span class="cast-title">Megumi Ogata</span>
+            <div class="character-box">Yuta Okkotsu</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/kana-hanazawa.jpg" alt="" class="cast-img">
+            <span class="cast-title">Kana Hanazawa</span>
+            <div class="character-box">Rika Orimoto</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/yuichi-nakamura.jpg" alt="" class="cast-img">
+            <span class="cast-title">Yuichi Nakamura</span>
+            <div class="character-box">Satoru Gojo</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/mikako-komatsu.webp" alt="" class="cast-img">
+            <span class="cast-title">Mikako Komatsu</span>
+            <div class="character-box">Maki Zenin</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/koki-uchiyama.jpg" alt="" class="cast-img">
+            <span class="cast-title">Koki Uchiyama</span>
+            <div class="character-box">Toge Inumaki</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/tomokazu-seki.jpg" alt="" class="cast-img">
+            <span class="cast-title">Tomokazu Seki</span>
+            <div class="character-box">Panda</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/takahiro-sakarui.jpg" alt="" class="cast-img">
+            <span class="cast-title">Takahiro Sakurai</span>
+            <div class="character-box">Suguru Geto</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- movie information -->
+
+    <!-- watch options -->
+    <section class="watch-here container">
+      <h2 class="watch-title">Watch Options</h2>
+      <div class="watch-links">
+        <div class="watch-link">
+          <img src="/images/watch/crunchyroll.png" alt="Crunchyroll">
+          <a href="/redirect.html">Crunchyroll</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/funimation.png" alt="Funimation">
+          <a href="/redirect.html">Funimation</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/appletv.jpg" alt="Apple TV">
+          <a href="/redirect.html">Apple TV</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/playstore.png" alt="Playstore">
+          <a href="/redirect.html">Play Store</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/hulu.png" alt="Hulu">
+          <a href="/redirect.html">Hulu</a>
+        </div>
+      </div>
+    </section>
+    <!-- watch options -->
+
+    <!--Copyright-->
+    <footer class="copyright">
+      <p>&copy; MegYaSuKri All rights reserved &centerdot; 2024</p>
+    </footer>
+    <!--copyright-->
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/playpage.js"></script>
+</body>
+
+</html>

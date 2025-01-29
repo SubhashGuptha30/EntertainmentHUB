@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainnment hub</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="/css/playpage.css" />
+  <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none">
+    <header>
+      <div class="nav container">
+        <a href="/home.html" class="logo" title="Entertainment Hub">
+          Entertainnment<span>Hub</span>
+        </a>
+        <div class="search">
+          <div class="search-box">
+            <input type="search" title="Search" id="search-input" placeholder="Search here..." />
+            <i class="bx bx-search"></i>
+          </div>
+          <div class="search-result"></div>
+        </div>
+        <a href="/profile.html" class="user">
+          <img src="/images/user.png" alt="user profile" title="User Profile" class="user-img" />
+        </a>
+        <div class="navbar">
+          <a href="/home.html" class="nav-link" title="Home">
+            <i class="bx bx-home-alt-2"></i>
+            <span class="nav-link-title">Home</span>
+          </a>
+          <a href="/movies.html" class="nav-link" title="Movies">
+            <i class="bx bx-camera-movie"></i>
+            <span class="nav-link-title">Movies</span>
+          </a>
+          <a href="/anime.html" class="nav-link" title="Anime">
+            <i class="bx bx-child"></i>
+            <span class="nav-link-title">Anime</span>
+          </a>
+          <a href="/web-series.html" class="nav-link" title="Web Series">
+            <i class="bx bx-tv"></i>
+            <span class="nav-link-title">Series</span>
+          </a>
+          <a href="/franchises.html" class="nav-link" title="Franchises">
+            <i class="bx bx-list-ul"></i>
+            <span class="nav-link-title">Franchises</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- movie head -->
+    <section class="play-container container head">
+      <div class="play-img-container">
+        <img src="/images/horizontal/your-lie-in-april.jpg" alt="Home Image" class="play-img">
+        <div class="play-info head-text">
+          <div class="play-text">
+            <h2>Your Lie in April</h2>
+            <div class="rating">
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class='bx bxs-star'></i>
+              <i class="bx bxs-star-half"></i>
+            </div><br>
+            <div class="tags">
+              <span>Anime</span>
+              <span>Romance</span>
+              <span>Drama</span>
+              <span>Music</span>
+            </div>
+          </div>
+          <!-- Play button inside play-img-container -->
+          <div class="play-buton">
+            <button class="play-button">
+              <i class='bx bx-play'></i>
+            </button>
+            <div class="video-overlay" id="video-overlay">
+              <iframe id="video-iframe" src="https://www.youtube.com/embed/3aL0gDZtFbE?si=QvoRnNyEMHgnYdps"
+                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- movie head -->
+
+    <!-- movie information -->
+    <section class="about-movie container">
+      <div class="description">
+        <h2>Your Lie in April</h2>
+        <p>
+          "Your Lie in April" is a Japanese anime series based on the manga of the same name by Naoshi Arakawa. The
+          story follows Kousei Arima, a piano prodigy who loses his ability to hear the sound of the piano after his
+          abusive mother, who was also his instructor, passes away. This traumatic experience leads Kousei to abandon
+          playing the piano, leaving him trapped in a monotonous and colorless life.
+        </p>
+        <p>
+          Kousei's world changes when he meets Kaori Miyazono, a spirited and free-spirited violinist. Kaori's
+          passionate approach to music and her vibrant personality gradually reignite Kousei's love for the piano and
+          life itself. As they perform together and grow closer, Kousei begins to confront his past traumas and embrace
+          his future. However, Kaori harbors a secret that will impact both their lives profoundly.
+        </p>
+      </div>
+      <div class="movie-cast">
+        <h2 class="cast-heading">Cast </h2>
+        <div class="cast">
+          <div class="cast-box">
+            <img src="/images/cast/natsuki-hanae.webp" alt="" class="cast-img">
+            <span class="cast-title">Natsuki Hanae</span>
+            <div class="character-box">Kousei Arima</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/risa-taneda.webp" alt="" class="cast-img">
+            <span class="cast-title">Risa Taneda</span>
+            <div class="character-box">Kaori Miyazono</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/ayane-sakura.jpeg" alt="" class="cast-img">
+            <span class="cast-title">Ayane Sakura</span>
+            <div class="character-box">Tsubaki Sawabe</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/ryota-ohsaka.jpeg" alt="" class="cast-img">
+            <span class="cast-title">Ryota Ohsaka</span>
+            <div class="character-box">Ryota Watari</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/saori-hayami.webp" alt="" class="cast-img">
+            <span class="cast-title">Saori Hayami</span>
+            <div class="character-box">Emi Igawa</div>
+          </div>
+          <div class="cast-box">
+            <img src="/images/cast/yuki-kaji.webp" alt="" class="cast-img">
+            <span class="cast-title">Yuki Kaji</span>
+            <div class="character-box">Takeshi Aiza</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- movie information -->
+
+    <!-- watch options -->
+    <section class="watch-here container">
+      <h2 class="watch-title">Watch Options</h2>
+      <div class="watch-links">
+        <div class="watch-link">
+          <img src="/images/watch/crunchyroll.png" alt="Crunchyroll">
+          <a href="/redirect.html">Crunchyroll</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/funimation.png" alt="Funimation">
+          <a href="/redirect.html">Funimation</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/netflix.png" alt="Netflix">
+          <a href="/redirect.html">Netflix</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/hulu.png" alt="Hulu">
+          <a href="/redirect.html">Hulu</a>
+        </div>
+        <div class="watch-link">
+          <img src="/images/watch/primevideo.png" alt="Amazon Prime Video">
+          <a href="/redirect.html">Amazon Prime Video</a>
+        </div>
+      </div>
+    </section>
+    <!-- watch options -->
+
+    <!--Copyright-->
+    <footer class="copyright">
+      <p>&copy; MegYaSuKri All rights reserved &centerdot; 2024</p>
+    </footer>
+    <!--copyright-->
+  </div>
+
+  <script src="/js/main.js"></script>
+  <script src="/js/playpage.js"></script>
+</body>
+
+</html>
