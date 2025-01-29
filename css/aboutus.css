@@ -1,0 +1,119 @@
+.total {
+  margin: 150px;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  padding: 50px;
+  background-color: rgb(42, 42, 64);
+}
+
+.main1 {
+  padding-left: 90px;
+  padding-right: 90px;
+  line-height: 40px;
+  background-color: rgb(42, 42, 64);
+}
+
+.main h1 {
+  text-align: center;
+  color: var(--main-color);
+}
+
+.main1 h2 {
+  text-align: center;
+  color: var(--main-color);
+}
+
+#yearRange {
+  cursor: pointer;
+  margin-left: 60%;
+  width: 100%;
+}
+
+.range-container {
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+  justify-content: center;
+}
+
+#selectedYear {
+  font-size: 1.5em;
+  margin: 10px 0;
+}
+
+#movieImageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 150%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+#movieImage {
+  max-width: 100%;
+  height: auto;
+}
+
+@media screen and (max-width: 600px) {
+  .total {
+    margin-top: 90px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .main1 {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  #yearRange {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .range-container {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .total {
+    margin-top: 90px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .main1 {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  #yearRange {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .range-container {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #movieImage {
+    width: 100%;
+    height: 400px;
+  }
+}
