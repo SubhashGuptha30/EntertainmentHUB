@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" Content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entertainment Hub</title>
+  <link rel="stylesheet" href="/login/login.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: transparent;
+      z-index: 9999;
+    }
+  </style>
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none;">
+
+    <div class="wrapper">
+      <form id="loginForm">
+        <h1>Login</h1>
+        <div class="input-box">
+          <input type="text" placeholder="Username" required id="username">
+          <i class='bx bxs-user-circle'></i>
+        </div>
+
+        <div class="input-box">
+          <input type="password" placeholder="Password" required id="password">
+          <i class='bx bxs-lock-alt'></i>
+        </div>
+
+        <div class="remember-forgot">
+          <label class="rmbr"><input type="checkbox">Remember me </label>
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+        <div class="register-link">
+          <p>Don't have an account? <a href="/login/register.html">REGISTER</a></p>
+        </div>
+      </form>
+      <div id="message" class="message"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Show the preloader
+      document.getElementById("preloader").style.display = "block";
+
+      // Simulate content loading (replace this with your actual content loading logic)
+      setTimeout(function () {
+        // Hide the preloader
+        document.getElementById("preloader").style.display = "none";
+        // Show the main content
+        document.getElementById("main-content").style.display = "block";
+      }, 1000);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('loginForm');
+
+      if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const username = document.getElementById('username').value;
+          const password = document.getElementById('password').value;
+
+          const storedUser = JSON.parse(localStorage.getItem(username));
+
+          const messageDiv = document.getElementById('message');
+
+          if (!storedUser) {
+            messageDiv.textContent = 'Username not found';
+            messageDiv.style.color = 'red';
+          } else if (storedUser.password !== password) {
+            messageDiv.textContent = 'Incorrect password';
+            messageDiv.style.color = 'red';
+          } else {
+            window.location.href = '/login/success.html';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>

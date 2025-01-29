@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entertainment Hub</title>
+  <link rel="stylesheet" href="/login/login.css">
+</head>
+
+<body>
+  <div class="wrapper">
+    <h1>Login Successful</h1>
+    <button class="btn" id="continue-button">Continue to Website</button>
+  </div>
+
+  <script>
+    document.getElementById('continue-button').addEventListener('click', function () {
+      // Debugging step to ensure button click is captured
+      console.log("Continue button clicked");
+
+      // Clear all history states by pushing and replacing a dummy state
+      window.history.pushState(null, null, window.location.href);
+      window.history.replaceState(null, null, window.location.href);
+
+      // Redirect to home.html and create a new state
+      window.location.replace('/home.html');
+    });
+  </script>
+</body>
+
+</html>

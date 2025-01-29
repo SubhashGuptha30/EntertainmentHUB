@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Entertainment Hub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: url("pic5.jpg") no-repeat center center/cover;
+    }
+
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      background-color: transparent;
+      z-index: 9999;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      margin: 20px;
+    }
+
+    .form-container {
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-top: 10px;
+    }
+
+    input,
+    textarea,
+    select {
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    p {
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <iframe id="preloader" src="/preloader.html"></iframe>
+
+  <div id="main-content" style="display: none;">
+
+    <div class="container">
+      <div class="form-container">
+        <h1>Register</h1>
+        <form id="register-form">
+          <label for="register-username">Username:</label>
+          <input type="text" id="register-username" name="username" required>
+
+          <label for="register-email">Email:</label>
+          <input type="email" id="register-email" name="email" required>
+
+          <label for="register-password">Password:</label>
+          <input type="password" id="register-password" name="password" required>
+
+          <label for="register-gender">Gender:</label>
+          <select id="register-gender" name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+
+          <label for="register-age">Age:</label>
+          <input type="number" id="register-age" name="age" min="0" required>
+
+          <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="/login/login.html">Login here</a></p>
+        <div id="message" class="message"></div> <!-- Added this line for message display -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Show the preloader
+      document.getElementById("preloader").style.display = "block";
+
+      // Simulate content loading (replace this with your actual content loading logic)
+      setTimeout(function () {
+        // Hide the preloader
+        document.getElementById("preloader").style.display = "none";
+        // Show the main content
+        document.getElementById("main-content").style.display = "block";
+      }, 1000);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const registerForm = document.getElementById('register-form');
+
+      registerForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const username = document.getElementById('register-username').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const gender = document.getElementById('register-gender').value;
+        const age = document.getElementById('register-age').value;
+
+        const messageDiv = document.getElementById('message');
+
+        if (localStorage.getItem(username)) {
+          messageDiv.textContent = 'Username already exists';
+          messageDiv.style.color = 'red';
+        } else {
+          const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,}$/;
+
+          if (!passwordPattern.test(password)) {
+            messageDiv.textContent = 'Password must be at least 8 characters long, with at least one lowercase letter, one uppercase letter, one number, and one special character {@$!%*?&_-}.';
+            messageDiv.style.color = 'red';
+          } else {
+            const user = { username, email, password, gender, age };
+            localStorage.setItem(username, JSON.stringify(user));
+            messageDiv.textContent = 'Registration successful! Please log in.';
+            messageDiv.style.color = 'green';
+            setTimeout(() => {
+              window.location.href = '/login/login.html';
+            }, 2000);
+          }
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
