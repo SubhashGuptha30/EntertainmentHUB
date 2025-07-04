@@ -1,6 +1,6 @@
 # EntertainmentHUB
 
-**EntertainmentHUB** is a web-based platform designed to centralize and enhance your entertainment experience. It enables users to discover, organize, and manage a wide array of entertainment content such as movies, TV shows, music, games, and trending digital media—all from one convenient hub.
+**EntertainmentHUB** is a web-based platform designed to centralize and enhance your entertainment experience. It enables users to discover, organize, and manage a wide array of entertainment content such as movies, TV shows, and anime—all from one convenient hub.
 
 ## Technical Overview
 
@@ -12,7 +12,7 @@
   - Aggregates entertainment content from various sources for easy discovery.
   - Offers personalized content recommendations based on user preferences.
   - Includes robust search and filter options to quickly find desired content.
-  - Supports user accounts for saving favorites and maintaining watchlists.
+  - Supports user accounts for saving favourites and maintaining watchlists.
 
 - **Architecture:**  
   - The project uses static assets (HTML/CSS/JS), making it suitable for deployment on most web servers or static site hosting services.
