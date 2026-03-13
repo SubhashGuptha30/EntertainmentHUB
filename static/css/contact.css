@@ -1,0 +1,124 @@
+/* Premium Contact Page Styles */
+
+.contact-page {
+    padding-top: 120px;
+    padding-bottom: 4rem;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-container {
+    width: 90%;
+    max-width: 1200px;
+    background: #111;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.contact-left {
+    flex: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.contact-left-title h2 {
+    font-size: 2.5rem;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.contact-left-title hr {
+    border: none;
+    width: 60px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 2px;
+}
+
+.contact-input {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+    font-family: inherit;
+}
+
+.contact-input:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+textarea.contact-input {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.contact-btn {
+    background: var(--primary);
+    color: #000;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+}
+
+.contact-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 180, 58, 0.4);
+}
+
+.contact-right {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(255, 180, 58, 0.1), rgba(0, 0, 0, 0.8));
+    padding: 2rem;
+}
+
+.contact-right img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5));
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .contact-container {
+        flex-direction: column;
+    }
+
+    .contact-right {
+        display: none;
+        /* Hide image on smaller screens or keep if wanted */
+    }
+
+    .contact-left {
+        padding: 2rem;
+    }
+}

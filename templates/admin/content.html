@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Management | Admin | Entertainment Hub</title>
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/admin/admin.css" />
+</head>
+<body>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <i class='bx bx-shield-quarter'></i>
+      <span>Admin<span class="accent">Hub</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="/admin/dashboard.html" class="nav-item"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
+      <a href="/admin/content.html"   class="nav-item active"><i class='bx bx-movie-play'></i><span>Content</span></a>
+      <a href="/admin/users.html"     class="nav-item"><i class='bx bxs-group'></i><span>Users</span></a>
+      <a href="/admin/selectors.html" class="nav-item"><i class='bx bx-slider'></i><span>Selectors</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="admin-name" class="admin-label"></span>
+      <button class="btn-logout" id="logoutBtn"><i class='bx bx-log-out'></i> Logout</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="page-header">
+      <h2><i class='bx bx-movie-play'></i> Content Management</h2>
+      <button class="btn-primary" id="addBtn"><i class='bx bx-plus'></i> Add New</button>
+    </div>
+
+    <!-- Type + Search -->
+    <div class="filters-bar">
+      <div class="search-wrap">
+        <i class='bx bx-search'></i>
+        <input type="text" id="search-input" placeholder="Search by title..." />
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-type="all">All</button>
+        <button class="filter-tab" data-type="movies">Movies</button>
+        <button class="filter-tab" data-type="animes">Anime</button>
+        <button class="filter-tab" data-type="webSeries">Series</button>
+      </div>
+    </div>
+
+    <!-- A–Z bar -->
+    <div class="az-bar" id="az-bar">
+      <button class="az-btn active" data-letter="all">All</button>
+      <button class="az-btn" data-letter="0-9">#</button>
+      <button class="az-btn" data-letter="A">A</button><button class="az-btn" data-letter="B">B</button>
+      <button class="az-btn" data-letter="C">C</button><button class="az-btn" data-letter="D">D</button>
+      <button class="az-btn" data-letter="E">E</button><button class="az-btn" data-letter="F">F</button>
+      <button class="az-btn" data-letter="G">G</button><button class="az-btn" data-letter="H">H</button>
+      <button class="az-btn" data-letter="I">I</button><button class="az-btn" data-letter="J">J</button>
+      <button class="az-btn" data-letter="K">K</button><button class="az-btn" data-letter="L">L</button>
+      <button class="az-btn" data-letter="M">M</button><button class="az-btn" data-letter="N">N</button>
+      <button class="az-btn" data-letter="O">O</button><button class="az-btn" data-letter="P">P</button>
+      <button class="az-btn" data-letter="Q">Q</button><button class="az-btn" data-letter="R">R</button>
+      <button class="az-btn" data-letter="S">S</button><button class="az-btn" data-letter="T">T</button>
+      <button class="az-btn" data-letter="U">U</button><button class="az-btn" data-letter="V">V</button>
+      <button class="az-btn" data-letter="W">W</button><button class="az-btn" data-letter="X">X</button>
+      <button class="az-btn" data-letter="Y">Y</button><button class="az-btn" data-letter="Z">Z</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Poster</th><th>Title</th><th>Type</th>
+            <th>Status</th><th>Rating</th><th>Tags</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="content-tbody">
+          <tr><td colspan="7" class="loading-row"><i class='bx bx-loader-alt bx-spin'></i> Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-bar" id="pagination-bar" style="display:none;">
+      <button class="btn-secondary btn-sm" id="prev-page"><i class='bx bx-chevron-left'></i> Prev</button>
+      <span id="page-info" class="page-info">Page 1 of 1</span>
+      <button class="btn-secondary btn-sm" id="next-page">Next <i class='bx bx-chevron-right'></i></button>
+    </div>
+  </main>
+</div>
+
+<!-- ═══ ADD / EDIT MODAL ════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal" style="display:none;">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="modal-title">Add Content</h3>
+      <button class="modal-close" id="modalClose"><i class='bx bx-x'></i></button>
+    </div>
+
+    <form id="content-form" class="modal-form">
+      <input type="hidden" id="content-id" />
+
+      <!-- ── BASIC INFO ───────────────────────────────────────────── -->
+      <div class="form-section-label"><i class='bx bx-info-circle'></i> Basic Info</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" id="f-title" required placeholder="Movie / Anime / Series title" />
+        </div>
+        <div class="form-group">
+          <label>Slug *</label>
+          <input type="text" id="f-slug" required placeholder="e.g. attack-on-titan" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Type *</label>
+          <select id="f-type">
+            <option value="movies">Movie</option>
+            <option value="animes">Anime</option>
+            <option value="webSeries">Web Series</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="f-status">
+            <option value="Released">Released</option>
+            <option value="New Release">New Release</option>
+            <option value="Top Rated">Top Rated</option>
+            <option value="Coming Soon">Coming Soon</option>
+            <option value="Ongoing">Ongoing</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Rating</label>
+          <select id="f-rating"><option value="">— select —</option></select>
+        </div>
+        <div class="form-group">
+          <label>Video URL <small>(YouTube embed)</small></label>
+          <input type="text" id="f-video" placeholder="https://www.youtube.com/embed/..." />
+        </div>
+      </div>
+
+      <!-- ── ARTWORK ──────────────────────────────────────────────── -->
+      <div class="form-section-label"><i class='bx bx-image'></i> Artwork</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Vertical Poster <small>(2:3 portrait)</small></label>
+          <div class="upload-area" onclick="document.getElementById('vimage-file').click()">
+            <img id="vimage-preview" class="upload-preview" style="display:none" />
+            <div class="upload-placeholder" id="vimage-placeholder">
+              <i class='bx bx-image-add'></i>
+              <span>Click to upload</span>
+              <small>JPG · PNG · WebP</small>
+            </div>
+            <div class="upload-status" id="vimage-status"></div>
+          </div>
+          <input type="file" id="vimage-file" accept="image/*" style="display:none" />
+        </div>
+        <div class="form-group">
+          <label>Horizontal Banner <small>(16:9 landscape)</small></label>
+          <div class="upload-area" onclick="document.getElementById('himage-file').click()">
+            <img id="himage-preview" class="upload-preview" style="display:none" />
+            <div class="upload-placeholder" id="himage-placeholder">
+              <i class='bx bx-image-add'></i>
+              <span>Click to upload</span>
+              <small>JPG · PNG · WebP</small>
+            </div>
+            <div class="upload-status" id="himage-status"></div>
+          </div>
+          <input type="file" id="himage-file" accept="image/*" style="display:none" />
+        </div>
+      </div>
+
+      <!-- ── DETAILS ──────────────────────────────────────────────── -->
+      <div class="form-section-label"><i class='bx bx-align-left'></i> Details</div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="f-desc" rows="3" placeholder="Short synopsis of the content..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Tags <small>(click to toggle)</small></label>
+        <div class="chip-selector" id="tags-chips"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Watch Options <small>(click to toggle)</small></label>
+        <div class="chip-selector" id="watch-chips"></div>
+      </div>
+
+      <!-- ── CAST ────────────────────────────────────────────────── -->
+      <div class="form-section-label"><i class='bx bx-user-voice'></i> Cast</div>
+
+      <div class="form-group" style="position:relative;">
+        <label>Search &amp; Select Cast Members</label>
+        <div class="cast-search-wrap">
+          <i class='bx bx-search'></i>
+          <input type="text" id="cast-search" placeholder="Type actor / character name..." autocomplete="off" />
+        </div>
+        <div class="cast-dropdown" id="cast-dropdown" style="display:none;"></div>
+      </div>
+      <div id="cast-selected-list" class="cast-selected-list"></div>
+
+      <!-- ── FOOTER ──────────────────────────────────────────────── -->
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+        <button type="submit" class="btn-primary" id="saveBtn">
+          <i class='bx bx-save'></i> Save
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Confirm Delete -->
+<div class="modal-overlay" id="confirm-modal" style="display:none;">
+  <div class="modal-box modal-sm">
+    <div class="modal-header">
+      <h3><i class='bx bx-error-circle' style="color:var(--danger)"></i> Confirm Delete</h3>
+    </div>
+    <p style="margin:1rem 0;color:var(--text-muted);">Delete <strong id="delete-title"></strong>? This cannot be undone.</p>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="cancelDelete">Cancel</button>
+      <button class="btn-danger" id="confirmDelete"><i class='bx bx-trash'></i> Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/admin/admin.js"></script>
+<script>
+  requireAdmin();
+
+  /* ─── Constants ▸ pagination ─────────────────────────────────────────────── */
+  const PAGE_SIZE = 50;
+
+  /* ─── State ──────────────────────────────────────────────────────────────── */
+  let allContent     = [];
+  let currentFilter  = 'all';
+  let currentLetter  = 'all';
+  let currentPage    = 1;
+  let deleteTargetId = null;
+  let selectors      = { rating: [], tags: [], watch_options: [], cast: [] };
+  let selectedTags   = [];
+  let selectedWatch  = [];
+  let selectedCast   = [];
+  let vImagePath = '';
+  let hImagePath = '';
+  let castSearchTimer = null;
+
+  /* ─── Selectors ──────────────────────────────────────────────────────────── */
+  async function loadSelectors() {
+    const res = await adminFetch('/api/admin/selectors');
+    if (!res) return;
+    selectors = await res.json();
+    buildRatingSelect();
+    buildChips('tags-chips',  selectors.tags  || [], selectedTags);
+    buildChips('watch-chips', selectors.watch_options || [], selectedWatch);
+  }
+
+  function buildRatingSelect() {
+    const sel = document.getElementById('f-rating');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— select —</option>';
+    (selectors.rating || []).forEach(r => {
+      const opt = document.createElement('option');
+      opt.value = r.value; opt.textContent = r.value;
+      if (r.value === cur) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function buildChips(id, items, arr) {
+    const c = document.getElementById(id);
+    c.innerHTML = '';
+    items.forEach(item => {
+      // For watch_options, value is JSON {name, logo} — extract name for display/storage
+      let displayName = item.value;
+      let storeValue  = item.value;
+      try {
+        const parsed = JSON.parse(item.value);
+        if (parsed && parsed.name) { displayName = parsed.name; storeValue = parsed.name; }
+      } catch { /* plain string — use as-is */ }
+
+      const chip = document.createElement('span');
+      chip.className = 'chip' + (arr.includes(storeValue) ? ' chip-on' : '');
+      chip.textContent = displayName;
+      chip.dataset.value = storeValue;
+      chip.onclick = () => {
+        const v = chip.dataset.value;
+        if (arr.includes(v)) { arr.splice(arr.indexOf(v), 1); chip.classList.remove('chip-on'); }
+        else { arr.push(v); chip.classList.add('chip-on'); }
+      };
+      c.appendChild(chip);
+    });
+  }
+
+  /* ─── File Upload ────────────────────────────────────────────────────────── */
+  async function handleUpload(file, previewId, placeholderId, statusId, which) {
+    const status  = document.getElementById(statusId);
+    const preview = document.getElementById(previewId);
+    const holder  = document.getElementById(placeholderId);
+    status.textContent = 'Uploading…'; status.style.color = 'var(--warning)';
+    const folder = which === 'v' ? 'vertical' : 'horizontal';
+    const fd = new FormData();
+    fd.append('file', file);
+    try {
+      const res  = await fetch(`/api/admin/upload?folder=${folder}`, { method: 'POST', credentials: 'same-origin', body: fd });
+      const data = await res.json();
+      if (res.ok) {
+        if (which === 'v') vImagePath = data.path; else hImagePath = data.path;
+        preview.src = data.path; preview.style.display = 'block';
+        holder.style.display = 'none';
+        status.textContent = '✓ Uploaded'; status.style.color = 'var(--success)';
+      } else { status.textContent = data.error || 'Failed'; status.style.color = 'var(--danger)'; }
+    } catch { status.textContent = 'Error'; status.style.color = 'var(--danger)'; }
+  }
+  document.getElementById('vimage-file').addEventListener('change', function() { handleUpload(this.files[0], 'vimage-preview', 'vimage-placeholder', 'vimage-status', 'v'); });
+  document.getElementById('himage-file').addEventListener('change', function() { handleUpload(this.files[0], 'himage-preview', 'himage-placeholder', 'himage-status', 'h'); });
+
+  /* ─── Cast Search ────────────────────────────────────────────────────────── */
+  document.getElementById('cast-search').addEventListener('input', function() {
+    clearTimeout(castSearchTimer);
+    const q = this.value.trim();
+    if (!q) { document.getElementById('cast-dropdown').style.display = 'none'; return; }
+    castSearchTimer = setTimeout(() => doSearchCast(q), 300);
+  });
+
+  async function doSearchCast(q) {
+    const res = await adminFetch(`/api/admin/selectors/cast/search?q=${encodeURIComponent(q)}`);
+    if (!res) return;
+    const results = await res.json();
+    const dd = document.getElementById('cast-dropdown');
+    if (!results.length) { dd.style.display = 'none'; return; }
+    dd.innerHTML = results.map(m => `
+      <div class="cast-result" data-id="${m.id}" data-name="${(m.name||'').replace(/"/g,'&quot;')}" data-img="${m.image||''}">
+        <img src="${m.image||'/static/images/user.png'}" onerror="this.src='/static/images/user.png'" />
+        <span>${m.name}</span>
+      </div>`).join('');
+    dd.style.display = 'block';
+    dd.querySelectorAll('.cast-result').forEach(el => {
+      el.addEventListener('click', () => {
+        addCastMember(el.dataset.id, el.dataset.name, el.dataset.img);
+        document.getElementById('cast-search').value = '';
+        dd.style.display = 'none';
+      });
+    });
+  }
+  function addCastMember(id, name, image) {
+    if (selectedCast.find(c => c.name === name)) return;
+    selectedCast.push({ id, name, image, role: '' });
+    renderCastList();
+  }
+  function renderCastList() {
+    document.getElementById('cast-selected-list').innerHTML = selectedCast.map((m, i) => `
+      <div class="cast-card">
+        <img src="${m.image||'/static/images/user.png'}" onerror="this.src='/static/images/user.png'" />
+        <div class="cast-info">
+          <span class="cast-name">${m.name}</span>
+          <input type="text" class="cast-role-input" placeholder="Role / Character"
+                 value="${m.role}" onchange="selectedCast[${i}].role=this.value" />
+        </div>
+        <button type="button" class="cast-remove" onclick="removeCast(${i})"><i class='bx bx-x'></i></button>
+      </div>`).join('');
+  }
+  function removeCast(i) { selectedCast.splice(i, 1); renderCastList(); }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#cast-search') && !e.target.closest('#cast-dropdown'))
+      document.getElementById('cast-dropdown').style.display = 'none';
+  });
+
+  /* ─── A–Z + Type Filter ──────────────────────────────────────────────────── */
+  document.querySelectorAll('.filter-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.type;
+      currentPage = 1;
+      renderTable();
+    });
+  });
+
+  document.querySelectorAll('.az-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.az-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentLetter = btn.dataset.letter;
+      currentPage = 1;
+      renderTable();
+    });
+  });
+
+  document.getElementById('search-input').addEventListener('input', () => { currentPage = 1; renderTable(); });
+
+  /* ─── Table / Pagination ─────────────────────────────────────────────────── */
+  function getFiltered() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    return allContent.filter(item => {
+      if (currentFilter !== 'all' && item.type !== currentFilter) return false;
+      if (q && !item.title.toLowerCase().includes(q)) return false;
+      if (currentLetter !== 'all') {
+        const first = (item.title[0] || '').toUpperCase();
+        if (currentLetter === '0-9') { if (!/[0-9]/.test(first)) return false; }
+        else if (first !== currentLetter) return false;
+      }
+      return true;
+    });
+  }
+
+  async function loadContent() {
+    document.getElementById('content-tbody').innerHTML =
+      `<tr><td colspan="7" class="loading-row"><i class='bx bx-loader-alt bx-spin'></i> Loading…</td></tr>`;
+    const res = await adminFetch('/api/admin/content');
+    if (!res) return;
+    allContent = await res.json();
+    renderTable();
+  }
+
+  function renderTable() {
+    const filtered = getFiltered();
+    const total = filtered.length;
+    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    currentPage = Math.min(currentPage, totalPages);
+    const paged = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+    const tbody = document.getElementById('content-tbody');
+    if (!paged.length) {
+      tbody.innerHTML = `<tr><td colspan="7" class="loading-row">No content found</td></tr>`;
+      document.getElementById('pagination-bar').style.display = 'none';
+      return;
+    }
+
+    const typeLabels = { movies: 'Movie', animes: 'Anime', webSeries: 'Series' };
+    tbody.innerHTML = paged.map(item => `
+      <tr>
+        <td><img src="${item['v-image']||item['h-image']||'/static/images/logo.png'}"
+                 class="table-poster" onerror="this.src='/static/images/logo.png'" /></td>
+        <td class="title-cell">
+          <span class="item-title">${item.title}</span>
+          <span class="item-slug">${item.slug}</span>
+        </td>
+        <td><span class="type-badge type-${item.type}">${typeLabels[item.type]||item.type}</span></td>
+        <td>${item.Status||'Released'}</td>
+        <td>${item.rating||'—'}</td>
+        <td class="sections-cell">${(item.tags||[]).slice(0,3).join(', ')||'—'}</td>
+        <td class="action-cell">
+          <button class="btn-icon btn-edit" onclick="openEdit(${item.id})"><i class='bx bx-edit'></i></button>
+          <button class="btn-icon btn-del"  onclick="openDelete(${item.id}, '${item.title.replace(/'/g,"\\'")}')"><i class='bx bx-trash'></i></button>
+        </td>
+      </tr>`).join('');
+
+    // Pagination bar
+    const bar = document.getElementById('pagination-bar');
+    if (totalPages > 1 || total > PAGE_SIZE) {
+      bar.style.display = 'flex';
+      document.getElementById('page-info').textContent =
+        `Page ${currentPage} of ${totalPages}  (${total} items)`;
+      document.getElementById('prev-page').disabled = currentPage <= 1;
+      document.getElementById('next-page').disabled = currentPage >= totalPages;
+    } else {
+      bar.style.display = 'none';
+    }
+  }
+
+  document.getElementById('prev-page').addEventListener('click', () => { currentPage--; renderTable(); });
+  document.getElementById('next-page').addEventListener('click', () => { currentPage++; renderTable(); });
+
+  /* ─── Open Modal ─────────────────────────────────────────────────────────── */
+  document.getElementById('addBtn').addEventListener('click', () => openModal());
+
+  function openModal(item = null) {
+    const isEdit = !!item;
+    document.getElementById('modal-title').textContent = isEdit ? 'Edit Content' : 'Add New Content';
+    document.getElementById('content-id').value = item ? item.id : '';
+    document.getElementById('f-title').value  = item ? item.title : '';
+    document.getElementById('f-slug').value   = item ? item.slug  : '';
+    document.getElementById('f-slug').readOnly = isEdit;
+    document.getElementById('f-type').value   = item ? item.type  : 'movies';
+    document.getElementById('f-status').value = item ? (item.Status || 'Released') : 'Released';
+    document.getElementById('f-video').value  = item ? (item.videoUrl || '') : '';
+    document.getElementById('f-desc').value   = item ? (item.description || '') : '';
+
+    // Rating
+    document.getElementById('f-rating').value = item ? (item.rating || '') : '';
+
+    // Artwork
+    vImagePath = item ? (item['v-image'] || '') : '';
+    hImagePath = item ? (item['h-image'] || '') : '';
+    resetUpload('vimage-preview', 'vimage-placeholder', 'vimage-status', vImagePath);
+    resetUpload('himage-preview', 'himage-placeholder', 'himage-status', hImagePath);
+
+    // Chips
+    selectedTags  = item ? [...(item.tags || [])] : [];
+    selectedWatch = item ? [...(item.watchOptions || [])] : [];
+    buildChips('tags-chips',  selectors.tags  || [], selectedTags);
+    buildChips('watch-chips', selectors.watch_options || [], selectedWatch);
+
+    // Cast
+    selectedCast = item ? (item.cast || []).map(m => ({ id: null, name: m.name||'', image: m.image||'', role: m.role||'' })) : [];
+    renderCastList();
+
+    if (!isEdit) {
+      document.getElementById('f-title').addEventListener('input', autoSlug);
+    } else {
+      document.getElementById('f-title').removeEventListener('input', autoSlug);
+    }
+    document.getElementById('modal').style.display = 'flex';
+  }
+
+  function autoSlug() {
+    document.getElementById('f-slug').value = document.getElementById('f-title').value
+      .toLowerCase().replace(/[^a-z0-9\s-]/g,'').replace(/\s+/g,'-').replace(/-+/g,'-').trim();
+  }
+
+  function resetUpload(previewId, placeholderId, statusId, existingPath) {
+    const preview = document.getElementById(previewId);
+    const holder  = document.getElementById(placeholderId);
+    const status  = document.getElementById(statusId);
+    if (existingPath) {
+      preview.src = existingPath; preview.style.display = 'block';
+      holder.style.display = 'none'; status.textContent = 'Existing image';
+    } else {
+      preview.style.display = 'none'; holder.style.display = 'flex'; status.textContent = '';
+    }
+  }
+
+  function openEdit(id) { const item = allContent.find(i => i.id === id); if (item) openModal(item); }
+  function openDelete(id, title) {
+    deleteTargetId = id;
+    document.getElementById('delete-title').textContent = title;
+    document.getElementById('confirm-modal').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    document.getElementById('f-slug').readOnly = false;
+    document.getElementById('f-title').removeEventListener('input', autoSlug);
+    document.getElementById('vimage-file').value = '';
+    document.getElementById('himage-file').value = '';
+    vImagePath = ''; hImagePath = '';
+  }
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+  document.getElementById('cancelDelete').addEventListener('click', () => { document.getElementById('confirm-modal').style.display = 'none'; });
+
+  /* ─── Form Submit ────────────────────────────────────────────────────────── */
+  document.getElementById('content-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const id = document.getElementById('content-id').value;
+    const isEdit = !!id;
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Saving…";
+
+    const payload = {
+      title:       document.getElementById('f-title').value,
+      slug:        document.getElementById('f-slug').value,
+      type:        document.getElementById('f-type').value,
+      status:      document.getElementById('f-status').value,
+      rating:      document.getElementById('f-rating').value,
+      videoUrl:    document.getElementById('f-video').value,
+      'v-image':   vImagePath,
+      'h-image':   hImagePath,
+      description: document.getElementById('f-desc').value,
+      tags:        [...selectedTags],
+      watchOptions:[...selectedWatch],
+      cast:        selectedCast.map(m => ({ name: m.name, image: m.image, role: m.role })),
+    };
+
+    const url    = isEdit ? `/api/admin/content/${id}` : '/api/admin/content';
+    const method = isEdit ? 'PUT' : 'POST';
+    const res    = await adminFetch(url, { method, body: JSON.stringify(payload) });
+    saveBtn.disabled = false;
+    saveBtn.innerHTML = "<i class='bx bx-save'></i> Save";
+    if (res && res.ok) {
+      closeModal(); showToast(isEdit ? 'Content updated!' : 'Content added!', 'success'); loadContent();
+    } else {
+      const err = res ? await res.json() : {};
+      showToast(err.error || 'Error saving content', 'error');
+    }
+  });
+
+  /* ─── Delete ─────────────────────────────────────────────────────────────── */
+  document.getElementById('confirmDelete').addEventListener('click', async () => {
+    if (!deleteTargetId) return;
+    const res = await adminFetch(`/api/admin/content/${deleteTargetId}`, { method: 'DELETE' });
+    document.getElementById('confirm-modal').style.display = 'none';
+    if (res && res.ok) { showToast('Deleted!', 'success'); loadContent(); }
+    else showToast('Error deleting', 'error');
+  });
+
+  /* ─── Init ───────────────────────────────────────────────────────────────── */
+  loadSelectors();
+  loadContent();
+  if (new URLSearchParams(window.location.search).get('action') === 'add') setTimeout(openModal, 600);
+</script>
+</body>
+</html>

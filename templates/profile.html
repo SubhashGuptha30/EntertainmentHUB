@@ -1,0 +1,254 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainment Hub - Profile</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="/static/css/profile.css" />
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="loader">
+      <div class="inner"></div>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div id="global-header"></div>
+
+    <div class="profile-container">
+
+      <div class="profile-wrapper">
+        <div class="profile-header">
+          <div class="profile-pic-wrapper">
+            <img src="/static/images/user.png" alt="Profile Picture" class="profile-img" id="profile-img" />
+            <button class="btn edit-btn" onclick="document.getElementById('upload-profile-pic').click()">Edit</button>
+            <input type="file" id="upload-profile-pic" style="display:none" accept="image/*" />
+          </div>
+          <h2 id="profile-username">Username</h2>
+        </div>
+        <div class="profile-details">
+          <div class="profile-box">
+            <div class="profile-section">
+              <h3>Email:</h3>
+              <p id="profile-email">user@example.com</p>
+            </div>
+            <div class="profile-section">
+              <h3>Gender:</h3>
+              <p id="profile-gender">Not specified</p>
+            </div>
+            <div class="profile-section">
+              <h3>Age:</h3>
+              <p id="profile-age">Not specified</p>
+            </div>
+          </div>
+          <div class="changer">
+            <div class="profile-section">
+              <button class="btn" onclick="toggleEditProfile()">Edit Profile Information</button>
+              <form id="edit-profile-form" style="display: none;">
+                <label for="edit-username">Username:</label>
+                <input type="text" id="edit-username" name="edit-username" />
+                <label for="edit-email">Email:</label>
+                <input type="email" id="edit-email" name="edit-email" />
+                <label for="edit-gender">Gender:</label>
+                <input type="text" id="edit-gender" name="edit-gender" />
+                <label for="edit-age">Age:</label>
+                <input type="number" id="edit-age" name="edit-age" />
+                <button type="submit" class="btn">Save Changes</button>
+              </form>
+            </div>
+            <div class="profile-section">
+              <button class="btn" onclick="toggleChangePassword()">Change Password</button>
+              <form id="change-password-form" style="display: none;">
+                <label for="current-password">Current Password:</label>
+                <input type="password" id="current-password" name="current-password" />
+                <label for="new-password">New Password:</label>
+                <input type="password" id="new-password" name="new-password" />
+                <label for="confirm-password">Confirm New Password:</label>
+                <input type="password" id="confirm-password" name="confirm-password" />
+                <button type="submit" class="btn">Change Password</button>
+              </form>
+            </div>
+          </div>
+          <div class="profile-section more">
+            <h3>More</h3>
+            <div class="more-links">
+              <a href="/contact/contactus.html" class="btn">Contact Us</a>
+              <a href="/aboutus.html" class="btn">About Us</a>
+            </div>
+          </div>
+          <div class="profile-section logout-section">
+            <button class="btn logout-btn" id="logout-button">Logout</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!--Footer-->
+  <div id="global-footer"></div>
+  <!--Footer-->
+
+  <script src="/static/js/main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      // Preloader
+      document.getElementById("preloader").style.display = "block";
+      setTimeout(function () {
+        document.getElementById("preloader").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+      }, 1000);
+
+      // Load user from server session
+      await loadUserInfo();
+
+      // Event listeners
+      document.getElementById('upload-profile-pic').addEventListener('change', handleProfilePicUpload);
+      document.getElementById('edit-profile-form').addEventListener('submit', updateProfile);
+      document.getElementById('change-password-form').addEventListener('submit', changePassword);
+      document.getElementById('logout-button').addEventListener('click', logout);
+    });
+
+    async function loadUserInfo() {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (!res.ok) {
+          // Not logged in on server side; fall back to localStorage for display
+          const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+          if (cached) populateUI(cached);
+          else window.location.href = '/index.html';
+          return;
+        }
+        const user = await res.json();
+        // Keep localStorage in sync for display
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        localStorage.setItem('signedIn', 'true');
+        populateUI(user);
+      } catch {
+        const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        if (cached) populateUI(cached);
+      }
+    }
+
+    function populateUI(user) {
+      document.getElementById('profile-username').textContent = user.username || 'Unknown';
+      document.getElementById('edit-username').value = user.username || '';
+
+      document.getElementById('profile-email').textContent = user.email || '—';
+      document.getElementById('edit-email').value = user.email || '';
+
+      document.getElementById('profile-gender').textContent = user.gender || 'Not specified';
+      document.getElementById('edit-gender').value = user.gender || '';
+
+      document.getElementById('profile-age').textContent = user.age || 'Not specified';
+      document.getElementById('edit-age').value = user.age || '';
+
+      if (user.profile_pic || user.profilePic) {
+        document.getElementById('profile-img').src = user.profile_pic || user.profilePic;
+      }
+    }
+
+    function toggleEditProfile() {
+      const form = document.getElementById('edit-profile-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function toggleChangePassword() {
+      const form = document.getElementById('change-password-form');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function handleProfilePicUpload() {
+      const file = this.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = async function (e) {
+          document.getElementById('profile-img').src = e.target.result;
+          // Save profile pic via API (base64 string)
+          await fetch('/api/auth/me', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ profile_pic: e.target.result })
+          });
+          const cached = JSON.parse(localStorage.getItem('currentUser') || '{}');
+          cached.profile_pic = e.target.result;
+          localStorage.setItem('currentUser', JSON.stringify(cached));
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    async function updateProfile(event) {
+      event.preventDefault();
+      const body = {
+        username: document.getElementById('edit-username').value,
+        email:    document.getElementById('edit-email').value,
+        gender:   document.getElementById('edit-gender').value,
+        age:      parseInt(document.getElementById('edit-age').value),
+      };
+
+      const res = await fetch('/api/auth/me', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      if (res.ok) {
+        alert('Profile updated successfully!');
+        // Update localStorage too
+        const cached = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        Object.assign(cached, body);
+        localStorage.setItem('currentUser', JSON.stringify(cached));
+        location.reload();
+      } else {
+        const data = await res.json();
+        alert('Error: ' + (data.error || 'Update failed'));
+      }
+    }
+
+    async function changePassword(event) {
+      event.preventDefault();
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword     = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (newPassword !== confirmPassword) {
+        alert('New passwords do not match!');
+        return;
+      }
+
+      const res = await fetch('/api/auth/me', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ current_password: currentPassword, new_password: newPassword })
+      });
+
+      if (res.ok) {
+        alert('Password changed successfully!');
+        document.getElementById('current-password').value = '';
+        document.getElementById('new-password').value = '';
+        document.getElementById('confirm-password').value = '';
+        toggleChangePassword();
+      } else {
+        const data = await res.json();
+        alert('Error: ' + (data.error || 'Password change failed'));
+      }
+    }
+
+    async function logout() {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      localStorage.removeItem('currentUser');
+      localStorage.setItem('signedIn', 'false');
+      alert('Logged out successfully!');
+      window.location.replace('/index.html');
+    }
+  </script>
+</body>
+
+</html>

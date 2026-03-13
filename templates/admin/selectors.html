@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Selectors | Admin | Entertainment Hub</title>
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/admin/admin.css" />
+</head>
+
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class='bx bx-shield-quarter'></i>
+        <span>Admin<span class="accent">Hub</span></span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html" class="nav-item"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
+        <a href="/admin/content.html" class="nav-item"><i class='bx bx-movie-play'></i><span>Content</span></a>
+        <a href="/admin/users.html" class="nav-item"><i class='bx bxs-group'></i><span>Users</span></a>
+        <a href="/admin/selectors.html" class="nav-item active"><i class='bx bx-slider'></i><span>Selectors</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <span id="admin-name" class="admin-label"></span>
+        <button class="btn-logout" id="logoutBtn"><i class='bx bx-log-out'></i> Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h2><i class='bx bx-slider'></i> Form Selectors</h2>
+        <span class="page-subtitle">Manage dropdown options used in the Add Content form</span>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="filter-tabs" style="margin-bottom:1.5rem;">
+        <button class="filter-tab active" data-cat="rating">Rating</button>
+        <button class="filter-tab" data-cat="tags">Tags / Genres</button>
+        <button class="filter-tab" data-cat="watch_options">Watch Options</button>
+        <button class="filter-tab" data-cat="cast">Cast Members</button>
+        <button class="filter-tab" data-cat="franchises">Franchises</button>
+      </div>
+
+      <!-- Add New (above panel so it's always visible without scrolling) -->
+      <div class="selector-add-box">
+        <div class="form-section-label" style="margin:0 0 1rem;"><i class='bx bx-plus-circle'></i> Add New Option</div>
+        <div id="add-fields"></div>
+        <button class="btn-primary" id="add-btn" style="margin-top:.75rem;">
+          <i class='bx bx-plus'></i> Add
+        </button>
+      </div>
+
+      <!-- Panel for current category -->
+      <div id="sel-panel" class="table-wrapper" style="padding:1.5rem; margin-top: 0;">
+        <div id="sel-loading" style="text-align:center;color:var(--text-muted);padding:2rem;">
+          <i class='bx bx-loader-alt bx-spin'></i> Loading…
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ═══ EDIT MODAL ══════════════════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="edit-modal" style="display:none;">
+    <div class="modal-box" style="max-width:480px;">
+      <div class="modal-header">
+        <h3><i class='bx bx-edit'></i> Edit Option</h3>
+        <button class="modal-close" id="editModalClose"><i class='bx bx-x'></i></button>
+      </div>
+      <div class="modal-form" id="edit-fields"></div>
+      <div class="modal-footer" style="padding:0 1.5rem 1.5rem;">
+        <button class="btn-secondary" id="cancelEdit">Cancel</button>
+        <button class="btn-primary" id="saveEdit"><i class='bx bx-save'></i> Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete -->
+  <div class="modal-overlay" id="confirm-modal" style="display:none;">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3><i class='bx bx-error-circle' style="color:var(--danger)"></i> Confirm Delete</h3>
+      </div>
+      <p style="margin:1rem 0;color:var(--text-muted);">Remove <strong id="del-label"></strong> from selectors?</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelDel">Cancel</button>
+        <button class="btn-danger" id="confirmDel"><i class='bx bx-trash'></i> Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/admin/admin.js"></script>
+  <script>
+    requireAdmin();
+
+    let currentCat = 'rating';
+    let allSelectors = {};
+    let deletePendingId = null;
+    let editTargetId = null;
+    let editCategory = null;
+    let castActiveLetter = null; // which letter group is shown in cast tab
+
+    /* ─── Image Upload helper ─────────────────────────────────────────────── */
+    async function uploadImage(file, folder = 'uploads') {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch(`/api/admin/upload?folder=${folder}`, { method: 'POST', credentials: 'same-origin', body: fd });
+      const data = await res.json();
+      return res.ok ? data.path : null;
+    }
+
+    /* ─── Load ────────────────────────────────────────────────────────────── */
+    async function loadSelectors() {
+      document.getElementById('sel-loading').style.display = 'block';
+      const res = await adminFetch('/api/admin/selectors');
+      if (!res) return;
+      allSelectors = await res.json();
+      document.getElementById('sel-loading').style.display = 'none';
+      renderPanel();
+    }
+
+    /* ─── Render panel ────────────────────────────────────────────────────── */
+    function renderPanel() {
+      const panel = document.getElementById('sel-panel');
+      const items = allSelectors[currentCat] || [];
+      if (!items.length) {
+        panel.innerHTML = `<p style="color:var(--text-muted);text-align:center;padding:2rem;">No options yet — add one above.</p>`;
+      } else if (currentCat === 'cast') {
+        renderCastPanel(panel, items);
+      } else if (currentCat === 'watch_options') {
+        renderWatchPanel(panel, items);
+      } else if (currentCat === 'franchises') {
+        renderFranchisePanel(panel, items);
+      } else {
+        renderSimplePanel(panel, items);
+      }
+      renderAddFields();
+    }
+
+    /* ─── Simple chip grid (rating / tags / watch_options) ────────────────── */
+    function renderSimplePanel(panel, items) {
+      panel.innerHTML = `
+        <div class="sel-grid">
+          ${items.map(item => `
+            <div class="sel-chip-row">
+              <span class="sel-chip">${item.value}</span>
+              <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${item.id}, '${item.value.replace(/'/g, "\\'")}')">
+                <i class='bx bx-pencil'></i>
+              </button>
+              <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${item.id}, '${item.value.replace(/'/g, "\\'")}')">
+                <i class='bx bx-trash'></i>
+              </button>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    /* ─── Watch Options panel — logo + name grid ─────────────────────────────── */
+    function renderWatchPanel(panel, items) {
+      const parsed = items.map(item => {
+        let m = {};
+        try { m = JSON.parse(item.value); } catch { m = { name: item.value, logo: '' }; }
+        return { id: item.id, name: m.name || item.value, logo: m.logo || '', raw: item.value };
+      }).sort((a, b) => a.name.localeCompare(b.name));
+
+      panel.innerHTML = `
+        <div class="watch-grid">
+          ${parsed.map(p => `
+            <div class="watch-card">
+              <div class="watch-logo-wrap">
+                ${p.logo
+          ? `<img src="${p.logo}" alt="${p.name}" onerror="this.style.display='none'" />`
+          : `<i class='bx bx-play-circle watch-logo-placeholder'></i>`}
+              </div>
+              <span class="watch-card-name">${p.name}</span>
+              <div class="watch-card-actions">
+                <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${p.id}, ${JSON.stringify(p.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
+                <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${p.id}, '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    }
+
+    /* ─── Cast panel — grouped alphabetically ─────────────────────────────── */
+
+    function renderCastPanel(panel, items) {
+      // Parse and sort all items
+      const parsed = items.map(item => {
+        let m = {};
+        try { m = JSON.parse(item.value); } catch { }
+        return { id: item.id, name: m.name || '—', image: m.image || '', raw: item.value };
+      }).sort((a, b) => a.name.localeCompare(b.name));
+
+      // Group by first letter
+      const groups = {};
+      parsed.forEach(m => {
+        const key = /[A-Za-z]/.test(m.name[0]) ? m.name[0].toUpperCase() : '#';
+        if (!groups[key]) groups[key] = [];
+        groups[key].push(m);
+      });
+      const letters = Object.keys(groups).sort();
+
+      // Auto-select first available letter if current selection is empty/gone
+      if (!castActiveLetter || !groups[castActiveLetter]) {
+        castActiveLetter = letters[0] || null;
+      }
+
+      // Filter buttons (not anchor links)
+      const jumpBar = letters.map(l =>
+        `<button class="az-jump${l === castActiveLetter ? ' active' : ''}" onclick="setCastLetter('${l}')">${l}</button>`
+      ).join('');
+
+      // Only the selected group's table
+      const group = groups[castActiveLetter] || [];
+      const tableRows = group.map(m => `
+        <tr>
+          <td><img src="${m.image || '/static/images/user.png'}" class="table-avatar" onerror="this.src='/static/images/user.png'" /></td>
+          <td><strong>${m.name}</strong></td>
+          <td style="font-size:.75rem;color:var(--text-muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;">${m.image || '—'}</td>
+          <td class="action-cell">
+            <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${m.id}, ${JSON.stringify(m.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
+            <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${m.id}, '${m.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+          </td>
+        </tr>`).join('');
+
+      panel.innerHTML = `
+        <div class="az-jump-bar">${jumpBar}</div>
+        <div class="cast-alpha-group">
+          <div class="cast-alpha-header">${castActiveLetter || ''} &mdash; ${group.length} member${group.length !== 1 ? 's' : ''}</div>
+          <table class="data-table">
+            <thead><tr><th>Avatar</th><th>Name</th><th>Image</th><th>Actions</th></tr></thead>
+            <tbody>${tableRows}</tbody>
+          </table>
+        </div>`;
+    }
+
+    function setCastLetter(letter) {
+      castActiveLetter = letter;
+      const panel = document.getElementById('sel-panel');
+      renderCastPanel(panel, allSelectors['cast'] || []);
+    }
+
+
+    /* ─── Franchise panel — image + title + description cards ─────────── */
+    function renderFranchisePanel(panel, items) {
+      const parsed = items.map(item => {
+        let m = {};
+        try { m = JSON.parse(item.value); } catch { }
+        return { id: item.id, title: m.title || item.value, image: m.image || '', description: m.description || '', raw: item.value };
+      }).sort((a, b) => a.title.localeCompare(b.title));
+
+      panel.innerHTML = `
+        <div class="franchise-sel-grid">
+          ${parsed.map(f => `
+            <div class="franchise-sel-card">
+              <div class="franchise-sel-img-wrap">
+                ${f.image
+                  ? `<img src="${f.image}" alt="${f.title}" onerror="this.style.display='none'" />`
+                  : `<i class='bx bx-film franchise-sel-placeholder'></i>`}
+              </div>
+              <div class="franchise-sel-info">
+                <span class="franchise-sel-title">${f.title}</span>
+                <p class="franchise-sel-desc">${f.description}</p>
+              </div>
+              <div class="franchise-sel-actions">
+                <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${f.id}, ${JSON.stringify(f.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
+                <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${f.id}, '${f.title.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    }
+    /* ─── Add Fields ──────────────────────────────────────────────────────── */
+    function renderAddFields() {
+      const box = document.getElementById('add-fields');
+      if (currentCat === 'cast') {
+        box.innerHTML = `
+          <div class="form-row">
+            <div class="form-group">
+              <label>Cast Member Name</label>
+              <input type="text" id="new-cast-name" placeholder="e.g. Tanjiro Kamado" />
+            </div>
+            <div class="form-group">
+              <label>Photo</label>
+              <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="text" id="new-cast-image" placeholder="/static/images/cast/name.jpg" style="flex:1;" />
+                <label class="btn-secondary" style="padding:.55rem .75rem;cursor:pointer;white-space:nowrap;font-size:.82rem;margin:0;" title="Upload photo">
+                  <i class='bx bx-upload'></i>
+                  <input type="file" id="new-cast-upload" accept="image/*" style="display:none;" onchange="handleAddCastUpload(this)" />
+                </label>
+              </div>
+            </div>
+          </div>`;
+      } else if (currentCat === 'watch_options') {
+        box.innerHTML = `
+          <div class="form-row">
+            <div class="form-group">
+              <label>Platform Name</label>
+              <input type="text" id="new-watch-name" placeholder="e.g. Netflix" />
+            </div>
+            <div class="form-group">
+              <label>Logo Image</label>
+              <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="text" id="new-watch-logo" placeholder="/static/images/watch/name.png" style="flex:1;" />
+                <label class="btn-secondary" style="padding:.55rem .75rem;cursor:pointer;white-space:nowrap;font-size:.82rem;margin:0;" title="Upload logo">
+                  <i class='bx bx-upload'></i>
+                  <input type="file" id="new-watch-upload" accept="image/*" style="display:none;" onchange="handleAddWatchUpload(this)" />
+                </label>
+              </div>
+            </div>
+          </div>`;
+      } else if (currentCat === 'franchises') {
+        box.innerHTML = `
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" id="new-franchise-title" placeholder="e.g. My Hero Academia" />
+            </div>
+            <div class="form-group">
+              <label>Banner Image</label>
+              <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="text" id="new-franchise-image" placeholder="/images/franchise/name.jpg" style="flex:1;" />
+                <label class="btn-secondary" style="padding:.55rem .75rem;cursor:pointer;white-space:nowrap;font-size:.82rem;margin:0;" title="Upload image">
+                  <i class='bx bx-upload'></i>
+                  <input type="file" id="new-franchise-upload" accept="image/*" style="display:none;" onchange="handleAddFranchiseUpload(this)" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:.5rem;">
+            <label>Description</label>
+            <textarea id="new-franchise-desc" rows="2" placeholder="Short description of the franchise…" style="width:100%;resize:vertical;"></textarea>
+          </div>`;
+      } else {
+        const labels = { rating: 'Rating value (e.g. PG-13)', tags: 'Tag / Genre name' };
+        box.innerHTML = `
+          <div class="form-group">
+            <label>${labels[currentCat] || 'New value'}</label>
+            <input type="text" id="new-simple-val" placeholder="Enter new option…" />
+          </div>`;
+      }
+    }
+
+    async function handleAddCastUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      showToast('Uploading…', 'success');
+      const path = await uploadImage(file, 'cast');
+      if (path) { document.getElementById('new-cast-image').value = path; showToast('Image uploaded!', 'success'); }
+      else showToast('Upload failed', 'error');
+    }
+    async function handleAddWatchUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      showToast('Uploading…', 'success');
+      const path = await uploadImage(file, 'watch');
+      if (path) { document.getElementById('new-watch-logo').value = path; showToast('Logo uploaded!', 'success'); }
+      else showToast('Upload failed', 'error');
+    }
+    async function handleAddFranchiseUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      showToast('Uploading…', 'success');
+      const path = await uploadImage(file, 'franchise');
+      if (path) { document.getElementById('new-franchise-image').value = path; showToast('Image uploaded!', 'success'); }
+      else showToast('Upload failed', 'error');
+    }
+
+    /* ─── Add Handler ───────────────────────────────────────────────────── */
+    document.getElementById('add-btn').addEventListener('click', async () => {
+      let value = '';
+      if (currentCat === 'cast') {
+        const name = (document.getElementById('new-cast-name')?.value || '').trim();
+        const image = (document.getElementById('new-cast-image')?.value || '').trim();
+        if (!name) { showToast('Cast name is required', 'error'); return; }
+        value = JSON.stringify({ name, image });
+      } else if (currentCat === 'watch_options') {
+        const name = (document.getElementById('new-watch-name')?.value || '').trim();
+        const logo = (document.getElementById('new-watch-logo')?.value || '').trim();
+        if (!name) { showToast('Platform name is required', 'error'); return; }
+        value = JSON.stringify({ name, logo });
+      } else if (currentCat === 'franchises') {
+        const title = (document.getElementById('new-franchise-title')?.value || '').trim();
+        const image = (document.getElementById('new-franchise-image')?.value || '').trim();
+        const description = (document.getElementById('new-franchise-desc')?.value || '').trim();
+        if (!title) { showToast('Title is required', 'error'); return; }
+        value = JSON.stringify({ title, image, description });
+      } else {
+        value = (document.getElementById('new-simple-val')?.value || '').trim();
+        if (!value) { showToast('Value cannot be empty', 'error'); return; }
+      }
+      const res = await adminFetch('/api/admin/selectors', {
+        method: 'POST', body: JSON.stringify({ category: currentCat, value })
+      });
+      if (res && res.ok) { showToast('Option added!', 'success'); await loadSelectors(); }
+      else { const d = res ? await res.json() : {}; showToast(d.error || 'Error adding option', 'error'); }
+    });
+
+    /* ─── Edit Modal ──────────────────────────────────────────────────────── */
+    function openEdit(id, valueOrRaw) {
+      editTargetId = id;
+      editCategory = currentCat;
+      const box = document.getElementById('edit-fields');
+
+      if (currentCat === 'cast') {
+        let m = {};
+        try { m = JSON.parse(valueOrRaw); } catch { }
+        box.innerHTML = `
+          <div class="form-row" style="margin-bottom:1rem;">
+            <div class="form-group">
+              <label>Name</label>
+              <input type="text" id="edit-cast-name" value="${(m.name || '').replace(/"/g, '&quot;')}" />
+            </div>
+            <div class="form-group">
+              <label>Photo URL</label>
+              <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="text" id="edit-cast-image" value="${(m.image || '').replace(/"/g, '&quot;')}" style="flex:1;" />
+                <label class="btn-secondary" style="padding:.55rem .75rem;cursor:pointer;white-space:nowrap;font-size:.82rem;margin:0;">
+                  <i class='bx bx-upload'></i>
+                  <input type="file" id="edit-cast-upload" accept="image/*" style="display:none;" onchange="handleEditCastUpload(this)" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:center;">
+            <img id="edit-cast-preview" src="${m.image || '/static/images/user.png'}"
+                 style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--border);"
+                 onerror="this.src='/static/images/user.png'" />
+          </div>`;
+      } else if (currentCat === 'watch_options') {
+        let m = {};
+        try { m = JSON.parse(valueOrRaw); } catch { m = { name: valueOrRaw, logo: '' }; }
+        box.innerHTML = `
+          <div class="form-row" style="margin-bottom:1rem;">
+            <div class="form-group">
+              <label>Platform Name</label>
+              <input type="text" id="edit-watch-name" value="${(m.name || '').replace(/"/g, '&quot;')}" />
+            </div>
+            <div class="form-group">
+              <label>Logo URL</label>
+              <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="text" id="edit-watch-logo" value="${(m.logo || '').replace(/"/g, '&quot;')}" style="flex:1;" />
+                <label class="btn-secondary" style="padding:.55rem .75rem;cursor:pointer;white-space:nowrap;font-size:.82rem;margin:0;">
+                  <i class='bx bx-upload'></i>
+                  <input type="file" id="edit-watch-upload" accept="image/*" style="display:none;" onchange="handleEditWatchUpload(this)" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:center;">
+            ${m.logo
+            ? `<img id="edit-watch-preview" src="${m.logo}" style="max-height:60px;object-fit:contain;border:1px solid var(--border);border-radius:6px;padding:4px;" />`
+            : `<span id="edit-watch-preview" style="color:var(--text-muted);font-size:.82rem;">No logo yet</span>`}
+          </div>`;
+      } else if (currentCat === 'franchises') {
+        let m = {};
+        try { m = JSON.parse(valueOrRaw); } catch { m = { title: valueOrRaw, image: '', description: '' }; }
+        box.innerHTML = `
+          <div class="form-row" style="margin-bottom:1rem;">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" id="edit-franchise-title" value="${(m.title || '').replace(/"/g, '&quot;')}" />
+            </div>
+            <div class="form-group">
+              <label>Banner Image</label>
+              <div style="display:flex;gap:.5rem;align-items:center;">
+                <input type="text" id="edit-franchise-image" value="${(m.image || '').replace(/"/g, '&quot;')}" style="flex:1;" />
+                <label class="btn-secondary" style="padding:.55rem .75rem;cursor:pointer;white-space:nowrap;font-size:.82rem;margin:0;">
+                  <i class='bx bx-upload'></i>
+                  <input type="file" id="edit-franchise-upload" accept="image/*" style="display:none;" onchange="handleEditFranchiseUpload(this)" />
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label>Description</label>
+            <textarea id="edit-franchise-desc" rows="3" style="width:100%;resize:vertical;">${(m.description || '').replace(/</g, '&lt;')}</textarea>
+          </div>
+          <div style="display:flex;justify-content:center;">
+            ${ m.image ? `<img id="edit-franchise-preview" src="${m.image}" style="max-height:80px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'" />` : '' }
+          </div>`;
+      } else {
+        box.innerHTML = `
+          <div class="form-group" style="margin-bottom:1rem;">
+            <label>Value</label>
+            <input type="text" id="edit-simple-val" value="${valueOrRaw.replace(/"/g, '&quot;')}" />
+          </div>`;
+      }
+      document.getElementById('edit-modal').style.display = 'flex';
+    }
+
+    async function handleEditCastUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      showToast('Uploading…', 'success');
+      const path = await uploadImage(file, 'cast');
+      if (path) {
+        document.getElementById('edit-cast-image').value = path;
+        document.getElementById('edit-cast-preview').src = path;
+        showToast('Image updated!', 'success');
+      } else showToast('Upload failed', 'error');
+    }
+    async function handleEditWatchUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      showToast('Uploading…', 'success');
+      const path = await uploadImage(file, 'watch');
+      if (path) {
+        document.getElementById('edit-watch-logo').value = path;
+        const prev = document.getElementById('edit-watch-preview');
+        if (prev && prev.tagName === 'IMG') { prev.src = path; }
+        else if (prev) { prev.outerHTML = `<img id="edit-watch-preview" src="${path}" style="max-height:60px;object-fit:contain;border:1px solid var(--border);border-radius:6px;padding:4px;" />`; }
+        showToast('Logo updated!', 'success');
+      } else showToast('Upload failed', 'error');
+    }
+    async function handleEditFranchiseUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      showToast('Uploading…', 'success');
+      const path = await uploadImage(file, 'franchise');
+      if (path) {
+        document.getElementById('edit-franchise-image').value = path;
+        const prev = document.getElementById('edit-franchise-preview');
+        if (prev) { prev.src = path; prev.style.display = ''; }
+        showToast('Image updated!', 'success');
+      } else showToast('Upload failed', 'error');
+    }
+
+    document.getElementById('saveEdit').addEventListener('click', async () => {
+      let value = '';
+      if (editCategory === 'cast') {
+        const name = (document.getElementById('edit-cast-name')?.value || '').trim();
+        const image = (document.getElementById('edit-cast-image')?.value || '').trim();
+        if (!name) { showToast('Name required', 'error'); return; }
+        value = JSON.stringify({ name, image });
+      } else if (editCategory === 'watch_options') {
+        const name = (document.getElementById('edit-watch-name')?.value || '').trim();
+        const logo = (document.getElementById('edit-watch-logo')?.value || '').trim();
+        if (!name) { showToast('Platform name required', 'error'); return; }
+        value = JSON.stringify({ name, logo });
+      } else if (editCategory === 'franchises') {
+        const title = (document.getElementById('edit-franchise-title')?.value || '').trim();
+        const image = (document.getElementById('edit-franchise-image')?.value || '').trim();
+        const description = (document.getElementById('edit-franchise-desc')?.value || '').trim();
+        if (!title) { showToast('Title required', 'error'); return; }
+        value = JSON.stringify({ title, image, description });
+      } else {
+        value = (document.getElementById('edit-simple-val')?.value || '').trim();
+        if (!value) { showToast('Value required', 'error'); return; }
+      }
+      const res = await adminFetch(`/api/admin/selectors/${editTargetId}`, {
+        method: 'PUT', body: JSON.stringify({ value })
+      });
+      if (res && res.ok) {
+        document.getElementById('edit-modal').style.display = 'none';
+        showToast('Updated!', 'success');
+        await loadSelectors();
+      } else {
+        const d = res ? await res.json() : {};
+        showToast(d.error || 'Error updating', 'error');
+      }
+    });
+
+    document.getElementById('editModalClose').addEventListener('click', () => { document.getElementById('edit-modal').style.display = 'none'; });
+    document.getElementById('cancelEdit').addEventListener('click', () => { document.getElementById('edit-modal').style.display = 'none'; });
+
+    /* ─── Delete ──────────────────────────────────────────────────────────── */
+    function askDelete(id, label) {
+      deletePendingId = id;
+      document.getElementById('del-label').textContent = label;
+      document.getElementById('confirm-modal').style.display = 'flex';
+    }
+    document.getElementById('cancelDel').addEventListener('click', () => { document.getElementById('confirm-modal').style.display = 'none'; });
+    document.getElementById('confirmDel').addEventListener('click', async () => {
+      if (!deletePendingId) return;
+      document.getElementById('confirm-modal').style.display = 'none';
+      const res = await adminFetch(`/api/admin/selectors/${deletePendingId}`, { method: 'DELETE' });
+      if (res && res.ok) { showToast('Option removed', 'success'); await loadSelectors(); }
+      else showToast('Error removing option', 'error');
+      deletePendingId = null;
+    });
+
+    /* ─── Category Tabs ───────────────────────────────────────────────────── */
+    document.querySelectorAll('.filter-tab[data-cat]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab[data-cat]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCat = btn.dataset.cat;
+        renderPanel();
+      });
+    });
+
+    loadSelectors();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,144 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Entertainment Hub</title>
+  <link rel="stylesheet" href="/static/css/auth.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    select.auth-input {
+      color: #fff;
+      appearance: none;
+      cursor: pointer;
+    }
+    select.auth-input option {
+      background: var(--bg-card);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="loader">
+      <div class="inner"></div>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div class="auth-page">
+      <div class="auth-box">
+        <form id="register-form">
+          <h2>Register</h2>
+
+          <div class="auth-input-group">
+            <input type="text" id="register-username" name="username" placeholder="Username" class="auth-input" required>
+            <i class='bx bxs-user'></i>
+          </div>
+
+          <div class="auth-input-group">
+            <input type="email" id="register-email" name="email" placeholder="Email" class="auth-input" required>
+            <i class='bx bxs-envelope'></i>
+          </div>
+
+          <div class="auth-input-group">
+            <input type="password" id="register-password" name="password" placeholder="Password" class="auth-input" required>
+            <i class='bx bxs-lock-alt'></i>
+          </div>
+
+          <div class="auth-input-group">
+            <select id="register-gender" name="gender" class="auth-input" required>
+              <option value="" disabled selected>Select Gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+            <i class='bx bx-male-female'></i>
+          </div>
+
+          <div class="auth-input-group">
+            <input type="number" id="register-age" name="age" min="0" placeholder="Age" class="auth-input" required>
+            <i class='bx bx-calendar'></i>
+          </div>
+
+          <button type="submit" class="auth-btn" id="registerBtn">Register</button>
+
+          <div class="auth-link">
+            <p>Already have an account? <a href="/login/login.html">Login here</a></p>
+            <a href="/index.html" class="back-link"
+              style="color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem; display: block;">
+              <i class='bx bx-arrow-back'></i> Back to Home
+            </a>
+          </div>
+        </form>
+        <div id="message" style="margin-top: 1rem; min-height: 1.5rem; font-size: 0.9rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        const preloader = document.getElementById("preloader");
+        preloader.style.opacity = '0';
+        setTimeout(() => { preloader.style.display = "none"; }, 500);
+      }, 800);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const registerForm = document.getElementById('register-form');
+
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('registerBtn');
+        const messageDiv = document.getElementById('message');
+        const username = document.getElementById('register-username').value.trim();
+        const email    = document.getElementById('register-email').value.trim();
+        const password = document.getElementById('register-password').value;
+        const gender   = document.getElementById('register-gender').value;
+        const age      = document.getElementById('register-age').value;
+
+        // Client-side password validation
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_-])[A-Za-z\d@$!%*?&_-]{8,}$/;
+        if (!passwordPattern.test(password)) {
+          messageDiv.textContent = 'Password needs 8+ chars, 1 uppercase, 1 number, 1 special char.';
+          messageDiv.style.color = '#ff4757';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Registering...';
+        messageDiv.textContent = '';
+
+        try {
+          const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password, gender, age: parseInt(age) })
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            messageDiv.textContent = 'Registration successful! Redirecting to login...';
+            messageDiv.style.color = 'var(--primary)';
+            setTimeout(() => { window.location.href = '/login/login.html'; }, 2000);
+          } else {
+            messageDiv.textContent = data.error || 'Registration failed';
+            messageDiv.style.color = '#ff4757';
+            btn.disabled = false;
+            btn.textContent = 'Register';
+          }
+        } catch (err) {
+          messageDiv.textContent = 'Connection error. Is the server running?';
+          messageDiv.style.color = '#ff4757';
+          btn.disabled = false;
+          btn.textContent = 'Register';
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

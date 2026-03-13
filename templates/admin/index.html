@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | Entertainment Hub</title>
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/admin/admin.css" />
+</head>
+<body class="auth-body">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <i class='bx bx-shield-quarter'></i>
+        <h1>Entertainment<span>Hub</span></h1>
+        <p class="auth-subtitle">Admin Portal</p>
+      </div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label><i class='bx bxs-user'></i> Username</label>
+          <input type="text" id="username" placeholder="Admin username" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label><i class='bx bxs-lock-alt'></i> Password</label>
+          <input type="password" id="password" placeholder="Admin password" required autocomplete="current-password" />
+        </div>
+        <div id="error-msg" class="error-msg" style="display:none;"></div>
+        <button type="submit" class="btn-primary" id="loginBtn">
+          <i class='bx bx-log-in'></i> Login to Admin Panel
+        </button>
+      </form>
+      <a href="/index.html" class="back-link"><i class='bx bx-arrow-back'></i> Back to Site</a>
+    </div>
+  </div>
+
+  <script>
+    // If already logged in, redirect to dashboard
+    fetch('/api/admin/check')
+      .then(r => r.ok ? window.location.href = '/admin/dashboard.html' : null)
+      .catch(() => {});
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const errDiv = document.getElementById('error-msg');
+      btn.disabled = true;
+      btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Logging in...";
+      errDiv.style.display = 'none';
+
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        window.location.href = '/admin/dashboard.html';
+      } else {
+        errDiv.textContent = data.error || 'Login failed';
+        errDiv.style.display = 'block';
+        btn.disabled = false;
+        btn.innerHTML = "<i class='bx bx-log-in'></i> Login to Admin Panel";
+      }
+    });
+  </script>
+</body>
+</html>
+

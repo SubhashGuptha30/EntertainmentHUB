@@ -1,0 +1,2956 @@
+{
+  "avengers-endgame": {
+    "title": "Avengers: Endgame",
+    "h-image": "/images/horizontal/avengers-endgame.jpg",
+    "v-image": "/images/vertical/avengers-endgame.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "SCI-FI",
+      "Action &centerdot Adventure",
+      "Sci-Fi"
+    ],
+    "description": "After the devastating events of Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.",
+    "cast": [
+      {
+        "name": "Robert Downey Jr.",
+        "role": "Tony Stark / Iron Man",
+        "image": "/images/cast/rdj.jpg"
+      },
+      {
+        "name": "Chris Evans",
+        "role": "Steve Rogers / Captain America",
+        "image": "/images/cast/chris-evans.jpg"
+      },
+      {
+        "name": "Scarlett Johansson",
+        "role": "Natasha Romanoff / Black Widow",
+        "image": "/images/cast/scarlett-johansson.jpg"
+      },
+      {
+        "name": "Chris Hemsworth",
+        "role": "Thor",
+        "image": "/images/cast/chris-hemsworth.jpg"
+      },
+      {
+        "name": "Mark Ruffalo",
+        "role": "Bruce Banner / Hulk",
+        "image": "/images/cast/mark-ruffalo.jpg"
+      },
+      {
+        "name": "Jeremy Renner",
+        "role": "Clint Barton / Hawkeye",
+        "image": "/images/cast/jeremy-renner.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/TcMBFSGVi1c",
+    "genreDisplay": "Action &centerdot Adventure &centerdot; Drama &centerdot; Sci-Fi",
+    "sections": [
+      "head"
+    ]
+  },
+  "avengers-infinity-war": {
+    "title": "Avengers: Endgame",
+    "h-image": "",
+    "v-image": "/images/vertical/avengers-infinity-war.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "SCI-FI",
+      "Action &centerdot Adventure",
+      "Sci-Fi"
+    ],
+    "description": "The Avengers and their allies must be willing to sacrifice all in an attempt to defeat the powerful Thanos before his blitz of devastation and ruin puts an end to the universe.",
+    "cast": [
+      {
+        "name": "Robert Downey Jr.",
+        "role": "Tony Stark / Iron Man",
+        "image": "/images/cast/rdj.jpg"
+      },
+      {
+        "name": "Chris Hemsworth",
+        "role": "Thor",
+        "image": "/images/cast/chris-hemsworth.jpg"
+      },
+      {
+        "name": "Mark Ruffalo",
+        "role": "Bruce Banner / Hulk",
+        "image": "/images/cast/mark-ruffalo.jpg"
+      },
+      {
+        "name": "Chris Evans",
+        "role": "Steve Rogers / Captain America",
+        "image": "/images/cast/chris-evans.jpg"
+      },
+      {
+        "name": "Benedict Cumberbatch",
+        "role": "Doctor Strange",
+        "image": "/images/cast/benedict-cumberbatch.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/6ZfuNTqbHE8",
+    "genreDisplay": "Action &centerdot Adventure &centerdot; Sci-Fi",
+    "sections": [
+      "popular"
+    ]
+  },
+  "baahubali-2-the-conclusion": {
+    "title": "Avengers: Endgame",
+    "h-image": "",
+    "v-image": "/images/vertical/baahubali-2-the-conclusion.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Fantasy",
+      "Drama"
+    ],
+    "description": "This film is the follow-up to Baahubali: The Beginning, serving as both a sequel and a prequel. The film is set in medieval India and follows the sibling rivalry between Amarendra Baahubali and Bhallaladeva; the latter conspires against the former and has him killed by Kattappa.",
+    "cast": [
+      {
+        "name": "Anushka Shetty",
+        "role": "Devasena",
+        "image": "/images/cast/anushka-shetty.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot; Drama",
+    "sections": [
+      "popular"
+    ]
+  },
+  "brahmastra-part-one-shiva": {
+    "title": "Brahmastra-part-one-shiva",
+    "h-image": "",
+    "v-image": "/images/vertical/brahmastra-part-one-shiva.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Fantasy",
+      "Adventure"
+    ],
+    "description": "Mukerji stated that the core idea was inspired by stories of Hindu mythology he heard in his childhood from his grandfather. Kapoor described the film as an action-adventure about a DJ named Shiva and his journey with his ladylove Isha, and finally something that leads him to his destiny which is the Brahmastra.",
+    "cast": [
+      {
+        "name": "Alia Bhatt",
+        "role": "Isha",
+        "image": "/images/cast/alia-bhatt.jpg"
+      },
+      {
+        "name": "Amitabh Bachchan",
+        "role": "Guruji",
+        "image": "/images/cast/amitabh-bachchan.jpg"
+      },
+      {
+        "name": "Mouni Roy",
+        "role": "Junoon",
+        "image": "/images/cast/mouni-roy.jpg"
+      },
+      {
+        "name": "Nagarjuna Akkineni",
+        "role": "Anish Shetty",
+        "image": "/images/cast/nagarjuna.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Adventure &centerdot; Action &centerdot; Fantasy",
+    "sections": [
+      "top-rated"
+    ]
+  },
+  "deadpool-and-wolverine": {
+    "title": "Deadpool-and-wolverine",
+    "h-image": "",
+    "v-image": "/images/vertical/deadpool-and-wolverine.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Comedy",
+      "Sci-fi"
+    ],
+    "description": "Wolverine is recovering from his injuries when he crosses paths with the loudmouth, Deadpool. They team up to defeat a common enemy.",
+    "cast": [
+      {
+        "name": "Hugh Jackman",
+        "role": "Logan / Wolverine",
+        "image": "/images/cast/hugh-jackman.jpg"
+      },
+      {
+        "name": "Emma Corrin",
+        "role": "Cassandra Nova",
+        "image": "/images/cast/emma-corrin.jpg"
+      },
+      {
+        "name": "Morena Baccarin",
+        "role": "Vanessa",
+        "image": "/images/cast/morena-baccarin.jpg"
+      },
+      {
+        "name": "Matthew Macfadyen",
+        "role": "Mr. Paradox",
+        "image": "/images/cast/matthew-macfadyen.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/73_1biulkYk",
+    "genreDisplay": "Action &centerdot; Comedy &centerdot; Sci-fi",
+    "sections": [
+      "coming-soon"
+    ]
+  },
+  "dune-part-two": {
+    "title": "Dune-Part-Two",
+    "h-image": "",
+    "v-image": "/images/vertical/dune-part-two.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Adventure",
+      "SCI-FI"
+    ],
+    "description": "Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family.",
+    "cast": [
+      {
+        "name": "Austin Butler",
+        "role": "Feyd-Rautha Harkonnen",
+        "image": "/images/cast/austin-butler.jpg"
+      },
+      {
+        "name": "Florence Pugh",
+        "role": "Princess Irulan",
+        "image": "/images/cast/florence-pugh.jpg"
+      },
+      {
+        "name": "Josh Brolin",
+        "role": "Gurney Halleck",
+        "image": "/images/cast/josh-brolin.jpg"
+      },
+      {
+        "name": "Javier Bardem",
+        "role": "Stilgar",
+        "image": "/images/cast/javier-bardem.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/Way9Dexny3w",
+    "genreDisplay": "Adventure &centerdot; Sci-Fi",
+    "sections": [
+      "new-releases",
+      "top-rated"
+    ]
+  },
+  "extraction-2": {
+    "title": "Extraction",
+    "h-image": "",
+    "v-image": "/images/vertical/extraction-2.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Thriller",
+      "Action &centerdot Crime"
+    ],
+    "description": "A hardened gun-for-hire's latest mission becomes a soul-searching race to survive when he's sent into Bangladesh to rescue a drug lord's kidnapped son. Watch all you want. Chris Hemsworth stars in this nonstop action-thriller with Rudhraksh Jaiswal, Randeep Hooda and Golshifteh Farahani.",
+    "cast": [
+      {
+        "name": "Chris Hemsworth",
+        "role": "Tyler Rake",
+        "image": "/images/cast/chris-hemsworth.jpg"
+      },
+      {
+        "name": "Golshifteh Farahani",
+        "role": "Nik Khan",
+        "image": "/images/cast/golshifteh-farahani.jpg"
+      },
+      {
+        "name": "Adam Bessa",
+        "role": "Yaz",
+        "image": "/images/cast/adam-bessa.jpg"
+      },
+      {
+        "name": "Daniel Bernhardt",
+        "role": "Zurab",
+        "image": "/images/cast/daniel-bernhardt.jpg"
+      },
+      {
+        "name": "Idris Elba",
+        "role": "Alcott",
+        "image": "/images/cast/idris-elba.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot Crime &centerdot; Thriller",
+    "sections": [
+      "most-watched"
+    ]
+  },
+  "fifty-shades-of-gray": {
+    "title": "Fifty-Shades-Of-GFiftyray",
+    "h-image": "",
+    "v-image": "/images/vertical/fifty-shades-of-gray.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Erotic",
+      "Romance",
+      "Thriller",
+      "Drama"
+    ],
+    "description": "Fifty Shades of Grey is a 2011 erotic romance novel by British author E. L. James. It became the first installment in the Fifty Shades novel series that follows the deepening relationship between a college graduate, Anastasia Steele, and a young business magnate, Christian Grey.",
+    "cast": [
+      {
+        "name": "Dakota Johnson",
+        "role": "Anastasia Steele",
+        "image": "/images/cast/dakota-johnson.jpg"
+      },
+      {
+        "name": "Jamie Dornan",
+        "role": "Christian Grey",
+        "image": "/images/cast/jamie-dornan.jpg"
+      },
+      {
+        "name": "Jennifer Ehle",
+        "role": "Carla",
+        "image": "/images/cast/jennifer-ehle.jpg"
+      },
+      {
+        "name": "Eloise Mumford",
+        "role": "Kate Kavanagh",
+        "image": "/images/cast/eloise-mumford.jpg"
+      },
+      {
+        "name": "Marcia Gay Harden",
+        "role": "Grace Grey",
+        "image": "/images/cast/marcia-gay-harden.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Romance &centerdot; Thriller &centerdot; Drama",
+    "sections": [
+      "most-watched"
+    ]
+  },
+  "furiosa-a-mad-max-saga": {
+    "title": "Furiosa-a-mad-max-saga",
+    "h-image": "",
+    "v-image": "/images/vertical/furiosa-a-mad-max-saga.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Sci-fi"
+    ],
+    "description": "Furiosa: A Mad Max Saga premiered at the 77th Cannes Film Festival on 15 May 2024. It was released in theatres in Australia by Warner Bros. on 23 May 2024, and in the United States the following day. The film received positive reviews from critics and grossed $116 million against its $168 million budget.",
+    "cast": [
+      {
+        "name": "Anya Taylor-Joy",
+        "role": "Furiosa",
+        "image": "/images/cast/anya-taylor-joy.jpg"
+      },
+      {
+        "name": "Chris Hemsworth",
+        "role": "Dementus",
+        "image": "/images/cast/chris-hemsworth.jpg"
+      },
+      {
+        "name": "Alyla Browne",
+        "role": "Young Furiosa",
+        "image": "/images/cast/alyla-browne.jpg"
+      },
+      {
+        "name": "Lachy Hulme",
+        "role": "Immortan Joe",
+        "image": "/images/cast/lachy-hulme.jpg"
+      },
+      {
+        "name": "Nathan Jones",
+        "role": "Rictus Erectus",
+        "image": "/images/cast/nathan-jones.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Adventure &centerdot; Action &centerdot; Sci-fi",
+    "sections": [
+      "coming-soon"
+    ]
+  },
+  "gangs-of-wasseypur": {
+    "title": "Gangs-of-Wasseypur",
+    "h-image": "",
+    "v-image": "/images/vertical/gangs-of-wasseypur.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Series",
+      "Action",
+      "Crime",
+      "Drama",
+      "Comedy &CenterDot; Thriller"
+    ],
+    "description": "Gangs of Wasseypur is a 2012 Indian Hindi-language two-part epic black comedy crime film produced and directed by Anurag Kashyap, and written by Kashyap and Zeishan Quadri.",
+    "cast": [
+      {
+        "name": "Manoj Bajpayee",
+        "role": "Sardar Khan",
+        "image": "/images/cast/manoj-bajpayee.jpg"
+      },
+      {
+        "name": "Nawazuddin Siddiqui",
+        "role": "Faizal Khan",
+        "image": "/images/cast/nawazuddin.jpg"
+      },
+      {
+        "name": "Huma Qureshi",
+        "role": "Mohsina",
+        "image": "/images/cast/huma-qureshi.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot; Crime &centerdot; Drama &centerdot; Comedy &CenterDot; Thriller",
+    "sections": [
+      "top-rated"
+    ]
+  },
+  "godzilla-x-kong-the-new-empire": {
+    "title": "Godzilla-x-Kong-the-New-Empire",
+    "h-image": "/images/horizontal/godzilla-x-kong-the-new-empire.jpg",
+    "v-image": "/images/vertical/godzilla-x-kong-the-new-empire.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Thriller",
+      "SCI-FI",
+      "Sci-Fi"
+    ],
+    "description": "The new installment in the Monsterverse puts the mighty Kong and the fearsome Godzilla against a colossal deadly threat hidden within our world that threatens the existence of their species and our very own, as well as diving deep into the mysteries of Skull Island and beyond.",
+    "cast": [
+      {
+        "name": "Brian Tyree Henry",
+        "role": "Bernie Hayes",
+        "image": "/images/cast/brian-tyree-henry.jpg"
+      },
+      {
+        "name": "Dan Stevens",
+        "role": "Trapper",
+        "image": "/images/cast/dan-stevens.jpg"
+      },
+      {
+        "name": "Kaylee Hottle",
+        "role": "Jia",
+        "image": "/images/cast/kaylee-hottle.jpg"
+      },
+      {
+        "name": "Fala Chen",
+        "role": "Iwi Queen",
+        "image": "/images/cast/fala-chen.jpg"
+      },
+      {
+        "name": "Alex Ferns",
+        "role": "Hampton",
+        "image": "/images/cast/alex-ferns.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Thriller &centerdot; Sci-Fi",
+    "sections": [
+      "head"
+    ]
+  },
+  "hanu-man": {
+    "title": "Hanu-Man",
+    "h-image": "",
+    "v-image": "/images/vertical/hanu-man.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Action &centerdot Adventure",
+      "Fantasy"
+    ],
+    "description": "Hanu-Man (also marketed as HanuMan) is a 2024 Indian Telugu-language superhero film written and directed by Prasanth Varma and produced by Primeshow Entertainment. It stars Teja Sajja in the title role, alongside Amritha Aiyer, Varalaxmi Sarathkumar, Samuthirakani, Vinay Rai, Vennela Kishore and Raj Deepak Shetty.",
+    "cast": [
+      {
+        "name": "Amritha Aiyer",
+        "role": "Meenakshi",
+        "image": "/images/cast/amritha-aiyer.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot Adventure &centerdot; Fantasy",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "kantara": {
+    "title": "Kantara",
+    "h-image": "",
+    "v-image": "/images/vertical/kantara.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Thriller",
+      "Drama",
+      "Adventure"
+    ],
+    "description": "Mystical Forest: is a 2022 Indian Kannada-language action thriller film written and directed by Rishab Shetty, and produced by Vijay Kiragandur, under Hombale Films. The film stars Rishab Shetty in a dual role with Kambala champion who is at loggerheads with an upright forest officer, Murali (played by Kishore).",
+    "cast": [
+      {
+        "name": "Kishore",
+        "role": "Murali",
+        "image": "/images/cast/kishore.jpg"
+      },
+      {
+        "name": "Achyuth Kumar",
+        "role": "Devendra Suttooru",
+        "image": "/images/cast/achyuth-kumar.jpg"
+      },
+      {
+        "name": "Manasi Sudhir",
+        "role": "Kamala",
+        "image": "/images/cast/manasi-sudhir.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot; Drama &centerdot; Adventure &centerdot; Thriller",
+    "sections": [
+      "most-watched"
+    ]
+  },
+  "kingdom-of-the-planet-of-the-apes": {
+    "title": "Kingdom-of-the-Planet-of-the-Apes",
+    "h-image": "",
+    "v-image": "/images/vertical/kingdom-of-the-planet-of-the-apes.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "SCI-FI",
+      "Sci-fi",
+      "Adventure"
+    ],
+    "description": "Kingdom of the Planet of the Apes is a 2024 American science fiction action film directed by Wes Ball and written by Josh Friedman. A standalone sequel to War for the Planet of the Apes (2017), it is the fourth installment in the Planet of the Apes reboot franchise and the tenth film overall.",
+    "cast": [
+      {
+        "name": "Freya Allan",
+        "role": "Mae",
+        "image": "/images/cast/freya-allan.jpg"
+      },
+      {
+        "name": "Kevin Durand",
+        "role": "Proximus Caesar",
+        "image": "/images/cast/kevin-durand.jpg"
+      },
+      {
+        "name": "Dichen Lachman",
+        "role": "Soona",
+        "image": "/images/cast/dichen-lachman.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot; Sci-fi &centerdot; Adventure",
+    "sections": [
+      "coming-soon"
+    ]
+  },
+  "kung-fu-panda-4": {
+    "title": "Kung-Fu-Panda-4",
+    "h-image": "",
+    "v-image": "/images/vertical/kung-fu-panda-4.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Comedy",
+      "Adventure",
+      "Action",
+      "Drama Animation"
+    ],
+    "description": "About. This spring, for the first time in almost a decade, comedy icon Jack Black returns to his role as Po, the world's most unlikely kung fu master, with a hilarious, butt-kicking new chapter in DreamWorks Animation's beloved action-comedy franchise: Kung Fu Panda 4.",
+    "cast": [
+      {
+        "name": "Jack Black",
+        "role": "Po (voice)",
+        "image": "/images/cast/jack-black.jpg"
+      },
+      {
+        "name": "Awkwafina",
+        "role": "Zhen (voice)",
+        "image": "/images/cast/awkwafina.jpg"
+      },
+      {
+        "name": "Dustin Hoffman",
+        "role": "Shifu (voice)",
+        "image": "/images/cast/dustin-hoffman.jpg"
+      },
+      {
+        "name": "Bryan Cranston",
+        "role": "Li Shan (voice)",
+        "image": "/images/cast/bryan-cranston.jpg"
+      },
+      {
+        "name": "James Hong",
+        "role": "Mr. Ping (voice)",
+        "image": "/images/cast/james-hong.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot; Drama Animation &centerdot; Comedy",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "madame-web": {
+    "title": "Madame-Web",
+    "h-image": "",
+    "v-image": "/images/vertical/madame-web.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "SCI-FI",
+      "Adventure",
+      "Sci-fi"
+    ],
+    "description": "Madame Web (Cassandra Webb) is a character appearing in American comic books published by Marvel Comics. She first appeared in The Amazing Spider-Man No. 210, published November 1980, and was created by writer Denny O'Neil and artist John Romita Jr.",
+    "cast": [
+      {
+        "name": "Dakota Johnson",
+        "role": "Cassandra Webb / Madame Web",
+        "image": "/images/cast/dakota-johnson.jpg"
+      },
+      {
+        "name": "Isabela Merced",
+        "role": "Anya Corazon",
+        "image": "/images/cast/isabela-merced.jpg"
+      },
+      {
+        "name": "Celeste O'Connor",
+        "role": "Mattie Franklin",
+        "image": "/images/cast/celeste-oconnor.jpg"
+      },
+      {
+        "name": "Emma Roberts",
+        "role": "Mary Parker",
+        "image": "/images/cast/emma-roberts.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Adventure &centerdot; Action &centerdot; Sci-fi",
+    "sections": [
+      "coming-soon"
+    ]
+  },
+  "pushpa-2": {
+    "title": "Pushpa-2: The Rule",
+    "h-image": "",
+    "v-image": "/images/vertical/pushpa-2.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Thriller",
+      "Drama",
+      "Crime"
+    ],
+    "description": "It is the second installment in the Pushpa film series and the sequel to Pushpa: The Rise. 10% of the film's footage was initially shot back-to-back with the original film. However, Sukumar decided to alter the story, which led to the film's principal photography commencing in October 2022.",
+    "cast": [
+      {
+        "name": "Allu Arjun",
+        "role": "Pushpa Raj",
+        "image": "/images/cast/allu-arjun.jpg"
+      },
+      {
+        "name": "Fahadh Faasil",
+        "role": "SP Bhanwar Singh Shekhawat",
+        "image": "/images/cast/fahadh-faasil.jpg"
+      },
+      {
+        "name": "Jagapathi Babu",
+        "role": "Sidappa Naidu",
+        "image": "/images/cast/jagapathi-babu.jpg"
+      },
+      {
+        "name": "Anasuya Bharadwaj",
+        "role": "Dakshayani",
+        "image": "/images/cast/anasuya.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Drama &centerdot; Action &centerdot; Crime",
+    "sections": [
+      "coming-soon"
+    ]
+  },
+  "rrr": {
+    "title": "RRR",
+    "h-image": "",
+    "v-image": "/images/vertical/rrr.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "War",
+      "Adventure",
+      "Drama"
+    ],
+    "description": "RRR is an entirely fictitious story incorporating the lives of two real-life Indian revolutionaries, namely Alluri Sitarama Raju and Komaram Bheem, who fought against the British Raj and the Nizam of Hyderabad respectively. Charan plays Rama Raju while Rama Rao plays Komaram Bheem.",
+    "cast": [
+      {
+        "name": "N. T. Rama Rao Jr.",
+        "role": "Komaram Bheem",
+        "image": "/images/cast/ntr.jpg"
+      },
+      {
+        "name": "Alia Bhatt",
+        "role": "Sita",
+        "image": "/images/cast/alia-bhatt.jpg"
+      },
+      {
+        "name": "Ajay Devgn",
+        "role": "Ram",
+        "image": "/images/cast/ajay-devgn.jpg"
+      },
+      {
+        "name": "Olivia Morris",
+        "role": "Jennifer",
+        "image": "/images/cast/olivia-morris.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Drama",
+    "sections": [
+      "popular"
+    ]
+  },
+  "salaar-part-1-ceasefire": {
+    "title": "Salaar-Part-1-Ceasefire",
+    "h-image": "",
+    "v-image": "/images/vertical/salaar-part-1-ceasefire.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Thriller",
+      "Drama",
+      "Crime"
+    ],
+    "description": "A gang leader tries to keep a promise made to his dying friend and takes on the other criminal gangs.",
+    "cast": [
+      {
+        "name": "Jagapathi Babu",
+        "role": "Raja Maanaar",
+        "image": "/images/cast/jagapathi-babu.jpg"
+      },
+      {
+        "name": "Bobby Simha",
+        "role": "Rojabaai",
+        "image": "/images/cast/bobby-simha.jpg"
+      },
+      {
+        "name": "Easwari Rao",
+        "role": "Jayathi",
+        "image": "/images/cast/easwari-rao.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/H71_is5c_f",
+    "genreDisplay": "Action &centerdot; Drama &centerdot; Crime",
+    "sections": [
+      "popular"
+    ]
+  },
+  "shogun": {
+    "title": "Shogun",
+    "h-image": "",
+    "v-image": "/images/vertical/shogun.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Drama"
+    ],
+    "description": "Shogun is the best no-code visual page builder to pair with native platforms. Achieve your vision fast with generative AI, multi-store content management, and optimization features.",
+    "cast": [
+      {
+        "name": "Hiroyuki Sanada",
+        "role": "Lord Yoshii Toranaga",
+        "image": "/images/cast/hiroyuki-sanada.jpg"
+      },
+      {
+        "name": "Cosmo Jarvis",
+        "role": "John Blackthorne",
+        "image": "/images/cast/cosmo-jarvis.jpg"
+      },
+      {
+        "name": "Anna Sawai",
+        "role": "Toda Mariko",
+        "image": "/images/cast/anna-sawai.jpg"
+      },
+      {
+        "name": "Fumi Nikaido",
+        "role": "Ochiba-no-Kata",
+        "image": "/images/cast/fumi-nikaido.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Drama",
+    "sections": [
+      "top-rated"
+    ]
+  },
+  "spiderman-no-way-home": {
+    "title": "Spiderman-No-Way-Home",
+    "h-image": "",
+    "v-image": "/images/vertical/spiderman-no-way-home.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Fantasy",
+      "Action &centerdot Adventure",
+      "Fantasy &CenterDot; Sci-fi"
+    ],
+    "description": "For the first time in the cinematic history of Spider-Man, our friendly neighborhood hero's identity is revealed, bringing his Super Hero responsibilities into conflict with his normal life and putting those he cares about most at risk.",
+    "cast": [
+      {
+        "name": "Benedict Cumberbatch",
+        "role": "Doctor Strange",
+        "image": "/images/cast/benedict-cumberbatch.jpg"
+      },
+      {
+        "name": "Andrew Garfield",
+        "role": "Peter Parker / Spider-Man",
+        "image": "/images/cast/andrew-garfield.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Action &centerdot Adventure &centerdot; Fantasy &CenterDot; Sci-fi",
+    "sections": [
+      "coming-soon"
+    ]
+  },
+  "the-goat-life": {
+    "title": "The-Goat-Life",
+    "h-image": "",
+    "v-image": "/images/vertical/the-goat-life.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Adventure",
+      "Drama"
+    ],
+    "description": "It is an adaptation of the 2008 best-selling Malayalam novel Aadujeevitham by Benyamin, which is based on the real-life story of Najeeb, a Malayali immigrant laborer, one among thousands of Indians who were forced into slavery in Saudi Arabia as goatherds on secluded farms in the deserts by the native Arabs.",
+    "cast": [
+      {
+        "name": "Amala Paul",
+        "role": "Sainu",
+        "image": "/images/cast/amala-paul.jpg"
+      },
+      {
+        "name": "Jimmy Jean-Louis",
+        "role": "Hakeem",
+        "image": "/images/cast/jimmy-jean-louis.jpg"
+      },
+      {
+        "name": "K.R. Gokul",
+        "role": "Ibrahim Khadiri",
+        "image": "/images/cast/kr-gokul.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Adventure &centerdot; Drama",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "the-godfather": {
+    "title": "The-Godfather",
+    "h-image": "",
+    "v-image": "/images/vertical/the-godfather.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Crime",
+      "Drama"
+    ],
+    "description": "The Godfather is set in the 1940s and takes place entirely within the world of the Corleones, a fictional New York Mafia family. It opens inside the dark office of the family patriarch, Don Vito Corleone (also known as the Godfather and played by Brando), on the wedding day of his daughter, Connie (Talia Shire).",
+    "cast": [
+      {
+        "name": "Marlon Brando",
+        "role": "Don Vito Corleone",
+        "image": "/images/cast/marlon-brando.jpg"
+      },
+      {
+        "name": "Al Pacino",
+        "role": "Michael Corleone",
+        "image": "/images/cast/al-pacino.jpg"
+      },
+      {
+        "name": "James Caan",
+        "role": "Sonny Corleone",
+        "image": "/images/cast/james-caan.jpg"
+      },
+      {
+        "name": "Diane Keaton",
+        "role": "Kay Adams",
+        "image": "/images/cast/diane-keaton.jpg"
+      },
+      {
+        "name": "John Cazale",
+        "role": "Fredo Corleone",
+        "image": "/images/cast/john-cazale.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Drama &centerdot; Crime",
+    "sections": [
+      "top-rated"
+    ]
+  },
+  "the-shawshank-redemption": {
+    "title": "The-Shawshank-Redemption",
+    "h-image": "",
+    "v-image": "/images/vertical/the-shawshank-redemption.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Thriller",
+      "Crime",
+      "Drama"
+    ],
+    "description": "In 1947, Andy Dufresne is convicted of murdering his wife and her lover and is sentenced to two consecutive life terms in prison. Andy is transferred to the Shawshank State Penitentiary, where he is introduced to Samuel L. Norton, warden of the prison, alongside with Byron Hadley, chief captain of the guards.",
+    "cast": [
+      {
+        "name": "Morgan Freeman",
+        "role": "Ellis 'Red' Redding",
+        "image": "/images/cast/morgan-freeman.jpg"
+      },
+      {
+        "name": "Bob Gunton",
+        "role": "Warden Samuel Norton",
+        "image": "/images/cast/bob-gunton.jpg"
+      },
+      {
+        "name": "Clancy Brown",
+        "role": "Captain Byron Hadley",
+        "image": "/images/cast/clancy-brown.jpg"
+      },
+      {
+        "name": "Gil Bellows",
+        "role": "Tommy Williams",
+        "image": "/images/cast/gil-bellows.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Drama",
+    "sections": [
+      "top-rated"
+    ]
+  },
+  "tillu-square": {
+    "title": "Tillu-Square",
+    "h-image": "",
+    "v-image": "/images/vertical/tillu-square.jpg",
+    "rating": 4.5,
+    "Status": "Released",
+    "tags": [
+      "Comedy",
+      "Romance",
+      "Drama",
+      "Crime"
+    ],
+    "description": "Tillu Square (stylised as (TILLU)²) is a 2024 Indian Telugu-language romantic crime comedy film directed by Mallik Ram and produced by Suryadevara Naga Vamsi under the banner of Sithara Entertainments and Fortune Four Cinemas. A sequel to the 2022 film DJ Tillu, Siddhu Jonnalagadda reprises his role from the previous film, while Anupama Parameswaran plays the female lead",
+    "cast": [
+      {
+        "name": "Anupama Parameswaran",
+        "role": "Lily",
+        "image": "/images/cast/anupama-parameswaran.jpg"
+      },
+      {
+        "name": "Murali Sharma",
+        "role": "Reddy Garu",
+        "image": "/images/cast/murali-sharma.jpg"
+      },
+      {
+        "name": "Muralidhar Goud",
+        "role": "Pandu",
+        "image": "/images/cast/muralidhar-goud.jpg"
+      },
+      {
+        "name": "Brahmaji",
+        "role": "Station CI",
+        "image": "/images/cast/brahmaji.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar"
+    ],
+    "videoUrl": "",
+    "genreDisplay": "Comedy &centerdot; Drama &centerdot; Crime",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "zack-snyder-justice-league": {
+    "title": "Zack Snyder Justice League",
+    "h-image": "/images/horizontal/zack-snyder-justice-league.jpg",
+    "v-image": "/images/vertical/zack-snyder-justice-league.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Fantasy",
+      "Sci-fi"
+    ],
+    "description": "Determined to ensure Superman's ultimate sacrifice was not in vain, Bruce Wayne aligns forces with Diana Prince with plans to recruit a team of metahumans to protect the world from an approaching threat of catastrophic proportions.",
+    "cast": [
+      {
+        "name": "Ben Affleck",
+        "role": "Bruce Wayne / Batman",
+        "image": "/images/cast/ben-affleck.jpg"
+      },
+      {
+        "name": "Henry Cavill",
+        "role": "Clark Kent / Superman",
+        "image": "/images/cast/henry-cavill.jpg"
+      },
+      {
+        "name": "Gal Gadot",
+        "role": "Diana Prince / Wonder Woman",
+        "image": "/images/cast/gal-gadot.jpg"
+      },
+      {
+        "name": "Jason Momoa",
+        "role": "Arthur Curry / Aquaman",
+        "image": "/images/cast/jason-momoa.jpg"
+      },
+      {
+        "name": "Ezra Miller",
+        "role": "Barry Allen / The Flash",
+        "image": "/images/cast/ezra-miller.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/vM-Bja2Gy04",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Fantasy &centerdot; Sci-fi",
+    "sections": [
+      "head"
+    ]
+  },
+  "vikram-vedha": {
+    "title": "Vikram Vedha",
+    "description": "A tough police officer sets out to track down and kill an equally tough gangster.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Drama",
+      "Crime"
+    ],
+    "cast": [
+      {
+        "name": "Hrithik Roshan",
+        "role": "Vedha Betal",
+        "image": "/images/cast/hrithik-roshan.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/IddMrfB9y1w",
+    "v-image": "/images/vertical/cs-10.jpg",
+    "genreDisplay": "Action &centerdot; Drama &centerdot; Crime",
+    "sections": [
+      "popular",
+      "most-watched",
+      "top-rated",
+      "coming-soon"
+    ]
+  },
+  "gangubhai-khathiawadi": {
+    "title": "Gangubhai Kathiawadi",
+    "description": "A young woman, sold into prostitution by her suitor, takes control of the world she was forced into and becomes a matriarch.",
+    "rating": "4.5",
+    "tags": [
+      "Biography",
+      "Crime",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Alia Bhatt",
+        "role": "Gangubai Kathiawadi",
+        "image": "/images/cast/alia-bhatt.jpg"
+      },
+      {
+        "name": "Ajay Devgn",
+        "role": "Rahim Lala",
+        "image": "/images/cast/ajay-devgn.jpg"
+      },
+      {
+        "name": "Jim Sarbh",
+        "role": "Afshan Raziyabai",
+        "image": "/images/cast/jim-sarbh.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/N1ZWduV_jfw",
+    "v-image": "/images/vertical/cs-11.jpg",
+    "genreDisplay": "Biography &centerdot; Crime &centerdot; Drama",
+    "sections": [
+      "popular",
+      "most-watched",
+      "top-rated",
+      "coming-soon"
+    ]
+  },
+  "animal": {
+    "title": "Animal",
+    "description": "A son undergoes a remarkable transformation as the bond with his father begins to fracture, and he becomes consumed by a quest for vengeance.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Crime",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Anil Kapoor",
+        "role": "Balbir Singh",
+        "image": "/images/cast/anil-kapoor.jpg"
+      },
+      {
+        "name": "Bobby Deol",
+        "role": "Abrar Haque",
+        "image": "/images/cast/bobby-deol.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/Dydmpfo68DA",
+    "v-image": "/images/vertical/cs-13.jpg",
+    "genreDisplay": "Action &centerdot; Crime &centerdot; Drama",
+    "sections": [
+      "popular",
+      "most-watched",
+      "top-rated",
+      "coming-soon"
+    ]
+  },
+  "leo": {
+    "title": "Leo",
+    "description": "Parthiban is a mild-mannered cafe owner in Kashmir, who fends off a gang of murderous thugs and gains attention from a drug cartel claiming he was once a part of them.",
+    "rating": "4.5",
+    "tags": [
+      "Biography",
+      "History",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Arjun Sarja",
+        "role": "Harold Das",
+        "image": "/images/cast/arjun-sarja.jpg"
+      },
+      {
+        "name": "Gautham Vasudev Menon",
+        "role": "Das (Narrator)",
+        "image": "/images/cast/gautham-menon.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/Po3jStA673E",
+    "v-image": "/images/vertical/leo.jpg",
+    "genreDisplay": "Biography &centerdot; History &centerdot; Drama",
+    "sections": [
+      "popular",
+      "most-watched",
+      "top-rated",
+      "coming-soon"
+    ]
+  },
+  "karthikeya-2": {
+    "title": "Karthikeya 2",
+    "description": "A sequel to the mystic thriller Karthikeya, which deals with the personal problems of Karthikeya and how his pursuit of the truth leads him to find out the power of the ancient Indian belief system and Tatva of Lord Sri Krishna.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "cast": [
+      {
+        "name": "Nikhil Siddhartha",
+        "role": "Karthikeya",
+        "image": "/images/cast/nikhil-siddhartha.jpg"
+      },
+      {
+        "name": "Anupama Parameswaran",
+        "role": "Mugdha",
+        "image": "/images/cast/anupama-parameswaran.jpg"
+      },
+      {
+        "name": "Anupam Kher",
+        "role": "Dhanvantari",
+        "image": "/images/cast/anupam-kher.jpg"
+      },
+      {
+        "name": "Adithya Menon",
+        "role": "Jaffar",
+        "image": "/images/cast/adithya-menon.jpg"
+      },
+      {
+        "name": "Harsha Chemudu",
+        "role": "Abbas",
+        "image": "/images/cast/harsha-chemudu.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/7p1jC6jC8-A",
+    "v-image": "/images/vertical/karthikeya-2.jpg",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Fantasy",
+    "sections": [
+      "popular",
+      "most-watched",
+      "top-rated",
+      "coming-soon"
+    ]
+  },
+  "guntur-karam": {
+    "title": "Guntur Karam",
+    "description": "Years after his mother leaves the family and remarries, a man seeks answers when approached by a politician asking him to sign legal documents denying his relation to her.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Mahesh Babu",
+        "role": "Ramana",
+        "image": "/images/cast/mahesh-babu.jpg"
+      },
+      {
+        "name": "Jayaram",
+        "role": "Vasu",
+        "image": "/images/cast/jayaram.jpg"
+      },
+      {
+        "name": "Meenakshi Chaudhary",
+        "role": "Sandhya",
+        "image": "/images/cast/meenakshi-chaudhary.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/DYGzKjSjR7k",
+    "v-image": "/images/vertical/cs-19.jpg",
+    "genreDisplay": "Action &centerdot; Drama",
+    "sections": [
+      "popular",
+      "most-watched",
+      "top-rated",
+      "coming-soon"
+    ]
+  },
+  "fast-x": {
+    "title": "Fast X",
+    "description": "Dom Toretto and his family are targeted by the vengeful son of drug kingpin Hernan Reyes.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Crime"
+    ],
+    "cast": [
+      {
+        "name": "Jason Momoa",
+        "role": "Dante Reyes",
+        "image": "/images/cast/jason-momoa.jpg"
+      },
+      {
+        "name": "Michelle Rodriguez",
+        "role": "Letty Ortiz",
+        "image": "/images/cast/michelle-rodriguez.jpg"
+      },
+      {
+        "name": "Ludacris",
+        "role": "Tej Parker",
+        "image": "/images/cast/ludacris.jpg"
+      },
+      {
+        "name": "John Cena",
+        "role": "Jakob Toretto",
+        "image": "/images/cast/john-cena.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/32Rw137s8i4",
+    "v-image": "/images/vertical/fast-x.jpg",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Crime",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "rocky-aur-rani-kii-prem-kahani": {
+    "title": "Rocky Aur Rani Kii Prem Kahaani",
+    "description": "Flamboyant Punjabi Rocky and intellectual Bengali journalist Rani fall in love despite their differences. After facing family opposition, they decide to live with each other's families for three months before getting married.",
+    "rating": "4.5",
+    "tags": [
+      "Comedy",
+      "Drama",
+      "Family &centerdot Romance"
+    ],
+    "cast": [
+      {
+        "name": "Alia Bhatt",
+        "role": "Rani",
+        "image": "/images/cast/alia-bhatt.jpg"
+      },
+      {
+        "name": "Dharmendra",
+        "role": "Kanwal Randhawa",
+        "image": "/images/cast/dharmendra.jpg"
+      },
+      {
+        "name": "Jaya Bachchan",
+        "role": "Dhanalakshmi Randhawa",
+        "image": "/images/cast/jaya-bachchan.jpg"
+      }
+    ],
+    "watchOptions": [],
+    "videoUrl": "https://www.youtube.com/embed/6Q7v5eQjX5g",
+    "v-image": "/images/vertical/rocky-aur-rani-kii-prem-kahani.jpg",
+    "genreDisplay": "Comedy &centerdot; Drama &centerdot; Family &centerdot Romance",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "fighter": {
+    "title": "Fighter",
+    "description": "Top aviators of the IAF come together in the face of imminent danger, to form Air Dragons. Fighter unfolds their camaraderie, brotherhood and battles, internal and external.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Thriller"
+    ],
+    "cast": [
+      {
+        "name": "Hrithik Roshan",
+        "role": "Squadron Leader Shamsher Pathania",
+        "image": "/images/cast/hrithik-roshan.jpg"
+      },
+      {
+        "name": "Deepika Padukone",
+        "role": "Squadron Leader Minal Rathore",
+        "image": "/images/cast/deepika-padukone.jpg"
+      },
+      {
+        "name": "Anil Kapoor",
+        "role": "Group Captain Rakesh Jai Singh",
+        "image": "/images/cast/anil-kapoor.jpg"
+      },
+      {
+        "name": "Karan Singh Grover",
+        "role": "Squadron Leader Sartaj Gill",
+        "image": "/images/cast/karan-singh-grover.jpg"
+      },
+      {
+        "name": "Akshay Oberoi",
+        "role": "Squadron Leader Basheer Khan",
+        "image": "/images/cast/akshay-oberoi.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/6amIq_mPTSQ",
+    "v-image": "/images/vertical/fighter.jpg",
+    "genreDisplay": "Action &centerdot; Thriller",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "captain-miller": {
+    "title": "Captain Miller",
+    "description": "A renegade Captain Miller and his unconventional outlaws execute a series of daring heists.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Dhanush",
+        "role": "Captain Miller",
+        "image": "/images/cast/dhanush.jpg"
+      },
+      {
+        "name": "Nivedhithaa Sathish",
+        "role": "Dhanalakshmi",
+        "image": "/images/cast/nivedhithaa.jpg"
+      },
+      {
+        "name": "John Kokken",
+        "role": "British Commander",
+        "image": "/images/cast/john-kokken.jpg"
+      },
+      {
+        "name": "Aditi Shankar",
+        "role": "Village girl",
+        "image": "/images/cast/aditi-shankar.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/5aDk_tqX9tM",
+    "v-image": "/images/vertical/captain-miller.jpg",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Drama",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "bhagavanth-kesari": {
+    "title": "Bhagavanth Kesari",
+    "description": "A man goes to great lengths to ensure his niece gets into the army, while confronting his past.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Thriller",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Nandamuri Balakrishna",
+        "role": "Bhagavanth Kesari",
+        "image": "/images/cast/balakrishna.jpg"
+      },
+      {
+        "name": "Kajal Aggarwal",
+        "role": "Padmavathi",
+        "image": "/images/cast/kajal-aggarwal.jpg"
+      },
+      {
+        "name": "Arjun Rampal",
+        "role": "Vikram",
+        "image": "/images/cast/arjun-rampal.jpg"
+      },
+      {
+        "name": "Bobby Simha",
+        "role": "Ashok",
+        "image": "/images/cast/bobby-simha.jpg"
+      },
+      {
+        "name": "Danish Akhtar Saifi",
+        "role": "Dadi",
+        "image": "/images/cast/danish-akhtar.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/0f1_f2_21_g",
+    "v-image": "/images/vertical/bhagavanth-kesari.jpg",
+    "genreDisplay": "Action &centerdot; Thriller &centerdot; Drama",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "eagle": {
+    "title": "Eagle",
+    "description": "A journalist uncovers the story of a ruthless assassin when she investigates a government cover up.",
+    "rating": "4.5",
+    "tags": [
+      "Action",
+      "Thriller"
+    ],
+    "cast": [
+      {
+        "name": "Kavya Thapar",
+        "role": "Deepika",
+        "image": "/images/cast/kavya-thapar.jpg"
+      },
+      {
+        "name": "Anupama Parameswaran",
+        "role": "Hema",
+        "image": "/images/cast/anupama-parameswaran.jpg"
+      },
+      {
+        "name": "Navdeep",
+        "role": "Siddhu",
+        "image": "/images/cast/navdeep.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/8_8c_c_7_7",
+    "v-image": "/images/vertical/eagle.jpg",
+    "genreDisplay": "Action &centerdot; Thriller",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "samajavaragamana": {
+    "title": "Samajavaragamana",
+    "description": "A middle-class man struggles to pass his degree exams while dealing with family issues and a budding romance.",
+    "rating": "4.5",
+    "tags": [
+      "Comedy",
+      "Family",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Harsha Vardhan",
+        "role": "Arvind",
+        "image": "/images/cast/harsha-vardhan.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/0_0_0_0",
+    "v-image": "/images/vertical/samajavaragamana.jpg",
+    "genreDisplay": "Comedy &centerdot; Family &centerdot; Drama",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "om-bheem-bush": {
+    "title": "Om Bheem Bush",
+    "description": "Three scientists inadvertently release a ghost in a village while searching for hidden treasure.",
+    "rating": "4.5",
+    "tags": [
+      "Comedy"
+    ],
+    "cast": [
+      {
+        "name": "Ayesha Khan",
+        "role": "Nandini",
+        "image": "/images/cast/ayesha-khan.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/0_0_0_0",
+    "v-image": "/images/vertical/om-bheem-bush.jpg",
+    "genreDisplay": "Comedy",
+    "sections": [
+      "new-releases"
+    ]
+  },
+  "i-want-to-eat-your-pancreas": {
+    "title": "I Want to Eat Your Pancreas",
+    "description": "\"I Want to Eat Your Pancreas\" is a Japanese animated film based on the novel of the same name by Yoru Sumino. The story follows an introverted high school boy who discovers the diary of his classmate, Sakura Yamauchi, and learns that she is suffering from a terminal pancreatic illness. Despite their contrasting personalities—Sakura being cheerful and outgoing, while the protagonist is reserved and indifferent—they form an unlikely friendship. As they spend more time together, they grow closer, and the protagonist learns to embrace life and human connections.",
+    "rating": 4.5,
+    "tags": [
+      "Animation",
+      "Drama",
+      "Family"
+    ],
+    "cast": [
+      {
+        "name": "Mahiro Takasugi",
+        "role": "Me (Haruki Shiga) - voice",
+        "image": "/images/cast/mahiro-takasugi.jpg"
+      },
+      {
+        "name": "Lynn",
+        "role": "Sakura Yamauchi - voice",
+        "image": "/images/cast/lynn.jpg"
+      },
+      {
+        "name": "Shin-ichiro Miki",
+        "role": "Gum Guy - voice",
+        "image": "/images/cast/shinichiro-miki.jpg"
+      },
+      {
+        "name": "Maaya Sakamoto",
+        "role": "Mother - voice",
+        "image": "/images/cast/maaya-sakamoto.jpg"
+      }
+    ],
+    "watchOptions": [],
+    "videoUrl": "https://www.youtube.com/embed/MmoBvmJA9XI?si=cS8LJAUtgNwIcU-3",
+    "v-image": "/images/vertical/i-want-to-eat-your-pancreas.jpg",
+    "genreDisplay": "Animation &centerdot; Drama &centerdot; Family",
+    "sections": [
+      "top-rated"
+    ]
+  },
+  "bheemla-nayak": {
+    "title": "Bheemla Nayak",
+    "description": "A strict police officer and a retired army havildar lock horns due to their egos.",
+    "rating": "PG-15",
+    "tags": [
+      "Action",
+      "Drama",
+      "Thriller"
+    ],
+    "cast": [
+      {
+        "name": "Nithya Menen",
+        "role": "Suguna",
+        "image": "/images/cast/nithya-menen.jpg"
+      },
+      {
+        "name": "Murali Sharma",
+        "role": "Inspector Sagar",
+        "image": "/images/cast/murali-sharma.jpg"
+      },
+      {
+        "name": "Brahmanandam",
+        "role": "Grandpa",
+        "image": "/images/cast/brahmanandam.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/0_0_0_0",
+    "h-image": "/images/horizontal/bheemla-nayak.jpg",
+    "genreDisplay": "Action &centerdot; Drama &centerdot; Thriller",
+    "sections": [
+      "head"
+    ]
+  },
+  "vikram-hitlist": {
+    "title": "Vikram Hitlist",
+    "description": "A special investigator assigned a case of serial killings discovers the case is not what it seems to be and leading down this path is only going to end in a war between everyone involved.",
+    "rating": "NR",
+    "tags": [
+      "Action",
+      "Crime",
+      "Drama"
+    ],
+    "cast": [
+      {
+        "name": "Kamal Haasan",
+        "role": "Vikram",
+        "image": "/images/cast/kamal-haasan.jpg"
+      },
+      {
+        "name": "Fahadh Faasil",
+        "role": "Amar",
+        "image": "/images/cast/fahadh-faasil.jpg"
+      },
+      {
+        "name": "Narain",
+        "role": "Bejoy",
+        "image": "/images/cast/narain.jpg"
+      },
+      {
+        "name": "Kalidas Jayaram",
+        "role": "Prapanchan",
+        "image": "/images/cast/kalidas-jayaram.jpg"
+      },
+      {
+        "name": "Chemban Vinod Jose",
+        "role": "Sandhanam's Aide",
+        "image": "/images/cast/chemban-vinod.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime",
+      "Disney+"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/OKBMCL-frPU",
+    "h-image": "/images/horizontal/vikram-hitlist.jpg",
+    "genreDisplay": "Action &centerdot; Crime &centerdot; Drama",
+    "sections": [
+      "head"
+    ]
+  },
+  "the-marvels": {
+    "title": "The Marvels",
+    "h-image": "",
+    "v-image": "/images/vertical/the-marvels.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "description": "Carol Danvers, aka Captain Marvel, has reclaimed her identity from the tyrannical Kree and taken revenge. But unintended consequences see Carol shouldering the burden of a destabilized universe.",
+    "cast": [
+      {
+        "name": "Brie Larson",
+        "role": "Carol Danvers / Captain Marvel",
+        "image": "/images/cast/brie-larson.jpg"
+      },
+      {
+        "name": "Iman Vellani",
+        "role": "Kamala Khan / Ms. Marvel",
+        "image": "/images/cast/iman-vellani.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Disney+",
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/wS_qbDztgVY",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Fantasy",
+    "sections": [
+      "coming-soon",
+      "new-releases"
+    ]
+  },
+  "oppenheimer": {
+    "title": "Oppenheimer",
+    "h-image": "",
+    "v-image": "/images/vertical/oppenheimer.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Biography",
+      "Drama",
+      "History"
+    ],
+    "description": "The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb during World War II.",
+    "cast": [
+      {
+        "name": "Cillian Murphy",
+        "role": "J. Robert Oppenheimer",
+        "image": "/images/cast/cillian-murphy.jpg"
+      },
+      {
+        "name": "Robert Downey Jr.",
+        "role": "Lewis Strauss",
+        "image": "/images/cast/rdj.jpg"
+      },
+      {
+        "name": "Emily Blunt",
+        "role": "Kitty Oppenheimer",
+        "image": "/images/cast/emily-blunt.jpg"
+      },
+      {
+        "name": "Matt Damon",
+        "role": "Leslie Groves",
+        "image": "/images/cast/matt-damon.jpg"
+      },
+      {
+        "name": "Florence Pugh",
+        "role": "Jean Tatlock",
+        "image": "/images/cast/florence-pugh.jpg"
+      },
+      {
+        "name": "Josh Hartnett",
+        "role": "Ernest Lawrence",
+        "image": "/images/cast/josh-hartnett.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Amazon Prime",
+      "Apple TV"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/uYPbbksJxIg",
+    "genreDisplay": "Biography &centerdot; Drama &centerdot; History",
+    "sections": [
+      "head",
+      "popular",
+      "most-watched",
+      "top-rated"
+    ]
+  },
+  "dhootha": {
+    "title": "Dhootha",
+    "description": "",
+    "rating": "PG-13",
+    "tags": [
+      "Drama",
+      "Horror",
+      "Thriller"
+    ],
+    "cast": [
+      {
+        "name": "Naga Chaitanya",
+        "role": "Sagar",
+        "image": "/images/cast/naga-chaitanya.jpg"
+      },
+      {
+        "name": "Aishwarya Lekshmi",
+        "role": "Keerthi",
+        "image": "/images/cast/aishwarya-lekshmi.jpg"
+      }
+    ],
+    "watchOptions": [],
+    "videoUrl": "",
+    "h-image": "/images/horizontal/dhootha.jpg",
+    "genreDisplay": "Drama &centerdot; Horror &centerdot; Thriller",
+    "sections": [
+      "head"
+    ]
+  },
+  "the-dark-knight": {
+    "title": "The Dark Knight",
+    "h-image": "",
+    "v-image": "/images/vertical/the-dark-knight.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    "cast": [
+      {
+        "name": "Christian Bale",
+        "role": "Bruce Wayne / Batman",
+        "image": "/images/cast/christian-bale.jpg"
+      },
+      {
+        "name": "Heath Ledger",
+        "role": "The Joker",
+        "image": "/images/cast/heath-ledger.jpg"
+      },
+      {
+        "name": "Aaron Eckhart",
+        "role": "Harvey Dent / Two-Face",
+        "image": "/images/cast/aaron-eckhart.jpg"
+      },
+      {
+        "name": "Michael Caine",
+        "role": "Alfred Pennyworth",
+        "image": "/images/cast/michael-caine.jpg"
+      },
+      {
+        "name": "Maggie Gyllenhaal",
+        "role": "Rachel Dawes",
+        "image": "/images/cast/maggie-gyllenhaal.jpg"
+      },
+      {
+        "name": "Gary Oldman",
+        "role": "Commissioner Gordon",
+        "image": "/images/cast/gary-oldman.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/EXeTwQWrcwY",
+    "genreDisplay": "Action &centerdot; Crime &centerdot; Drama &centerdot; Thriller",
+    "sections": [
+      "head",
+      "popular",
+      "top-rated"
+    ]
+  },
+  "inception": {
+    "title": "Inception",
+    "h-image": "",
+    "v-image": "/images/vertical/inception.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Sci-Fi",
+      "Thriller"
+    ],
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.",
+    "cast": [
+      {
+        "name": "Leonardo DiCaprio",
+        "role": "Dom Cobb",
+        "image": "/images/cast/leonardo-dicaprio.jpg"
+      },
+      {
+        "name": "Joseph Gordon-Levitt",
+        "role": "Arthur",
+        "image": "/images/cast/joseph-gordon-levitt.jpg"
+      },
+      {
+        "name": "Elliot Page",
+        "role": "Ariadne",
+        "image": "/images/cast/elliot-page.jpg"
+      },
+      {
+        "name": "Ken Watanabe",
+        "role": "Saito",
+        "image": "/images/cast/ken-watanabe.jpg"
+      },
+      {
+        "name": "Marion Cotillard",
+        "role": "Mal Cobb",
+        "image": "/images/cast/marion-cotillard.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/YoHD9XEInc0",
+    "genreDisplay": "Action &centerdot; Sci-Fi &centerdot; Thriller",
+    "sections": [
+      "head",
+      "popular",
+      "top-rated"
+    ]
+  },
+  "interstellar": {
+    "title": "Interstellar",
+    "h-image": "",
+    "v-image": "/images/vertical/interstellar.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Adventure",
+      "Drama",
+      "Sci-Fi"
+    ],
+    "description": "When Earth becomes uninhabitable in the future, a farmer and ex-NASA pilot, Joseph Cooper, is tasked to pilot a spacecraft, along with a team of researchers, to find a new planet for humans.",
+    "cast": [
+      {
+        "name": "Matthew McConaughey",
+        "role": "Cooper",
+        "image": "/images/cast/matthew-mcconaughey.jpg"
+      },
+      {
+        "name": "Anne Hathaway",
+        "role": "Dr. Amelia Brand",
+        "image": "/images/cast/anne-hathaway.jpg"
+      },
+      {
+        "name": "Jessica Chastain",
+        "role": "Murph (Adult)",
+        "image": "/images/cast/jessica-chastain.jpg"
+      },
+      {
+        "name": "Michael Caine",
+        "role": "Professor Brand",
+        "image": "/images/cast/michael-caine.jpg"
+      },
+      {
+        "name": "Matt Damon",
+        "role": "Dr. Mann",
+        "image": "/images/cast/matt-damon.jpg"
+      },
+      {
+        "name": "Mackenzie Foy",
+        "role": "Murph (Young)",
+        "image": "/images/cast/mackenzie-foy.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Amazon Prime",
+      "Netflix"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/zSWdZVtXT7E",
+    "genreDisplay": "Adventure &centerdot; Drama &centerdot; Sci-Fi",
+    "sections": [
+      "head",
+      "top-rated",
+      "most-watched"
+    ]
+  },
+  "the-batman": {
+    "title": "The Batman",
+    "h-image": "",
+    "v-image": "/images/vertical/the-batman.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Crime",
+      "Drama"
+    ],
+    "description": "When a sadistic serial killer begins murdering key political figures in Gotham, Batman is forced to investigate the city's hidden corruption and question his family's involvement.",
+    "cast": [
+      {
+        "name": "Jeffrey Wright",
+        "role": "Lt. James Gordon",
+        "image": "/images/cast/jeffrey-wright.jpg"
+      },
+      {
+        "name": "Colin Farrell",
+        "role": "Oz / The Penguin",
+        "image": "/images/cast/colin-farrell.jpg"
+      },
+      {
+        "name": "Andy Serkis",
+        "role": "Alfred Pennyworth",
+        "image": "/images/cast/andy-serkis.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Max",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/mqqft2x_Aa4",
+    "genreDisplay": "Action &centerdot; Crime &centerdot; Drama",
+    "sections": [
+      "popular",
+      "most-watched",
+      "new-releases"
+    ]
+  },
+  "john-wick-4": {
+    "title": "John Wick: Chapter 4",
+    "h-image": "",
+    "v-image": "/images/vertical/john-wick-4.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Crime",
+      "Thriller"
+    ],
+    "description": "John Wick uncovers a path to defeating The High Table. But before he can earn his freedom, Wick must face off against a new enemy with powerful alliances across the globe.",
+    "cast": [
+      {
+        "name": "Keanu Reeves",
+        "role": "John Wick",
+        "image": "/images/cast/keanu-reeves.jpg"
+      },
+      {
+        "name": "Donnie Yen",
+        "role": "Caine",
+        "image": "/images/cast/donnie-yen.jpg"
+      },
+      {
+        "name": "Bill Skarsgård",
+        "role": "Marquis de Gramont",
+        "image": "/images/cast/bill-skarsgard.jpg"
+      },
+      {
+        "name": "Laurence Fishburne",
+        "role": "Bowery King",
+        "image": "/images/cast/laurence-fishburne.jpg"
+      },
+      {
+        "name": "Hiroyuki Sanada",
+        "role": "Shimazu Koji",
+        "image": "/images/cast/hiroyuki-sanada.jpg"
+      },
+      {
+        "name": "Ian McShane",
+        "role": "Winston",
+        "image": "/images/cast/ian-mcshane.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/qEVUtrk8_B4",
+    "genreDisplay": "Action &centerdot; Crime &centerdot; Thriller",
+    "sections": [
+      "popular",
+      "new-releases",
+      "most-watched"
+    ]
+  },
+  "top-gun-maverick": {
+    "title": "Top Gun: Maverick",
+    "h-image": "",
+    "v-image": "/images/vertical/top-gun-maverick.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Drama"
+    ],
+    "description": "After thirty years of service as a top naval aviator, Pete Maverick Mitchell is where he belongs, pushing the envelope as a courageous test pilot and dodging the advancement in rank that would ground him.",
+    "cast": [
+      {
+        "name": "Miles Teller",
+        "role": "Lt. Bradley Rooster Bradshaw",
+        "image": "/images/cast/miles-teller.jpg"
+      },
+      {
+        "name": "Jennifer Connelly",
+        "role": "Penny Benjamin",
+        "image": "/images/cast/jennifer-connelly.jpg"
+      },
+      {
+        "name": "Glen Powell",
+        "role": "Lt. Jake Hangman Seresin",
+        "image": "/images/cast/glen-powell.jpg"
+      },
+      {
+        "name": "Jon Hamm",
+        "role": "Vice Adm. Beau Cyclone Simpson",
+        "image": "/images/cast/jon-hamm.jpg"
+      },
+      {
+        "name": "Ed Harris",
+        "role": "Rear Adm. Chester Cain",
+        "image": "/images/cast/ed-harris.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Amazon Prime",
+      "Apple TV"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/giXco2jaZ_4",
+    "genreDisplay": "Action &centerdot; Drama",
+    "sections": [
+      "popular",
+      "most-watched",
+      "top-rated"
+    ]
+  },
+  "barbie": {
+    "title": "Barbie",
+    "h-image": "",
+    "v-image": "/images/vertical/barbie.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Adventure",
+      "Comedy",
+      "Fantasy"
+    ],
+    "description": "Barbie and Ken are having the time of their lives in the colorful and seemingly perfect world of Barbie Land. However, when they get a chance to go to the real world, they soon discover the joys and perils of living among humans.",
+    "cast": [
+      {
+        "name": "Margot Robbie",
+        "role": "Barbie",
+        "image": "/images/cast/margot-robbie.jpg"
+      },
+      {
+        "name": "America Ferrera",
+        "role": "Gloria",
+        "image": "/images/cast/america-ferrera.jpg"
+      },
+      {
+        "name": "Kate McKinnon",
+        "role": "Weird Barbie",
+        "image": "/images/cast/kate-mckinnon.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Max",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/pBk4NYhWNMM",
+    "genreDisplay": "Adventure &centerdot; Comedy &centerdot; Fantasy",
+    "sections": [
+      "new-releases",
+      "most-watched"
+    ]
+  },
+  "spider-man-across-the-spider-verse": {
+    "title": "Spider-Man: Across the Spider-Verse",
+    "h-image": "",
+    "v-image": "/images/vertical/spider-verse-2.jpg",
+    "rating": "PG",
+    "Status": "Released",
+    "tags": [
+      "Animation",
+      "Action",
+      "Adventure"
+    ],
+    "description": "Miles Morales catapults across the Multiverse, where he encounters a team of Spider-People charged with protecting its very existence. When the heroes clash on how to handle a new threat, Miles must redefine what it means to be a hero.",
+    "cast": [
+      {
+        "name": "Hailee Steinfeld",
+        "role": "Gwen Stacy / Spider-Woman",
+        "image": "/images/cast/hailee-steinfeld.jpg"
+      },
+      {
+        "name": "Oscar Isaac",
+        "role": "Miguel O'Hara / Spider-Man 2099",
+        "image": "/images/cast/oscar-isaac.jpg"
+      },
+      {
+        "name": "Jake Johnson",
+        "role": "Peter B. Parker / Spider-Man",
+        "image": "/images/cast/jake-johnson.jpg"
+      },
+      {
+        "name": "Issa Rae",
+        "role": "Jessica Drew / Spider-Woman",
+        "image": "/images/cast/issa-rae.jpg"
+      },
+      {
+        "name": "Daniel Kaluuya",
+        "role": "Hobie Brown / Spider-Punk",
+        "image": "/images/cast/daniel-kaluuya.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/shW9i6k8cB0",
+    "genreDisplay": "Animation &centerdot; Action &centerdot; Adventure",
+    "sections": [
+      "new-releases",
+      "popular",
+      "most-watched"
+    ]
+  },
+  "guardians-of-the-galaxy-vol-3": {
+    "title": "Guardians of the Galaxy Vol. 3",
+    "h-image": "",
+    "v-image": "/images/vertical/gotg-vol3.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Sci-Fi"
+    ],
+    "description": "Still reeling from the loss of Gamora, Peter Quill rallies his team to defend the universe and one of their own, a mission that could mean the end of the Guardians if not successful.",
+    "cast": [
+      {
+        "name": "Chris Pratt",
+        "role": "Peter Quill / Star-Lord",
+        "image": "/images/cast/chris-pratt.jpg"
+      },
+      {
+        "name": "Dave Bautista",
+        "role": "Drax the Destroyer",
+        "image": "/images/cast/dave-bautista.jpg"
+      },
+      {
+        "name": "Karen Gillan",
+        "role": "Nebula",
+        "image": "/images/cast/karen-gillan.jpg"
+      },
+      {
+        "name": "Chukwudi Iwuji",
+        "role": "High Evolutionary",
+        "image": "/images/cast/chukwudi-iwuji.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Disney+",
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/u3V5KDHRQvk",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Comedy &centerdot; Sci-Fi",
+    "sections": [
+      "new-releases",
+      "popular"
+    ]
+  },
+  "mission-impossible-dead-reckoning": {
+    "title": "Mission: Impossible - Dead Reckoning",
+    "h-image": "",
+    "v-image": "/images/vertical/mi-dead-reckoning.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Thriller"
+    ],
+    "description": "Ethan Hunt and his IMF team must track down a dangerous weapon before it falls into the wrong hands. With control of the future and the fate of the world at stake, a deadly race around the globe begins.",
+    "cast": [
+      {
+        "name": "Hayley Atwell",
+        "role": "Grace",
+        "image": "/images/cast/hayley-atwell.jpg"
+      },
+      {
+        "name": "Esai Morales",
+        "role": "Gabriel",
+        "image": "/images/cast/esai-morales.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Amazon Prime",
+      "Apple TV"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/avz06PDqDbM",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Thriller",
+    "sections": [
+      "new-releases",
+      "coming-soon"
+    ]
+  },
+  "killers-of-the-flower-moon": {
+    "title": "Killers of the Flower Moon",
+    "h-image": "",
+    "v-image": "/images/vertical/killers-flower-moon.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Crime",
+      "Drama",
+      "History"
+    ],
+    "description": "When oil is discovered in 1920s Oklahoma under Osage Nation land, the Osage people are murdered one by one — until the FBI steps in to unravel the mystery.",
+    "cast": [
+      {
+        "name": "Leonardo DiCaprio",
+        "role": "Ernest Burkhart",
+        "image": "/images/cast/leonardo-dicaprio.jpg"
+      },
+      {
+        "name": "Lily Gladstone",
+        "role": "Mollie Burkhart",
+        "image": "/images/cast/lily-gladstone.jpg"
+      },
+      {
+        "name": "Jesse Plemons",
+        "role": "Tom White",
+        "image": "/images/cast/jesse-plemons.jpg"
+      },
+      {
+        "name": "Brendan Fraser",
+        "role": "W.S. Hamilton",
+        "image": "/images/cast/brendan-fraser.jpg"
+      },
+      {
+        "name": "John Lithgow",
+        "role": "Prosecutor Leaward",
+        "image": "/images/cast/john-lithgow.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Apple TV",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/EP34Yoxs3FQ",
+    "genreDisplay": "Crime &centerdot; Drama &centerdot; History",
+    "sections": [
+      "top-rated",
+      "most-watched"
+    ]
+  },
+  "wonka": {
+    "title": "Wonka",
+    "h-image": "",
+    "v-image": "/images/vertical/wonka.jpg",
+    "rating": "PG",
+    "Status": "Released",
+    "tags": [
+      "Adventure",
+      "Comedy",
+      "Family",
+      "Fantasy"
+    ],
+    "description": "Based on the extraordinary character at the center of Charlie and the Chocolate Factory, Wonka tells the wondrous story of how the world's greatest inventor became the beloved Willy Wonka we know today.",
+    "cast": [
+      {
+        "name": "Hugh Grant",
+        "role": "Oompa-Loompa",
+        "image": "/images/cast/hugh-grant.jpg"
+      },
+      {
+        "name": "Olivia Colman",
+        "role": "Mrs. Scrubbit",
+        "image": "/images/cast/olivia-colman.jpg"
+      },
+      {
+        "name": "Keegan-Michael Key",
+        "role": "Chief of Police",
+        "image": "/images/cast/keegan-michael-key.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Max",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/otNh9bTjXWg",
+    "genreDisplay": "Adventure &centerdot; Comedy &centerdot; Family &centerdot; Fantasy",
+    "sections": [
+      "new-releases",
+      "coming-soon"
+    ]
+  },
+  "napoleon": {
+    "title": "Napoleon",
+    "h-image": "",
+    "v-image": "/images/vertical/napoleon.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Biography",
+      "Drama",
+      "History"
+    ],
+    "description": "An epic that details the checkered rise and fall of French Emperor Napoleon Bonaparte and his relentless journey to power through the prism of his addictive, volatile relationship with his wife, Josephine.",
+    "cast": [
+      {
+        "name": "Joaquin Phoenix",
+        "role": "Napoleon Bonaparte",
+        "image": "/images/cast/joaquin-phoenix.jpg"
+      },
+      {
+        "name": "Ben Miles",
+        "role": "Caulaincourt",
+        "image": "/images/cast/ben-miles.jpg"
+      },
+      {
+        "name": "Ludivine Sagnier",
+        "role": "Thérésa Cabarrus",
+        "image": "/images/cast/ludivine-sagnier.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Apple TV",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/OAZWXUkrjPc",
+    "genreDisplay": "Action &centerdot; Biography &centerdot; Drama &centerdot; History",
+    "sections": [
+      "new-releases",
+      "top-rated"
+    ]
+  },
+  "poor-things": {
+    "title": "Poor Things",
+    "h-image": "",
+    "v-image": "/images/vertical/poor-things.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Comedy",
+      "Drama",
+      "Romance",
+      "Sci-Fi"
+    ],
+    "description": "The incredible tale of a young woman brought back to life by a brilliant but unorthodox scientist. Under his protection, she is eager to learn and experience everything about the world.",
+    "cast": [
+      {
+        "name": "Emma Stone",
+        "role": "Bella Baxter",
+        "image": "/images/cast/emma-stone.jpg"
+      },
+      {
+        "name": "Mark Ruffalo",
+        "role": "Duncan Wedderburn",
+        "image": "/images/cast/mark-ruffalo.jpg"
+      },
+      {
+        "name": "Christopher Abbott",
+        "role": "Alfie Blessington",
+        "image": "/images/cast/christopher-abbott.jpg"
+      },
+      {
+        "name": "Jerrod Carmichael",
+        "role": "Harry Astley",
+        "image": "/images/cast/jerrod-carmichael.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Hotstar",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/RlbR5N6veqw",
+    "genreDisplay": "Comedy &centerdot; Drama &centerdot; Romance &centerdot; Sci-Fi",
+    "sections": [
+      "top-rated",
+      "new-releases"
+    ]
+  },
+  "anyone-but-you": {
+    "title": "Anyone But You",
+    "h-image": "",
+    "v-image": "/images/vertical/anyone-but-you.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Comedy",
+      "Romance"
+    ],
+    "description": "After an amazing first date, Bea and Ben's fiery attraction turns ice-cold — until they unexpectedly find themselves at a destination wedding in Australia.",
+    "cast": [
+      {
+        "name": "Glen Powell",
+        "role": "Ben",
+        "image": "/images/cast/glen-powell.jpg"
+      },
+      {
+        "name": "Alexandra Shipp",
+        "role": "Claudia",
+        "image": "/images/cast/alexandra-shipp.jpg"
+      },
+      {
+        "name": "Hadley Robinson",
+        "role": "Halle",
+        "image": "/images/cast/hadley-robinson.jpg"
+      },
+      {
+        "name": "Darren Barnet",
+        "role": "Jonathan",
+        "image": "/images/cast/darren-barnet.jpg"
+      },
+      {
+        "name": "GaTa",
+        "role": "Pete",
+        "image": "/images/cast/gata.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/bRFnGah8K4Y",
+    "genreDisplay": "Comedy &centerdot; Romance",
+    "sections": [
+      "new-releases",
+      "most-watched"
+    ]
+  },
+  "aquaman-and-the-lost-kingdom": {
+    "title": "Aquaman and the Lost Kingdom",
+    "h-image": "",
+    "v-image": "/images/vertical/aquaman-2.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "description": "Black Manta seeks revenge on Aquaman for his father's death. With the power of the mythical Black Trident, he unleashes an ancient force. Aquaman must forge an uneasy alliance to save Atlantis.",
+    "cast": [
+      {
+        "name": "Jason Momoa",
+        "role": "Arthur Curry / Aquaman",
+        "image": "/images/cast/jason-momoa.jpg"
+      },
+      {
+        "name": "Amber Heard",
+        "role": "Mera",
+        "image": "/images/cast/amber-heard.jpg"
+      },
+      {
+        "name": "Nicole Kidman",
+        "role": "Atlanna",
+        "image": "/images/cast/nicole-kidman.jpg"
+      },
+      {
+        "name": "Dolph Lundgren",
+        "role": "King Nereus",
+        "image": "/images/cast/dolph-lundgren.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Max",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/UGc5Tzz19UY",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Fantasy",
+    "sections": [
+      "coming-soon",
+      "new-releases"
+    ]
+  },
+  "dune-part-one": {
+    "title": "Dune",
+    "h-image": "",
+    "v-image": "/images/vertical/dune-part-one.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Drama",
+      "Sci-Fi"
+    ],
+    "description": "A noble family becomes embroiled in a war for control over the galaxy's most valuable asset while its heir becomes troubled by visions of a dark future.",
+    "cast": [
+      {
+        "name": "Oscar Isaac",
+        "role": "Duke Leto Atreides",
+        "image": "/images/cast/oscar-isaac.jpg"
+      },
+      {
+        "name": "Jason Momoa",
+        "role": "Duncan Idaho",
+        "image": "/images/cast/jason-momoa.jpg"
+      },
+      {
+        "name": "Josh Brolin",
+        "role": "Gurney Halleck",
+        "image": "/images/cast/josh-brolin.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Max",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/n9xhJrPXop4",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Drama &centerdot; Sci-Fi",
+    "sections": [
+      "top-rated",
+      "most-watched"
+    ]
+  },
+  "everything-everywhere-all-at-once": {
+    "title": "Everything Everywhere All at Once",
+    "h-image": "",
+    "v-image": "/images/vertical/eeaao.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Comedy",
+      "Sci-Fi"
+    ],
+    "description": "A middle-aged Chinese immigrant is swept up into an insane adventure in which she alone can save existence by exploring other universes and connecting with the lives she could have led.",
+    "cast": [
+      {
+        "name": "Michelle Yeoh",
+        "role": "Evelyn Quan Wang",
+        "image": "/images/cast/michelle-yeoh.jpg"
+      },
+      {
+        "name": "Ke Huy Quan",
+        "role": "Waymond Wang",
+        "image": "/images/cast/ke-huy-quan.jpg"
+      },
+      {
+        "name": "Jamie Lee Curtis",
+        "role": "Deirdre Beaubeirdre",
+        "image": "/images/cast/jamie-lee-curtis.jpg"
+      },
+      {
+        "name": "James Hong",
+        "role": "Gong Gong",
+        "image": "/images/cast/james-hong.jpg"
+      },
+      {
+        "name": "Jenny Slate",
+        "role": "Big Nose",
+        "image": "/images/cast/jenny-slate.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Amazon Prime",
+      "Apple TV"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/wxN1T1qdQ",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Comedy &centerdot; Sci-Fi",
+    "sections": [
+      "top-rated",
+      "popular"
+    ]
+  },
+  "joker": {
+    "title": "Joker",
+    "h-image": "",
+    "v-image": "/images/vertical/joker.jpg",
+    "rating": "R",
+    "Status": "Released",
+    "tags": [
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "description": "During the 1980s, a failed stand-up comedian is driven insane and turns to a life of crime and chaos in Gotham City while becoming an infamous psychopathic criminal figure.",
+    "cast": [
+      {
+        "name": "Joaquin Phoenix",
+        "role": "Arthur Fleck / Joker",
+        "image": "/images/cast/joaquin-phoenix.jpg"
+      },
+      {
+        "name": "Frances Conroy",
+        "role": "Penny Fleck",
+        "image": "/images/cast/frances-conroy.jpg"
+      },
+      {
+        "name": "Brett Cullen",
+        "role": "Thomas Wayne",
+        "image": "/images/cast/brett-cullen.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Max"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/zAGVQLHvwOY",
+    "genreDisplay": "Crime &centerdot; Drama &centerdot; Thriller",
+    "sections": [
+      "top-rated",
+      "popular",
+      "most-watched"
+    ]
+  },
+  "avatar-the-way-of-water": {
+    "title": "Avatar: The Way of Water",
+    "h-image": "",
+    "v-image": "/images/vertical/avatar-2.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Fantasy",
+      "Sci-Fi"
+    ],
+    "description": "Jake Sully lives with his newfound family formed on the extrasolar moon Pandora. When a familiar threat returns to finish what was previously started, Jake must work with Neytiri and the army of the Na'vi race to protect their home.",
+    "cast": [
+      {
+        "name": "Kate Winslet",
+        "role": "Ronal",
+        "image": "/images/cast/kate-winslet.jpg"
+      },
+      {
+        "name": "Cliff Curtis",
+        "role": "Tonowari",
+        "image": "/images/cast/cliff-curtis.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Disney+",
+      "Hotstar"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/d9MyW72ELq0",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Fantasy &centerdot; Sci-Fi",
+    "sections": [
+      "head",
+      "most-watched",
+      "popular"
+    ]
+  },
+  "pathaan": {
+    "title": "Pathaan",
+    "h-image": "",
+    "v-image": "/images/vertical/pathaan.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Adventure",
+      "Thriller"
+    ],
+    "description": "An Indian spy takes on the leader of a group of mercenaries who have nefarious plans to target his homeland.",
+    "cast": [
+      {
+        "name": "Deepika Padukone",
+        "role": "Rubina",
+        "image": "/images/cast/deepika-padukone.jpg"
+      },
+      {
+        "name": "John Abraham",
+        "role": "Jim",
+        "image": "/images/cast/john-abraham.jpg"
+      },
+      {
+        "name": "Dimple Kapadia",
+        "role": "Nandini",
+        "image": "/images/cast/dimple-kapadia.jpg"
+      },
+      {
+        "name": "Ashutosh Rana",
+        "role": "Colonel Luthra",
+        "image": "/images/cast/ashutosh-rana.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Amazon Prime",
+      "Netflix"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/vqu4z34wENw",
+    "genreDisplay": "Action &centerdot; Adventure &centerdot; Thriller",
+    "sections": [
+      "popular",
+      "most-watched",
+      "head"
+    ]
+  },
+  "jawan": {
+    "title": "Jawan",
+    "h-image": "",
+    "v-image": "/images/vertical/jawan.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Action",
+      "Drama",
+      "Thriller"
+    ],
+    "description": "A high-octane action thriller which outlines the emotional journey of a man who is set to rectify the wrongs in society.",
+    "cast": [
+      {
+        "name": "Nayanthara",
+        "role": "Narmada",
+        "image": "/images/cast/nayanthara.jpg"
+      },
+      {
+        "name": "Deepika Padukone",
+        "role": "Aishwarya Rathore",
+        "image": "/images/cast/deepika-padukone.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Netflix",
+      "Amazon Prime"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/MWOlkJqOONI",
+    "genreDisplay": "Action &centerdot; Drama &centerdot; Thriller",
+    "sections": [
+      "popular",
+      "new-releases",
+      "most-watched"
+    ]
+  },
+  "stree-2": {
+    "title": "Stree 2",
+    "h-image": "",
+    "v-image": "/images/vertical/stree-2.jpg",
+    "rating": "PG-13",
+    "Status": "Released",
+    "tags": [
+      "Comedy",
+      "Horror",
+      "Thriller"
+    ],
+    "description": "The people of Chanderi are haunted once again when a new evil emerges, kidnapping women from their town. Vicky and his friends must once again battle the supernatural threat.",
+    "cast": [
+      {
+        "name": "Aparshakti Khurana",
+        "role": "Bittu",
+        "image": "/images/cast/aparshakti-khurana.jpg"
+      },
+      {
+        "name": "Abhishek Banerjee",
+        "role": "Jana",
+        "image": "/images/cast/abhishek-banerjee.jpg"
+      }
+    ],
+    "watchOptions": [
+      "Amazon Prime",
+      "Netflix"
+    ],
+    "videoUrl": "https://www.youtube.com/embed/KMy5kTlFvWE",
+    "genreDisplay": "Comedy &centerdot; Horror &centerdot; Thriller",
+    "sections": [
+      "new-releases",
+      "popular",
+      "most-watched",
+      "coming-soon"
+    ]
+  }
+}

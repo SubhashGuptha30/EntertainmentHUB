@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entertainment Hub | Stream Movies, Anime & Series</title>
+  <link rel="stylesheet" href="/static/css/styles.css?v=2" />
+  <link rel="stylesheet" href="/static/css/swiper-bundle.min.css?v=2" />
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="loader">
+      <div class="inner"></div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <nav>
+      <div class="logo">ENTERTAINMENT<span>HUB</span></div>
+      <div class="nav-links">
+        <a href="#features">FEATURES</a>
+        <a href="#cta">SIGN UP</a>
+        <a href="/contact/contactus.html">CONTACT</a>
+        <a href="/aboutus.html">ABOUT US</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-overlay"></div>
+    <div class="hero-content">
+      <h1>WELCOME TO<br>ENTERTAINMENT<span>HUB</span></h1>
+      <p>YOUR ULTIMATE DESTINATION FOR MOVIES, ANIME, AND SERIES</p>
+
+      <button class="btn-orange-gradient" onclick="scrollToSection('cta')">
+        Get Started <i class='bx bx-right-arrow-alt'></i>
+      </button>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
+  <section class="info-section">
+    <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2.5rem; color: var(--text-main);">Why Choose Us?</h2>
+
+    <div class="features-grid">
+      <!-- Feature 1: Unlimited Movies -->
+      <div class="feature-row">
+        <div class="feature-text">
+          <h3>UNLIMITED MOVIES</h3>
+          <p>Welcome to our vast collection! Dive into a world where entertainment knows no bounds. Classics,
+            blockbusters, and indie gems awaiting your discovery.</p>
+        </div>
+        <div class="feature-image">
+          <img src="/static/images/landing/unlimited-movies.png" alt="Movies Collection" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Feature 2: Exclusive Series (Reversed) -->
+      <div class="feature-row reverse">
+        <div class="feature-text">
+          <h3>EXCLUSIVE SERIES</h3>
+          <p>Discover a world of captivating storytelling. Our curated selection features original productions you won't
+            find anywhere else.</p>
+        </div>
+        <div class="feature-image">
+          <img src="/static/images/landing/exclusive-series.png" alt="Exclusive Series" loading="lazy">
+        </div>
+      </div>
+
+      <!-- Feature 3: Amazing Anime -->
+      <div class="feature-row">
+        <div class="feature-text">
+          <h3>AMAZING ANIME</h3>
+          <p>Embark on a journey into the captivating world of anime. Vibrant visuals, rich storytelling, and
+            unforgettable characters spanning all genres.</p>
+        </div>
+        <div class="feature-image">
+          <!-- Updated Image for Anime specifically -->
+          <img src="/static/images/landing/amazing-anime.png" alt="Anime World" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call To Action -->
+  <section id="cta" class="cta-section">
+    <h2>JOIN US TODAY</h2>
+    <p style="margin-bottom: 2rem; color: var(--text-muted);">SIGN UP NOW AND START ENJOYING THE BEST IN ENTERTAINMENT.
+    </p>
+    <button class="btn-orange-gradient" onclick="window.location.href='/login/login.html'">
+      LOG IN / SIGN UP <i class='bx bx-log-in-circle'></i>
+    </button>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Contact us at: entertainmenthub892@gmail.com</p>
+    <p>&copy; MegYaSuKri All rights reserved &centerdot; 2024</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Preloader Logic
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+        }, 500);
+      }, 800);
+    });
+
+    // Auth Logic - Auto redirect disabled
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   const signedIn = localStorage.getItem('signedIn');
+    //   if (signedIn === 'true') {
+    //     window.location.href = 'home.html';
+    //   }
+    // });
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
+</body>
+
+</html>

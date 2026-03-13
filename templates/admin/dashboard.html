@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Admin | Entertainment Hub</title>
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/admin/admin.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class='bx bx-shield-quarter'></i>
+        <span>Admin<span class="accent">Hub</span></span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html" class="nav-item active">
+          <i class='bx bxs-dashboard'></i><span>Dashboard</span>
+        </a>
+        <a href="/admin/content.html" class="nav-item">
+          <i class='bx bx-movie-play'></i><span>Content</span>
+        </a>
+        <a href="/admin/users.html" class="nav-item">
+          <i class='bx bxs-group'></i><span>Users</span>
+        </a>
+        <a href="/admin/selectors.html" class="nav-item">
+          <i class='bx bx-slider'></i><span>Selectors</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <span id="admin-name" class="admin-label"></span>
+        <button class="btn-logout" id="logoutBtn"><i class='bx bx-log-out'></i> Logout</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="page-header">
+        <h2><i class='bx bxs-dashboard'></i> Dashboard</h2>
+        <span class="page-subtitle">Welcome back, <strong id="greeting"></strong></span>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card stat-movies">
+          <div class="stat-icon"><i class='bx bx-camera-movie'></i></div>
+          <div class="stat-info">
+            <span class="stat-number" id="stat-movies">—</span>
+            <span class="stat-label">Movies</span>
+          </div>
+        </div>
+        <div class="stat-card stat-anime">
+          <div class="stat-icon"><i class='bx bx-child'></i></div>
+          <div class="stat-info">
+            <span class="stat-number" id="stat-animes">—</span>
+            <span class="stat-label">Anime</span>
+          </div>
+        </div>
+        <div class="stat-card stat-series">
+          <div class="stat-icon"><i class='bx bx-tv'></i></div>
+          <div class="stat-info">
+            <span class="stat-number" id="stat-series">—</span>
+            <span class="stat-label">Web Series</span>
+          </div>
+        </div>
+        <div class="stat-card stat-users">
+          <div class="stat-icon"><i class='bx bxs-group'></i></div>
+          <div class="stat-info">
+            <span class="stat-number" id="stat-users">—</span>
+            <span class="stat-label">Registered Users</span>
+          </div>
+        </div>
+        <div class="stat-card stat-total">
+          <div class="stat-icon"><i class='bx bx-collection'></i></div>
+          <div class="stat-info">
+            <span class="stat-number" id="stat-total">—</span>
+            <span class="stat-label">Total Content</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="action-buttons">
+          <a href="/admin/content.html?action=add" class="btn-action btn-add">
+            <i class='bx bx-plus-circle'></i> Add Content
+          </a>
+          <a href="/admin/content.html" class="btn-action btn-manage">
+            <i class='bx bx-edit'></i> Manage Content
+          </a>
+          <a href="/admin/users.html" class="btn-action btn-users">
+            <i class='bx bxs-group'></i> View Users
+          </a>
+          <a href="/home.html" class="btn-action btn-site" target="_blank">
+            <i class='bx bx-globe'></i> View Site
+          </a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/admin/admin.js"></script>
+  <script>
+    requireAdmin();
+    loadStats();
+    async function loadStats() {
+      const res = await adminFetch('/api/admin/stats');
+      if (!res) return;
+      const d = await res.json();
+      document.getElementById('stat-movies').textContent = d.movies;
+      document.getElementById('stat-animes').textContent = d.animes;
+      document.getElementById('stat-series').textContent = d.series;
+      document.getElementById('stat-users').textContent = d.users;
+      document.getElementById('stat-total').textContent = d.total_content;
+    }
+  </script>
+</body>
+</html>
+

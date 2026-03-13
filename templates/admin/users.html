@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Users | Admin | Entertainment Hub</title>
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/admin/admin.css" />
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class='bx bx-shield-quarter'></i>
+        <span>Admin<span class="accent">Hub</span></span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard.html" class="nav-item">
+          <i class='bx bxs-dashboard'></i><span>Dashboard</span>
+        </a>
+        <a href="/admin/content.html" class="nav-item">
+          <i class='bx bx-movie-play'></i><span>Content</span>
+        </a>
+        <a href="/admin/users.html" class="nav-item active">
+          <i class='bx bxs-group'></i><span>Users</span>
+        </a>
+        <a href="/admin/selectors.html" class="nav-item">
+          <i class='bx bx-slider'></i><span>Selectors</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <span id="admin-name" class="admin-label"></span>
+        <button class="btn-logout" id="logoutBtn"><i class='bx bx-log-out'></i> Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h2><i class='bx bxs-group'></i> Registered Users</h2>
+        <span class="page-subtitle" id="user-count"></span>
+      </div>
+
+      <div class="filters-bar">
+        <div class="search-wrap">
+          <i class='bx bx-search'></i>
+          <input type="text" id="search-input" placeholder="Search by username or email..." />
+        </div>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="data-table" id="users-table">
+          <thead>
+            <tr>
+              <th>Avatar</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Gender</th>
+              <th>Age</th>
+              <th>Joined</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="7" class="loading-row"><i class='bx bx-loader-alt bx-spin'></i> Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- Confirm Delete Modal -->
+  <div class="modal-overlay" id="confirm-modal" style="display:none;">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h3><i class='bx bx-error-circle' style="color:var(--danger)"></i> Confirm Delete</h3>
+      </div>
+      <p style="margin: 1rem 0; color: var(--text-muted);">Delete user <strong id="delete-username"></strong>? This cannot be undone.</p>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="cancelDelete">Cancel</button>
+        <button class="btn-danger" id="confirmDelete"><i class='bx bx-trash'></i> Delete User</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/admin/admin.js"></script>
+  <script>
+    requireAdmin();
+    let allUsers = [];
+    let deleteTargetId = null;
+
+    async function loadUsers() {
+      const tbody = document.getElementById('users-tbody');
+      tbody.innerHTML = `<tr><td colspan="7" class="loading-row"><i class='bx bx-loader-alt bx-spin'></i> Loading...</td></tr>`;
+      const res = await adminFetch('/api/admin/users');
+      if (!res) return;
+      allUsers = await res.json();
+      document.getElementById('user-count').textContent = `${allUsers.length} user${allUsers.length !== 1 ? 's' : ''} registered`;
+      renderUsers(allUsers);
+    }
+
+    function renderUsers(users) {
+      const tbody = document.getElementById('users-tbody');
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const filtered = users.filter(u =>
+        !search ||
+        u.username.toLowerCase().includes(search) ||
+        u.email.toLowerCase().includes(search)
+      );
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="loading-row">No users found</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = filtered.map(u => `
+        <tr>
+          <td>
+            <img src="${u.profile_pic || '/images/user.png'}" alt="${u.username}"
+                 class="table-avatar" onerror="this.src='/images/user.png'" />
+          </td>
+          <td><strong>${u.username}</strong></td>
+          <td>${u.email}</td>
+          <td>${u.gender || '—'}</td>
+          <td>${u.age || '—'}</td>
+          <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
+          <td class="action-cell">
+            <button class="btn-icon btn-del" onclick="openDelete(${u.id}, '${u.username.replace(/'/g,"\\'")}')">
+              <i class='bx bx-trash'></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('search-input').addEventListener('input', () => renderUsers(allUsers));
+
+    function openDelete(id, username) {
+      deleteTargetId = id;
+      document.getElementById('delete-username').textContent = username;
+      document.getElementById('confirm-modal').style.display = 'flex';
+    }
+
+    document.getElementById('cancelDelete').addEventListener('click', () => {
+      document.getElementById('confirm-modal').style.display = 'none';
+    });
+
+    document.getElementById('confirmDelete').addEventListener('click', async () => {
+      if (!deleteTargetId) return;
+      const res = await adminFetch(`/api/admin/users/${deleteTargetId}`, { method: 'DELETE' });
+      document.getElementById('confirm-modal').style.display = 'none';
+      if (res && res.ok) {
+        showToast('User deleted!', 'success');
+        loadUsers();
+      } else {
+        showToast('Error deleting user', 'error');
+      }
+    });
+
+    loadUsers();
+  </script>
+</body>
+</html>
+

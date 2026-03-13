@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Successful | Entertainment Hub</title>
+  <link rel="stylesheet" href="/static/css/auth.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <div class="auth-page">
+    <div class="auth-box">
+      <div style="margin-bottom: 1.5rem;">
+        <i class='bx bxs-check-circle' style="font-size: 4rem; color: #4ade80;"></i>
+      </div>
+      <h2 style="margin-bottom: 1rem;">Login Successful!</h2>
+      <p style="color: var(--text-muted); margin-bottom: 2rem;">Welcome back to Entertainment Hub.</p>
+      <button class="auth-btn" id="continue-button">Continue to Home <i class='bx bx-right-arrow-alt'></i></button>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('continue-button').addEventListener('click', function () {
+      // Debugging step to ensure button click is captured
+      console.log("Continue button clicked");
+
+      // Clear all history states by pushing and replacing a dummy state
+      window.history.pushState(null, null, window.location.href);
+      window.history.replaceState(null, null, window.location.href);
+
+      // Redirect to home.html and create a new state
+      window.location.replace('/home.html');
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainment Hub - About Us</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="/static/css/about.css" />
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="loader">
+      <div class="inner"></div>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div id="global-header"></div>
+
+    <div class="about-container">
+      <div class="about-header">
+        <h1>ABOUT US</h1>
+      </div>
+      <div class="about-content">
+        <p>Welcome to <strong>ENTERTAINMENT HUB</strong>, your ultimate destination for everything related to movies!
+          Our mission is to bring the magic of cinema to your fingertips by providing comprehensive, up-to-date, and
+          engaging content about your favorite films and the ones you’re eagerly anticipating.
+          <br><br>
+          At <strong>ENTERTAINMENT HUB</strong> we cater to movie enthusiasts of all kinds, whether you're a casual
+          viewer looking for a great film to watch tonight or a cinephile eager to dive deep into the latest releases
+          and classic masterpieces.
+        </p>
+
+        <h2>Our History</h2>
+        <div class="range-container" style="text-align:center;">
+          <input type="range" id="yearRange" min="1999" max="2023" step="3" value="1999" class="timeline-range">
+          <div id="selectedYear">1999</div>
+          <div class="timeline-image-container">
+            <img id="movieImage" src="/static/images/cast/eh2.png" alt="Movie 1999">
+          </div>
+        </div>
+
+        <h2>Information</h2>
+        <div class="info-box">
+          <h3>Discover the Magic of Cinema</h3>
+          <h4>At <strong>Entertainment<span>Hub</span> </strong>, we bring you:</h4>
+          <ul>
+            <li>The latest news and updates on upcoming movies</li>
+            <li>In-depth reviews and analyses of your favorite films</li>
+            <li>Exclusive interviews with actors, directors, and industry experts</li>
+            <li>Curated lists and recommendations tailored to your tastes</li>
+            <li>A vibrant community of fellow movie enthusiasts</li>
+          </ul>
+        </div>
+
+        <h2>Our Mission</h2>
+        <div class="info-box">
+          <p>Our mission at <strong>ENTERTAINMENT HUB</strong> is to be the go-to platform for movie lovers around the
+            globe. We aim to:</p>
+          <ul>
+            <li>Provide accurate and timely information on the latest movies and industry trends.</li>
+            <li>Foster a community where movie enthusiasts can connect, share, and discuss their passion for cinema.
+            </li>
+            <li>Deliver high-quality content that enhances the movie-watching experience.</li>
+            <li>Support and promote diverse voices and stories in the film industry.</li>
+          </ul>
+        </div>
+
+        <h2>Our Values</h2>
+        <div class="info-box">
+          <ul>
+            <li><strong>Integrity:</strong> We uphold the highest standards of honesty and transparency in all our
+              content and interactions.</li>
+            <li><strong>Customer Focus:</strong> Our readers are at the heart of everything we do.</li>
+            <li><strong>Innovation:</strong> We embrace creativity and strive to bring fresh perspectives.</li>
+            <li><strong>Teamwork:</strong> Collaboration and mutual respect are the cornerstones of our work culture.
+            </li>
+          </ul>
+        </div>
+
+        <h2>Our Team</h2>
+        <div class="team-grid">
+          <div class="team-card">
+            <img src="/static/images/cast/ninjacast4.png" alt="Team Member 1">
+            <div class="team-info">
+              <h3>K. Mithul</h3>
+              <p>Role: CEO</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <img src="/static/images/cast/ninjacast4.png" alt="Team Member 2">
+            <div class="team-info">
+              <h3>K. Yujana Lakshmi</h3>
+              <p>Role: CTO</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <img src="/static/images/cast/ninjacast4.png" alt="Team Member 3">
+            <div class="team-info">
+              <h3>G. Subhash Guptha</h3>
+              <p>Role: Creative Director</p>
+            </div>
+          </div>
+          <div class="team-card">
+            <img src="/static/images/cast/ninjacast4.png" alt="Team Member 4">
+            <div class="team-info">
+              <h3>P. Krishna Murthy</h3>
+              <p>Role: Marketing Manager</p>
+            </div>
+          </div>
+        </div>
+
+
+        <!--Footer-->
+
+        <!--Footer-->
+        <div id="global-footer"></div>
+        <!--Footer-->
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const yearRange = document.getElementById('yearRange');
+      const selectedYear = document.getElementById('selectedYear');
+      const movieImage = document.getElementById('movieImage');
+
+      const images = {
+        1999: '/images/cast/eh2.png',
+        2002: '/images/cast/eh1.png',
+        2005: '/images/cast/eh3.jpg',
+        2008: '/images/cast/eh4.png',
+        2011: '/images/cast/eh5.jpg',
+        2014: '/images/cast/eh6.png',
+        2017: '/images/cast/eh7.jpg',
+        2020: '/images/cast/eh9.jpg',
+        2023: '/images/cast/eh8.jpg'
+      };
+
+      yearRange.addEventListener('input', () => {
+        const year = yearRange.value;
+        selectedYear.textContent = year;
+
+        // Update the image source only if the year has a corresponding image
+        if (images[year]) {
+          movieImage.src = images[year];
+          movieImage.alt = `Movie ${year}`;
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>
