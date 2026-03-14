@@ -31,7 +31,7 @@ app = Flask(
     static_folder=STATIC_DIR,
     static_url_path='/static',   # Serve assets at /static/css/, /static/js/ etc.
 )
-app.secret_key = 'eh-secret-key-change-in-production-2024'
+app.secret_key = 'the-pizza-is-tasty-with-red-chutney'
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # Initialise DB on startup
