@@ -1,6 +1,5 @@
 """
-database.py — SQLite setup and JSON migration for Entertainment Hub
-Run this file once to create and populate the database.
+database.py — SQLite setup for Entertainment Hub
 Also imported by app.py for the get_db() helper.
 """
 
@@ -9,8 +8,7 @@ import json
 import os
 import hashlib
 
-DB_PATH  = os.path.join(os.path.dirname(__file__), 'entertainmenthub.db')
-DATA_DIR = os.path.join(os.path.dirname(__file__), 'static', 'data')
+DB_PATH = os.path.join(os.path.dirname(__file__), 'entertainmenthub.db')
 
 
 def get_db():
@@ -100,12 +98,6 @@ def init_db():
         conn.commit()
         print("[DB] Admin user created  ->  username: admin | password: admin123")
 
-    # ── Migrate JSON data ─────────────────────────────────────────────────────
-    existing_content = c.execute('SELECT COUNT(*) FROM content').fetchone()[0]
-    if existing_content == 0:
-        _migrate_json(c, conn)
-    else:
-        print(f'[DB] Content already present ({existing_content} rows), skipping migration.')
 
     # ── Migrate existing cast members into selectors (idempotent) ─────────────
     if c.execute("SELECT COUNT(*) FROM selectors WHERE category='cast'").fetchone()[0] == 0:
@@ -116,49 +108,6 @@ def init_db():
 
     conn.close()
 
-
-def _migrate_json(cursor, conn):
-    """Read the three JSON files and INSERT them into the content table."""
-    file_map = {
-        'movies':    'movies.json',
-        'animes':    'anime.json',
-        'webSeries': 'series.json',
-    }
-    total = 0
-    for content_type, filename in file_map.items():
-        filepath = os.path.join(DATA_DIR, filename)
-        if not os.path.exists(filepath):
-            print(f"[DB] WARNING: {filepath} not found, skipping.")
-            continue
-        with open(filepath, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        for slug, item in data.items():
-            cursor.execute('''
-                INSERT OR IGNORE INTO content
-                    (slug, type, title, h_image, v_image, rating, status,
-                     description, tags, cast_data, watch_options, video_url,
-                     genre_display, sections)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (
-                slug,
-                content_type,
-                item.get('title', slug),
-                item.get('h-image', ''),
-                item.get('v-image', ''),
-                str(item.get('rating', '4.5')),
-                item.get('Status', 'Released'),
-                item.get('description', ''),
-                json.dumps(item.get('tags', []), ensure_ascii=False),
-                json.dumps(item.get('cast', []), ensure_ascii=False),
-                json.dumps(item.get('watchOptions', []), ensure_ascii=False),
-                item.get('videoUrl', ''),
-                item.get('genreDisplay', ''),
-                json.dumps(item.get('sections', []), ensure_ascii=False),
-            ))
-            total += 1
-        conn.commit()
-        print(f"[DB] Migrated {len(data)} items from {filename} ({content_type})")
-    print(f'[DB] Total content migrated: {total} items')
 
 
 def _seed_selectors(cursor):
