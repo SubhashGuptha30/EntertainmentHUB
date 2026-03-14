@@ -148,6 +148,19 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-group" style="display: flex; flex-direction: column; justify-content: center;">
+          <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <input type="checkbox" id="f-franchise-check" style="width: auto; margin:0; padding:0;" onchange="document.getElementById('f-franchise-group').style.display = this.checked ? 'block' : 'none';" />
+            <span>Connected to a Franchise?</span>
+          </label>
+        </div>
+        <div class="form-group" id="f-franchise-group" style="display: none;">
+          <label>Select Franchise</label>
+          <select id="f-franchise"><option value="">— select —</option></select>
+        </div>
+      </div>
+
       <!-- ── ARTWORK ──────────────────────────────────────────────── -->
       <div class="form-section-label"><i class='bx bx-image'></i> Artwork</div>
 
@@ -263,6 +276,7 @@
     if (!res) return;
     selectors = await res.json();
     buildRatingSelect();
+    buildFranchiseSelect();
     buildChips('tags-chips',  selectors.tags  || [], selectedTags);
     buildChips('watch-chips', selectors.watch_options || [], selectedWatch);
   }
@@ -275,6 +289,25 @@
       const opt = document.createElement('option');
       opt.value = r.value; opt.textContent = r.value;
       if (r.value === cur) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function buildFranchiseSelect() {
+    const sel = document.getElementById('f-franchise');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— select —</option>';
+    (selectors.franchises || []).forEach(f => {
+      let fTitle = f.value;
+      try {
+        const parsed = JSON.parse(f.value);
+        if (parsed && parsed.title) fTitle = parsed.title;
+      } catch (e) {}
+
+      const opt = document.createElement('option');
+      opt.value = fTitle; 
+      opt.textContent = fTitle;
+      if (fTitle === cur) opt.selected = true;
       sel.appendChild(opt);
     });
   }
@@ -489,8 +522,12 @@
     document.getElementById('f-video').value  = item ? (item.videoUrl || '') : '';
     document.getElementById('f-desc').value   = item ? (item.description || '') : '';
 
-    // Rating
+    // Rating & Franchise
     document.getElementById('f-rating').value = item ? (item.rating || '') : '';
+    const hasFranchise = item && item.franchise && item.franchise.trim() !== '';
+    document.getElementById('f-franchise-check').checked = hasFranchise;
+    document.getElementById('f-franchise').value = hasFranchise ? item.franchise : '';
+    document.getElementById('f-franchise-group').style.display = hasFranchise ? 'block' : 'none';
 
     // Artwork
     vImagePath = item ? (item['v-image'] || '') : '';
@@ -575,6 +612,7 @@
       tags:        [...selectedTags],
       watchOptions:[...selectedWatch],
       cast:        selectedCast.map(m => ({ name: m.name, image: m.image, role: m.role })),
+      franchise:   document.getElementById('f-franchise-check').checked ? document.getElementById('f-franchise').value : ''
     };
 
     const url    = isEdit ? `/api/admin/content/${id}` : '/api/admin/content';

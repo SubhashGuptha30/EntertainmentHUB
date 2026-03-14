@@ -195,9 +195,9 @@ franchiseCards.forEach(franchise => {
       <div class="franchise-content">
           <h3 class="franchise-title">${franchise.title}</h3>
           <p class="franchise-desc">${franchise.description}</p>
-          <button class="view-btn">Explore</button>
+          <a href="/franchise-explore.html?franchise=${encodeURIComponent(franchise.title)}&img=${encodeURIComponent(franchise.imgSrc)}&desc=${encodeURIComponent(franchise.description)}" class="view-btn" style="text-decoration:none; display:inline-block; text-align:center; padding-top: 5px;">Explore</a>
       </div>
-    </div >
-    `;
+    </div>
+  `;
   franchiseSection.innerHTML += franchiseCard;
 });

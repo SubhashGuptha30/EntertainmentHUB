@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Franchise | Entertainment Hub</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+        /* Specific header layout for franchise */
+        .franchise-header {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 60px; /* offset header */
+        }
+
+        .franchise-header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, #0b0f19 5%, rgba(11,15,25,0.4) 100%);
+            z-index: 1;
+        }
+
+        .franchise-banner {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            filter: blur(8px) brightness(0.4);
+            transform: scale(1.05); /* hide blurred edges */
+        }
+
+        .franchise-info {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .franchise-logo {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            margin-bottom: 2rem;
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,180,58,0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .franchise-info h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+        }
+
+        .franchise-info p {
+            font-size: 1.1rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        /* Movie Grid */
+        .franchise-content-section {
+            padding: 4rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .content-heading {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--primary, #ffb43a);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        /* Loading & Error States */
+        #loader-msg { text-align: center; padding: 50px; color: #aaa; font-size: 1.2rem; }
+        .no-content-msg { text-align: center; padding: 60px; color: #888; font-size: 1.2rem; grid-column: 1 / -1; }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader">
+            <div class="inner"></div>
+        </div>
+    </div>
+
+    <div id="main-content" style="opacity: 0; transition: opacity 0.5s ease;">
+        <div id="global-header"></div>
+
+        <!-- Dynamic Header -->
+        <header class="franchise-header" id="f-header" style="display:none;">
+            <img src="" id="f-banner" class="franchise-banner" alt="Banner Background">
+            <div class="franchise-info">
+                <img src="" id="f-logo" class="franchise-logo" alt="Franchise Logo">
+                <h1 id="f-name">Franchise Name</h1>
+                <p id="f-desc">Loading description...</p>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Grid -->
+        <section class="franchise-content-section container">
+            <h2 class="content-heading">Titles in this Franchise</h2>
+            <div id="loader-msg"><i class='bx bx-loader-alt bx-spin'></i> Assembling the universe...</div>
+            <div class="grid-container" id="f-grid">
+                <!-- Content injected here via JS -->
+            </div>
+        </section>
+
+        <!--Footer-->
+        <div id="global-footer"></div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const franchiseName = urlParams.get('franchise');
+            const imgFile = urlParams.get('img');
+            const desc = urlParams.get('desc');
+
+            if (!franchiseName) {
+                window.location.href = '/franchises.html';
+                return;
+            }
+
+            // Populate header immediately if possible
+            document.title = `${franchiseName} - Entertainment Hub`;
+            document.getElementById('f-name').textContent = franchiseName;
+            
+            if (imgFile) {
+                document.getElementById('f-logo').src = `/images/franchise/${imgFile}`;
+                document.getElementById('f-banner').src = `/images/franchise/${imgFile}`;
+                document.getElementById('f-header').style.display = 'flex';
+            }
+            if (desc) {
+                document.getElementById('f-desc').textContent = desc;
+            }
+
+            // Show main layout
+            document.getElementById('main-content').style.opacity = '1';
+
+            // Wait until DataManager finishes loading all content
+            const waitForData = () => new Promise(resolve => {
+                if (DataManager.isLoaded) return resolve();
+                window.addEventListener('dataLoaded', resolve, { once: true });
+            });
+
+            await waitForData();
+            
+            // Collect all items matching the franchise
+            const allItems = DataManager.getAllItems();
+            const matchingItems = allItems.filter(item => item.franchise && item.franchise.toLowerCase() === franchiseName.toLowerCase());
+
+            const grid = document.getElementById('f-grid');
+            document.getElementById('loader-msg').style.display = 'none';
+
+            if (matchingItems.length === 0) {
+                grid.innerHTML = `<div class="no-content-msg">No titles have been added to the <strong>${franchiseName}</strong> franchise yet. Stay tuned!</div>`;
+                return;
+            }
+
+            // Render movie boxes
+            const html = matchingItems.map(slide => `
+                <div class="movie-box">
+                    <img src="${slide['v-image'] || '/images/default-poster.jpg'}" alt="${slide.title}" class="movie-box-img" onerror="this.src='/images/default-poster.jpg'" />
+                    <div class="box-text">
+                        <div class="movie-info">
+                            <h2 class="movie-title">${slide.title}</h2>
+                            <span class="movie-type">
+                                ${slide.genreDisplay || slide.genre || (slide.tags ? slide.tags.join(' • ') : '')}
+                            </span>
+                        </div>
+                        <div class="play-btn-box" title="Play Now">
+                            <a href="${DataManager.getItemPath(slide)}" class="play-btn">
+                                <i class="bx bx-right-arrow"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            grid.innerHTML = html;
+        });
+    </script>
+</body>
+</html>

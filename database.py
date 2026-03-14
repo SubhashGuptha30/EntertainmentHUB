@@ -63,6 +63,7 @@ def init_db():
             video_url    TEXT    DEFAULT '',
             genre_display TEXT   DEFAULT '',
             sections     TEXT    DEFAULT '[]',      -- JSON array stored as text
+            franchise    TEXT    DEFAULT '',
             UNIQUE(slug, type)
         )
     '''

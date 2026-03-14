@@ -59,8 +59,8 @@ const DataManager = {
    * Used for the hero banner so it feels fresh on every page load.
    * @param {number} max - max items to return (default 12)
    */
-  getHeroItems(max = 12) {
-    const all = this.getAllItems().filter(item => item['h-image']);
+  getHeroItems(max = 12, category = null) {
+    const all = this.getAllItems(category).filter(item => item['h-image']);
     // Fisher-Yates shuffle
     for (let i = all.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -103,9 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (preloader) {
     setTimeout(function () {
       preloader.style.opacity = '0';
-      if (mainContent) {
-        // mainContent.style.display = "block"; 
-      }
       setTimeout(() => {
         preloader.style.display = "none";
       }, 500);
@@ -119,9 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (document.getElementById("global-footer")) {
     loadFooter();
   }
-
-  // Initialize Swipers roughly (removed, now handled individually)
-  // initSwipers();
 });
 
 
@@ -131,27 +125,27 @@ function loadHeader() {
   const headerHTML = `
     <header>
       <div class="nav container">
-        <a href="/home.html" class="logo" title="Entertainment Hub">
+        <a href="/home" class="logo" title="Entertainment Hub">
           Entertainment<span>Hub</span>
         </a>
         <div class="navbar">
-          <a href="/home.html" class="nav-link" data-page="/home.html" title="Home">
+          <a href="/home" class="nav-link" data-page="/home" title="Home">
             <i class="bx bx-home-alt-2"></i>
             <span class="nav-link-title">Home</span>
           </a>
-          <a href="/movies.html" class="nav-link" data-page="/movies.html" title="Movies">
+          <a href="/movies" class="nav-link" data-page="/movies" title="Movies">
             <i class="bx bx-camera-movie"></i>
             <span class="nav-link-title">Movies</span>
           </a>
-          <a href="/anime.html" class="nav-link" data-page="/anime.html" title="Anime">
+          <a href="/anime" class="nav-link" data-page="/anime" title="Anime">
             <i class="bx bx-child"></i>
             <span class="nav-link-title">Anime</span>
           </a>
-          <a href="/web-series.html" class="nav-link" data-page="/web-series.html" title="Web Series">
+          <a href="/web-series" class="nav-link" data-page="/web-series" title="Web Series">
             <i class="bx bx-tv"></i>
             <span class="nav-link-title">Series</span>
           </a>
-          <a href="/franchises.html" class="nav-link" data-page="/franchises.html" title="Franchises">
+          <a href="/franchises" class="nav-link" data-page="/franchises" title="Franchises">
             <i class="bx bx-list-ul"></i>
             <span class="nav-link-title">Franchises</span>
           </a>
@@ -163,7 +157,7 @@ function loadHeader() {
           </div>
           <div class="search-result"></div>
         </div>
-        <a href="/profile.html" class="user">
+        <a href="/profile" class="user">
           <img src="/images/user.png" alt="user profile" title="User Profile" class="user-img" />
         </a>
       </div>
@@ -187,14 +181,13 @@ function loadFooter() {
         <div class="footer-links">
           <h3>Quick Links</h3>
           <ul>
-            <li><a href="/home.html">Home</a></li>
-            <li><a href="/movies.html">Movies</a></li>
-            <li><a href="/anime.html">Anime</a></li>
-            <li><a href="/web-series.html">Series</a></li>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/movies">Movies</a></li>
+            <li><a href="/anime">Anime</a></li>
+            <li><a href="/web-series">Series</a></li>
             <li><a href="/contact/contactus.html">Help & Support</a></li>
           </ul>
         </div>
-        <div class="footer-links" style="display: none;"> <!-- Hidden column for balance --> </div>
         <div class="footer-social">
           <h3>Connect with Us</h3>
           <div class="social-icons">
@@ -224,9 +217,18 @@ function setActiveLink() {
   navLinks.forEach(link => link.classList.remove('link-active'));
 
   navLinks.forEach(link => {
-    const linkPath = link.getAttribute('data-page');
-    // Check if current path ends with the link path (for local file support) or is root
-    if (currentPath === linkPath || (currentPath === "/" && linkPath === "/home.html") || (linkPath !== "/" && currentPath.endsWith(linkPath))) {
+    let linkPath = link.getAttribute('data-page');
+    if (!linkPath) return;
+    
+    // Normalize both paths for comparison
+    let currentNorm = currentPath.toLowerCase().replace('.html', '');
+    let linkNorm = linkPath.toLowerCase().replace('.html', '');
+    
+    if (currentNorm === '/' || currentNorm === '') {
+        currentNorm = '/home';
+    }
+
+    if (currentNorm.endsWith(linkNorm)) {
       link.classList.add('link-active');
     }
   });
@@ -398,10 +400,7 @@ function displayResults(results, container, query) {
 
 
 
-// 4. Swiper Initialization (Unchanged, operates if elements exist)
-/* global Swiper */
-
-// 4. Swiper Initialization Helper
+// Swiper Initialization Helper
 /* global Swiper */
 window.setupSwiper = function (selector) {
   // Common config
@@ -426,7 +425,6 @@ window.setupSwiper = function (selector) {
   };
 
   const headConfig = {
-    spaceBetween: 30,
     centeredSlides: true,
     slidesPerView: 1,
     spaceBetween: 10,
@@ -458,7 +456,3 @@ window.setupSwiper = function (selector) {
     }
   });
 };
-
-// Removed auto-init
-// initSwipers();
-

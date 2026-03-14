@@ -1,13 +1,4 @@
 
-// Removed hardcoded data
-// const headSlidesData = ...
-
-// Function to shuffle array and select n random elements
-function getRandomheadSlides(arr, n) {
-  const shuffled = arr.sort(() => 0.5 - Math.random());
-  return shuffled.slice(0, n);
-}
-
 // Function to generate slide HTML
 function generateheadSlideHTML(slide) {
   // Use category or derive from type
@@ -56,8 +47,8 @@ function renderheadSlides() {
     return;
   }
 
-  // Randomly sample items with horizontal posters — no section filtering needed
-  const selectedSlides = DataManager.getHeroItems(8);
+  // Randomly sample items with horizontal posters — filter by page category
+  const selectedSlides = DataManager.getHeroItems(8, DataManager.getPageCategory());
   const swiperWrapper = document.getElementById('head-slides');
   if (!swiperWrapper) return;
 

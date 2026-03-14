@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -51,26 +51,40 @@
             <div class="profile-section">
               <button class="btn" onclick="toggleEditProfile()">Edit Profile Information</button>
               <form id="edit-profile-form" style="display: none;">
-                <label for="edit-username">Username:</label>
-                <input type="text" id="edit-username" name="edit-username" />
-                <label for="edit-email">Email:</label>
-                <input type="email" id="edit-email" name="edit-email" />
-                <label for="edit-gender">Gender:</label>
-                <input type="text" id="edit-gender" name="edit-gender" />
-                <label for="edit-age">Age:</label>
-                <input type="number" id="edit-age" name="edit-age" />
+                <div class="form-group">
+                  <label for="edit-username">Username:</label>
+                  <input type="text" id="edit-username" name="edit-username" />
+                </div>
+                <div class="form-group">
+                  <label for="edit-email">Email:</label>
+                  <input type="email" id="edit-email" name="edit-email" />
+                </div>
+                <div class="form-group">
+                  <label for="edit-gender">Gender:</label>
+                  <input type="text" id="edit-gender" name="edit-gender" />
+                </div>
+                <div class="form-group">
+                  <label for="edit-age">Age:</label>
+                  <input type="number" id="edit-age" name="edit-age" />
+                </div>
                 <button type="submit" class="btn">Save Changes</button>
               </form>
             </div>
             <div class="profile-section">
               <button class="btn" onclick="toggleChangePassword()">Change Password</button>
               <form id="change-password-form" style="display: none;">
-                <label for="current-password">Current Password:</label>
-                <input type="password" id="current-password" name="current-password" />
-                <label for="new-password">New Password:</label>
-                <input type="password" id="new-password" name="new-password" />
-                <label for="confirm-password">Confirm New Password:</label>
-                <input type="password" id="confirm-password" name="confirm-password" />
+                <div class="form-group">
+                  <label for="current-password">Current Password:</label>
+                  <input type="password" id="current-password" name="current-password" />
+                </div>
+                <div class="form-group">
+                  <label for="new-password">New Password:</label>
+                  <input type="password" id="new-password" name="new-password" />
+                </div>
+                <div class="form-group">
+                  <label for="confirm-password">Confirm New Password:</label>
+                  <input type="password" id="confirm-password" name="confirm-password" />
+                </div>
                 <button type="submit" class="btn">Change Password</button>
               </form>
             </div>

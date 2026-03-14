@@ -9,7 +9,7 @@ import json
 import uuid
 from functools import wraps
 from flask import (Flask, request, jsonify, session,
-                   send_from_directory, send_file)
+                   send_from_directory)
 from database import init_db, get_db, hash_password, row_to_dict
 
 # ── App Setup ─────────────────────────────────────────────────────────────────
@@ -96,6 +96,9 @@ def serve_page(filename):
                 file_only = os.path.basename(html_path)
                 return send_from_directory(directory, file_only)
 
+    # Note: We must check if 404.html exists first, to avoid sending error if missing.
+    if os.path.isfile(os.path.join(TEMPLATES_DIR, '404.html')):
+        return send_from_directory(TEMPLATES_DIR, '404.html'), 404
     return "404 Not Found", 404
 
 
@@ -228,7 +231,7 @@ def delete_selector(selector_id):
 @app.route('/api/admin/selectors/<int:selector_id>', methods=['PUT'])
 @admin_required
 def update_selector(selector_id):
-    import sqlite3 as _sqlite3
+    import sqlite3 as _sqlite3  # local import to catch IntegrityError
     data  = request.get_json(silent=True) or {}
     value = (data.get('value') or '').strip()
     if not value:
@@ -349,8 +352,8 @@ def update_me():
         if not user:
             return jsonify({'error': 'User not found'}), 404
 
-        username    = data.get('username', user['username']).strip()
-        email       = data.get('email', user['email']).strip()
+        username    = (data.get('username') or user['username'] or '').strip()
+        email       = (data.get('email') or user['email'] or '').strip()
         gender      = data.get('gender', user['gender'])
         age         = data.get('age', user['age'])
         profile_pic = data.get('profile_pic', user['profile_pic'])
@@ -405,7 +408,10 @@ def get_content_by_type(ctype):
     db = get_db()
     try:
         rows = db.execute('SELECT * FROM content WHERE type=?', (ctype,)).fetchall()
-        result = {row_to_dict(r)['slug']: row_to_dict(r) for r in rows}
+        result = {}
+        for r in rows:
+            d = row_to_dict(r)
+            result[d['slug']] = d
         return jsonify(result)
     finally:
         db.close()
@@ -553,8 +559,8 @@ def admin_add_content():
         db.execute('''
             INSERT INTO content
                 (slug, type, title, h_image, v_image, rating, status, description,
-                 tags, cast_data, watch_options, video_url, genre_display, sections)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                 tags, cast_data, watch_options, video_url, genre_display, sections, franchise)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         ''', (
             slug, data['type'],
             data.get('title', ''),
@@ -569,6 +575,7 @@ def admin_add_content():
             data.get('video_url', data.get('videoUrl', '')),
             data.get('genre_display', data.get('genreDisplay', '')),
             json.dumps(sections, ensure_ascii=False),
+            data.get('franchise', ''),
         ))
         db.commit()
         return jsonify({'message': 'Content added', 'slug': slug}), 201
@@ -588,10 +595,11 @@ def admin_update_content(content_id):
         existing = row_to_dict(row)
 
         def _j(key):
+            """Return JSON string for a list field, preferring new data over existing."""
             val = data.get(key)
             if val is None:
-                return json.dumps(existing.get(key, []), ensure_ascii=False)
-            return json.dumps(val if isinstance(val, list) else val, ensure_ascii=False)
+                val = existing.get(key, [])
+            return json.dumps(val, ensure_ascii=False)
 
         # Re-derive sections from the (possibly new) status
         new_status = data.get('status', data.get('Status', existing.get('Status', 'Released')))
@@ -604,7 +612,7 @@ def admin_update_content(content_id):
             UPDATE content SET
                 title=?, h_image=?, v_image=?, rating=?, status=?,
                 description=?, tags=?, cast_data=?, watch_options=?,
-                video_url=?, genre_display=?, sections=?, type=?
+                video_url=?, genre_display=?, sections=?, type=?, franchise=?
             WHERE id=?
         ''', (
             data.get('title', existing['title']),
@@ -620,6 +628,7 @@ def admin_update_content(content_id):
             data.get('genre_display', data.get('genreDisplay', existing.get('genreDisplay', ''))),
             json.dumps(new_sections, ensure_ascii=False),
             data.get('type', existing.get('type', 'movies')),
+            data.get('franchise', existing.get('franchise', '')),
             content_id
         ))
         db.commit()

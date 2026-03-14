@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -155,12 +155,12 @@
                     document.getElementById('desc-title').textContent = item.title;
                     document.getElementById('movie-desc').textContent = item.description || "No description available.";
 
-                    // Image Fallback
-                    const poster = item['h-image'] || item['v-image'] || '/images/default-poster.jpg';
+                    // Image Fallback (Horizontal ONLY for banners)
+                    const poster = item['h-image'] || '/images/default-banner.jpg';
                     const bannerImg = document.getElementById('banner-image');
                     bannerImg.src = poster;
-                    // If it's an SVG placeholder, use contain mode instead of cover
-                    if (poster.endsWith('.svg')) {
+                    // If it's a placeholder, use contain mode instead of cover
+                    if (poster.endsWith('.svg') || poster.endsWith('.jpg')) {
                         bannerImg.classList.add('placeholder-img');
                     } else {
                         bannerImg.classList.remove('placeholder-img');
