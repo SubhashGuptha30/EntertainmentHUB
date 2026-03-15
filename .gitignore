@@ -1,0 +1,11 @@
+# Entertainment Hub - Ignore Rules
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+*.db
+backups/
+*.log
+.DS_Store
+Thumbs.db
