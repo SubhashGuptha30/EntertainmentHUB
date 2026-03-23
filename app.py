@@ -8,11 +8,10 @@ import os
 import json
 import uuid
 from functools import wraps
-from flask import (Flask, request, jsonify, session,
-                   send_from_directory)
+from flask import (Flask, request, jsonify, session, send_from_directory)
 from database import init_db, get_db, hash_password, row_to_dict
 
-# ── App Setup ─────────────────────────────────────────────────────────────────
+# App Setup
 BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR     = os.path.join(BASE_DIR, 'static')
 TEMPLATES_DIR  = os.path.join(BASE_DIR, 'templates')
@@ -39,7 +38,7 @@ with app.app_context():
     init_db()
 
 
-# ── Auth Decorators ───────────────────────────────────────────────────────────
+# Auth Decorators
 
 def login_required(f):
     @wraps(f)
@@ -59,7 +58,7 @@ def admin_required(f):
     return decorated
 
 
-# ── HTML Page Serving (from templates/) ──────────────────────────────────────
+# HTML Page Serving (from templates/)
 
 @app.route('/images/<path:filename>')
 def legacy_images(filename):
@@ -102,9 +101,7 @@ def serve_page(filename):
     return "404 Not Found", 404
 
 
-# ══════════════════════════════════════════════════════════════════════════════
 #  FILE UPLOAD API
-# ══════════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/admin/upload', methods=['POST'])
 @admin_required
@@ -129,9 +126,7 @@ def upload_file():
     return jsonify({'path': f'/static/images/{folder}/{filename}'})
 
 
-# ══════════════════════════════════════════════════════════════════════════════
 #  SELECTORS API (manages dropdown options)
-# ══════════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/admin/selectors', methods=['GET'])
 @admin_required
@@ -248,9 +243,7 @@ def update_selector(selector_id):
         db.close()
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 #  USER AUTH API
-# ═══════════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/auth/register', methods=['POST'])
 def register():
@@ -379,9 +372,7 @@ def update_me():
         db.close()
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 #  CONTENT API (User-facing)
-# ═══════════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/content', methods=['GET'])
 def get_all_content():
@@ -431,9 +422,7 @@ def get_single_item(ctype, slug):
         db.close()
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 #  ADMIN AUTH API
-# ═══════════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/admin/login', methods=['POST'])
 def admin_login():
@@ -470,9 +459,7 @@ def admin_check():
     return jsonify({'logged_in': False}), 401
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
 #  ADMIN DASHBOARD API
-# ═══════════════════════════════════════════════════════════════════════════════
 
 @app.route('/api/admin/stats', methods=['GET'])
 @admin_required
@@ -648,8 +635,6 @@ def admin_delete_content(content_id):
     finally:
         db.close()
 
-
-# ── Run ───────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     print("=" * 60)
     print("  Entertainment Hub -- Full Stack Server")
