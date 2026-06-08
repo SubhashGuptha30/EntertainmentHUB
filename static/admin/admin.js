@@ -8,7 +8,7 @@ async function requireAdmin() {
   try {
     const res = await fetch('/api/admin/check');
     if (!res.ok) {
-      window.location.href = '/admin/index.html';
+      window.location.href = '/admin/index';
       return;
     }
     const data = await res.json();
@@ -18,7 +18,7 @@ async function requireAdmin() {
     if (el)    el.textContent = `Logged in as: ${data.admin}`;
     if (greet) greet.textContent = data.admin;
   } catch {
-    window.location.href = '/admin/index.html';
+    window.location.href = '/admin/index';
   }
 }
 
@@ -27,12 +27,13 @@ async function adminFetch(url, options = {}) {
   const defaults = {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'same-origin',
+    cache: 'no-store',
   };
   try {
     const res = await fetch(url, { ...defaults, ...options,
       headers: { ...defaults.headers, ...(options.headers || {}) } });
     if (res.status === 403 || res.status === 401) {
-      window.location.href = '/admin/index.html';
+      window.location.href = '/admin/index';
       return null;
     }
     return res;
@@ -48,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
       await fetch('/api/admin/logout', { method: 'POST' });
-      window.location.href = '/admin/index.html';
+      window.location.href = '/admin/index';
     });
   }
 });

@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainment Hub</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="/static/css/view-more.css" />
+  <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    /* ── See-All Grid Layout ─────────────────────────────────── */
+    .see-all-page {
+      padding-top: 7rem;
+      min-height: 100vh;
+    }
+
+    .see-all-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding: 0 1rem;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--glass-bg);
+      border: var(--glass-border);
+      color: var(--text-main);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .see-all-meta {
+      flex: 1;
+    }
+
+    .see-all-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      border-left: 5px solid var(--primary);
+      padding-left: 1rem;
+      background: linear-gradient(to right, rgba(255, 180, 58, 0.1), transparent);
+      border-radius: 0 10px 10px 0;
+      padding-top: 4px;
+      padding-bottom: 4px;
+    }
+
+    .see-all-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.3rem;
+      padding-left: 1.2rem;
+    }
+
+    .see-all-count {
+      background: var(--glass-bg);
+      border: var(--glass-border);
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius-full);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    /* ── Card Grid ────────────────────────────────────────────── */
+    .see-all-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 1.5rem;
+      padding: 0 1rem;
+    }
+
+    @media (min-width: 768px) {
+      .see-all-grid {
+        grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .see-all-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      }
+    }
+
+    /* ── Loading Spinner ──────────────────────────────────────── */
+    .scroll-loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .scroll-loader i {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
+
+    .end-marker {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── Filter chips ─────────────────────────────────────────── */
+    .see-all-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 0 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-chip {
+      padding: 0.45rem 1rem;
+      border-radius: var(--radius-full);
+      background: var(--glass-bg);
+      border: var(--glass-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: var(--transition-normal);
+    }
+
+    .filter-chip:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .filter-chip.active {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+      font-weight: 600;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="loader">
+      <div class="inner"></div>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div id="global-header"></div>
+
+    <section class="see-all-page container">
+      <!-- Header -->
+      <div class="see-all-header">
+        <a class="back-btn" id="back-btn" title="Go back"><i class='bx bx-arrow-back'></i></a>
+        <div class="see-all-meta">
+          <h1 class="see-all-title" id="page-title">Loading…</h1>
+          <p class="see-all-subtitle" id="page-subtitle"></p>
+        </div>
+        <span class="see-all-count" id="item-count"></span>
+      </div>
+
+      <!-- Type filter chips -->
+      <div class="see-all-filters" id="type-filters"></div>
+
+      <!-- Content Grid -->
+      <div class="see-all-grid" id="content-grid"></div>
+
+      <!-- Infinite scroll sentinel -->
+      <div id="scroll-sentinel"></div>
+      <div class="scroll-loader" id="scroll-loader" style="display:none;">
+        <i class='bx bx-loader-alt bx-spin'></i> Loading more…
+      </div>
+      <div class="end-marker" id="end-marker" style="display:none;">✨ That's the end of the page! ✨</div>
+    </section>
+
+    <div id="global-footer"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('signedIn') !== 'true') {
+        window.location.href = '/'; return;
+      }
+    });
+  </script>
+  <script src="/static/js/main.js"></script>
+  <script>
+    /* ── Config ────────────────────────────────────────────────── */
+    const BATCH_SIZE = 24;
+    const params = new URLSearchParams(window.location.search);
+    const SECTION = params.get('section') || 'popular';
+    const PAGE_TYPE = params.get('type') || '';          // optional: movies, animes, webSeries
+
+    const SECTION_LABELS = {
+      'popular': 'Popular',
+      'new-releases': 'New Releases',
+      'top-rated': 'Top Rated',
+      'most-watched': 'Most Watched',
+      'coming-soon': 'Coming Soon',
+    };
+    const TYPE_LABELS = {
+      'movies': 'Movies', 'animes': 'Anime', 'webSeries': 'Web Series'
+    };
+
+    let allItems = [];   // filtered items for current view
+    let displayedCount = 0;
+    let activeTypeFilter = PAGE_TYPE || 'all';
+    let masterList = [];  // all items matching section (before type filter)
+
+    /* ── Set page titles ──────────────────────────────────────── */
+    let title = SECTION_LABELS[SECTION] || SECTION;
+    if (SECTION === 'franchise') {
+      title = params.get('franchise') || 'Franchise';
+    }
+    document.getElementById('page-title').textContent = title;
+    document.title = `Entertainment Hub | ${title}`;
+
+    if (PAGE_TYPE && SECTION !== 'franchise') {
+      document.getElementById('page-subtitle').textContent = TYPE_LABELS[PAGE_TYPE] || PAGE_TYPE;
+    } else if (SECTION === 'franchise') {
+      document.getElementById('page-subtitle').textContent = 'Franchise Collection';
+    }
+
+    /* ── Back button ──────────────────────────────────────────── */
+    document.getElementById('back-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      if (history.length > 1) history.back();
+      else window.location.href = '/home';
+    });
+
+    /* ── Fetch data ───────────────────────────────────────────── */
+    fetch('/api/content').then(r => r.json()).then(data => {
+      // Flatten the grouped content into a single array
+      const flat = [];
+      for (const type of Object.keys(data)) {
+        const items = data[type];
+        for (const slug of Object.keys(items)) {
+          const item = items[slug];
+          item.type = item.type || type;
+          item.slug = item.slug || slug;
+          flat.push(item);
+        }
+      }
+
+      // Filter by section
+      if (SECTION === 'franchise') {
+        const franchiseName = params.get('franchise');
+        masterList = flat.filter(item => item.franchise === franchiseName);
+      } else {
+        masterList = flat.filter(item => (item.sections || []).includes(SECTION));
+      }
+
+      // Sort alphabetically
+      masterList.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+
+      buildTypeFilters();
+      applyTypeFilter();
+      hidePreloader();
+    }).catch(() => {
+      document.getElementById('content-grid').innerHTML =
+        '<p style="color:var(--text-muted);text-align:center;padding:4rem;">Failed to load content.</p>';
+      hidePreloader();
+    });
+
+    function hidePreloader() {
+      const p = document.getElementById('preloader');
+      if (p) { p.style.opacity = '0'; setTimeout(() => p.style.display = 'none', 500); }
+    }
+
+    /* ── Type filter chips ────────────────────────────────────── */
+    function buildTypeFilters() {
+      const typesPresent = new Set(masterList.map(i => i.type));
+      if (typesPresent.size <= 1) {
+        document.getElementById('type-filters').style.display = 'none';
+        return;
+      }
+      const container = document.getElementById('type-filters');
+      let html = `<span class="filter-chip ${activeTypeFilter === 'all' ? 'active' : ''}" data-type="all">All</span>`;
+      for (const t of ['movies', 'animes', 'webSeries']) {
+        if (typesPresent.has(t)) {
+          html += `<span class="filter-chip ${activeTypeFilter === t ? 'active' : ''}" data-type="${t}">${TYPE_LABELS[t]}</span>`;
+        }
+      }
+      container.innerHTML = html;
+      container.querySelectorAll('.filter-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          activeTypeFilter = chip.dataset.type;
+          container.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          applyTypeFilter();
+        });
+      });
+    }
+
+    function applyTypeFilter() {
+      allItems = activeTypeFilter === 'all'
+        ? [...masterList]
+        : masterList.filter(i => i.type === activeTypeFilter);
+
+      displayedCount = 0;
+      document.getElementById('content-grid').innerHTML = '';
+      document.getElementById('end-marker').style.display = 'none';
+      document.getElementById('item-count').textContent = `${allItems.length} title${allItems.length !== 1 ? 's' : ''}`;
+      loadBatch();
+    }
+
+    /* ── Render batch ─────────────────────────────────────────── */
+    function loadBatch() {
+      const grid = document.getElementById('content-grid');
+      const batch = allItems.slice(displayedCount, displayedCount + BATCH_SIZE);
+
+      if (!batch.length) {
+        document.getElementById('scroll-loader').style.display = 'none';
+        if (displayedCount > 0) document.getElementById('end-marker').style.display = 'block';
+        else grid.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:4rem;grid-column:1/-1;">No content in this category yet.</p>';
+        return;
+      }
+
+      batch.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'movie-box';
+        card.style.animationDelay = `${idx * 40}ms`;
+        card.style.animation = 'fadeInUp 0.4s ease forwards';
+        card.style.opacity = '0';
+        card.onclick = () => {
+          window.location.href = `/play?type=${item.type}&slug=${item.slug}`;
+        };
+        const img = item['v-image'] || item['h-image'] || '/static/images/default-poster.jpg';
+        const typeLabel = TYPE_LABELS[item.type] || item.type;
+        card.innerHTML = `
+          <img src="${img}" alt="${item.title}" class="movie-box-img"
+               onerror="this.src='/static/images/default-poster.jpg'" loading="lazy" />
+          <div class="box-text">
+            <h3 class="movie-title">${item.title}</h3>
+            <span class="movie-type">${typeLabel} &middot; ${item.rating || ''}</span>
+          </div>`;
+        grid.appendChild(card);
+      });
+
+      displayedCount += batch.length;
+
+      if (displayedCount >= allItems.length) {
+        document.getElementById('scroll-loader').style.display = 'none';
+        document.getElementById('end-marker').style.display = 'block';
+      }
+    }
+
+    /* ── Infinite scroll via IntersectionObserver ──────────────── */
+    const sentinel = document.getElementById('scroll-sentinel');
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && displayedCount < allItems.length) {
+        document.getElementById('scroll-loader').style.display = 'flex';
+        setTimeout(() => loadBatch(), 300);  // tiny delay for smooth UX
+      }
+    }, { rootMargin: '300px' });
+    observer.observe(sentinel);
+  </script>
+</body>
+
+</html>

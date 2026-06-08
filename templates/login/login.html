@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" Content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login | Entertainment Hub</title>
+  <title>Entertainment Hub | Login</title>
   <link rel="stylesheet" href="/static/css/auth.css">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
@@ -34,15 +34,15 @@
 
           <div
             style="display:flex; justify-content:space-between; margin-bottom: 2rem; color: var(--text-muted); font-size: 0.9rem;">
-            <label><input type="checkbox" style="margin-right: 5px;">Remember me</label>
+            <label><input type="checkbox" id="rememberMe" style="margin-right: 5px;">Remember me</label>
             <a href="#" style="color: var(--primary);">Forgot password?</a>
           </div>
 
           <button type="submit" class="auth-btn" id="loginBtn">Login</button>
 
           <div class="auth-link">
-            <p>Don't have an account? <a href="/login/register.html">REGISTER</a></p>
-            <a href="/index.html" class="back-link"
+            <p>Don't have an account? <a href="/login/register">REGISTER</a></p>
+            <a href="/" class="back-link"
               style="color: var(--text-muted); font-size: 0.8rem; margin-top: 1rem; display: block;">
               <i class='bx bx-arrow-back'></i> Back to Home
             </a>
@@ -80,17 +80,18 @@
           const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ username, password, remember_me: document.getElementById('rememberMe').checked })
           });
           const data = await res.json();
 
           if (res.ok) {
-            // Store minimal info in localStorage for UI display (session handled server-side)
-            localStorage.setItem('signedIn', 'true');
-            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            const remember = document.getElementById('rememberMe').checked;
+            const store = remember ? localStorage : sessionStorage;
+            store.setItem('signedIn', 'true');
+            store.setItem('currentUser', JSON.stringify(data.user));
             messageDiv.textContent = 'Login successful!';
             messageDiv.style.color = 'var(--primary)';
-            setTimeout(() => { window.location.href = '/login/success.html'; }, 800);
+            setTimeout(() => { window.location.href = '/login/success'; }, 800);
           } else {
             messageDiv.textContent = data.error || 'Login failed';
             messageDiv.style.color = '#ff4757';

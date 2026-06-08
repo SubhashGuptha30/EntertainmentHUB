@@ -3,53 +3,71 @@
 /* Hero Section Enhancement */
 .play-container {
     position: relative;
-    padding-top: 120px;
-    /* Space for fixed header */
+    padding-top: 80px; /* Space for fixed header */
+    margin-bottom: 2rem;
 }
 
-.play-img-container {
-    position: relative;
+.play-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 60vh;
-    min-height: 400px;
-    border-radius: 0 0 30px 30px;
+    height: 100%;
+    z-index: 0;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f11 100%);
+    mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
-.play-img {
+.play-hero-bg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top;
-    mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+    object-position: center;
+    filter: blur(15px) brightness(0.35);
+    transform: scale(1.1);
 }
 
-/* When image is an SVG placeholder, hide it — gradient bg takes over */
-.play-img.placeholder-img {
-    opacity: 0;
-}
-
-/* Gradient Overlay for Text */
-.play-info {
+.play-hero-bg::after {
+    content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    padding: 4rem;
-    background: linear-gradient(to top, #0f0f11 10%, rgba(15, 15, 17, 0.8) 50%, transparent);
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(15, 15, 17, 0) 50%, #0f0f11 100%),
+                linear-gradient(to right, #0f0f11 5%, transparent 50%);
+}
+
+.play-hero-content {
+    position: relative;
+    z-index: 10;
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 2rem;
+    gap: 3rem;
+    padding: 4rem 2rem;
+    align-items: center;
+    min-height: 60vh;
+}
+
+.play-poster {
+    width: 300px;
+    height: 450px;
+    border-radius: 16px;
+    object-fit: cover;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+.play-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    max-width: 800px;
 }
 
 .play-text h2 {
     font-size: 4rem;
     font-weight: 800;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     line-height: 1.1;
     color: #fff;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
@@ -59,7 +77,6 @@
 .rating {
     display: flex;
     gap: 5px;
-    margin-bottom: 1rem;
     color: var(--primary);
     font-size: 1.2rem;
 }
@@ -84,11 +101,12 @@
 .play-buton {
     position: relative;
     z-index: 10;
+    margin-top: 1rem;
 }
 
 .play-button {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     background: var(--primary);
     border: none;
@@ -96,30 +114,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
+    font-size: 2.5rem;
     color: #000;
-    box-shadow: 0 0 30px rgba(255, 180, 58, 0.6);
+    box-shadow: 0 0 30px rgba(255, 180, 58, 0.5);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     animation: pulse 2s infinite;
 }
 
 .play-button:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 50px rgba(255, 180, 58, 0.8);
+    box-shadow: 0 0 40px rgba(255, 180, 58, 0.8);
 }
 
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(255, 180, 58, 0.7);
-    }
-
-    70% {
-        box-shadow: 0 0 0 20px rgba(255, 180, 58, 0);
-    }
-
-    100% {
-        box-shadow: 0 0 0 0 rgba(255, 180, 58, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(255, 180, 58, 0.6); }
+    70% { box-shadow: 0 0 0 20px rgba(255, 180, 58, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 180, 58, 0); }
 }
 
 /* Video Overlay */
@@ -346,10 +356,30 @@
    Mobile Responsive
    ========================================== */
 @media (max-width: 900px) {
-    .play-info {
+    .play-hero-content {
         flex-direction: column;
-        align-items: flex-start;
-        padding: 2rem;
+        text-align: center;
+        gap: 2rem;
+        padding: 2rem 1rem;
+        margin-top: 2rem;
+    }
+
+    .play-hero-bg::after {
+        background: linear-gradient(to bottom, rgba(15, 15, 17, 0) 20%, #0f0f11 80%);
+    }
+
+    .play-poster {
+        width: 200px;
+        height: 300px;
+        margin: 0 auto;
+    }
+
+    .play-info {
+        align-items: center;
+    }
+
+    .tags {
+        justify-content: center;
     }
 
     .play-text h2 {

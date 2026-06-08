@@ -88,7 +88,7 @@ const DataManager = {
   // Helper to generate correct Path
   getItemPath(item) {
     if (item.path) return item.path;
-    return `/play.html?type=${item.type}&slug=${item.slug}`;
+    return `/play?type=${item.type}&slug=${item.slug}`;
   }
 };
 
@@ -185,7 +185,7 @@ function loadFooter() {
             <li><a href="/movies">Movies</a></li>
             <li><a href="/anime">Anime</a></li>
             <li><a href="/web-series">Series</a></li>
-            <li><a href="/contact/contactus.html">Help & Support</a></li>
+            <li><a href="/contact/contactus">Help & Support</a></li>
           </ul>
         </div>
         <div class="footer-social">
@@ -264,7 +264,7 @@ function initializeSearch() {
     allItems.forEach(item => {
       const path = DataManager.getItemPath(item);
       const key = item.slug + '_' + item.type;
-      const image = item['v-image'] || item['h-image'] || '/images/default-poster.jpg';
+      const image = item['v-image'] || item['h-image'] || '/static/images/default-poster.jpg';
       const category = categoryLabels[item.type] || 'Content';
 
       // 1. Match by title
@@ -300,6 +300,13 @@ function initializeSearch() {
             }
           }
         });
+      }
+
+      // 4. Match by language
+      if (item.language && item.language.toLowerCase().includes(q)) {
+        if (!resultMap.has(key)) {
+          resultMap.set(key, { title: item.title, path, image, category, matchType: 'language', matchLabel: 'Language: ' + item.language });
+        }
       }
     });
 
@@ -381,7 +388,7 @@ function displayResults(results, container, query) {
 
   const html = results.map(r => `
     <div class="search-item" tabindex="0" onclick="window.location.href='${r.path}'">
-      <img class="search-item-img" src="${r.image}" alt="${r.title}" onerror="this.src='/images/default-poster.jpg'">
+      <img class="search-item-img" src="${r.image}" alt="${r.title}" onerror="this.src='/static/images/default-poster.jpg'">
       <div class="search-item-info">
         <div class="search-item-title">${highlight(r.title)}</div>
         <div class="search-item-meta">

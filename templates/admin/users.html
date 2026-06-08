@@ -16,16 +16,16 @@
         <span>Admin<span class="accent">Hub</span></span>
       </div>
       <nav class="sidebar-nav">
-        <a href="/admin/dashboard.html" class="nav-item">
+        <a href="/admin/dashboard" class="nav-item">
           <i class='bx bxs-dashboard'></i><span>Dashboard</span>
         </a>
-        <a href="/admin/content.html" class="nav-item">
+        <a href="/admin/content" class="nav-item">
           <i class='bx bx-movie-play'></i><span>Content</span>
         </a>
-        <a href="/admin/users.html" class="nav-item active">
+        <a href="/admin/users" class="nav-item active">
           <i class='bx bxs-group'></i><span>Users</span>
         </a>
-        <a href="/admin/selectors.html" class="nav-item">
+        <a href="/admin/selectors" class="nav-item">
           <i class='bx bx-slider'></i><span>Selectors</span>
         </a>
       </nav>
@@ -114,8 +114,8 @@
       tbody.innerHTML = filtered.map(u => `
         <tr>
           <td>
-            <img src="${u.profile_pic || '/images/user.png'}" alt="${u.username}"
-                 class="table-avatar" onerror="this.src='/images/user.png'" />
+            <img src="${u.profile_pic || '/static/images/user.png'}" alt="${u.username}"
+                 class="table-avatar" onerror="this.src='/static/images/user.png'" />
           </td>
           <td><strong>${u.username}</strong></td>
           <td>${u.email}</td>
@@ -123,7 +123,7 @@
           <td>${u.age || '—'}</td>
           <td>${u.created_at ? new Date(u.created_at).toLocaleDateString() : '—'}</td>
           <td class="action-cell">
-            <button class="btn-icon btn-del" onclick="openDelete(${u.id}, '${u.username.replace(/'/g,"\\'")}')">
+            <button class="btn-icon btn-del" onclick="openDelete('${u.id}', '${u.username.replace(/'/g,"\\'")}')">
               <i class='bx bx-trash'></i>
             </button>
           </td>

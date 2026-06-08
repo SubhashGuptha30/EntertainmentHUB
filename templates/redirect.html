@@ -415,7 +415,7 @@
                 <i class='bx bx-arrow-back'></i>
                 Go Back
             </a>
-            <a href="/home.html" class="btn-home">
+            <a href="/home" class="btn-home">
                 <i class='bx bx-home'></i>
                 Home
             </a>
@@ -432,12 +432,14 @@
         // Populate card
         document.getElementById('platform-name').textContent = platform;
         document.getElementById('movie-title').textContent = title;
-        document.title = `Redirecting to ${platform} | Entertainment Hub`;
+        document.title = `Entertainment Hub | ${platform}`;
 
         if (icon) {
-            document.getElementById('platform-icon').src = `/images/watch/${icon}.png`;
+            // icon can be a full URL (from GCS) or a simple name
+            const iconUrl = icon.startsWith('http') ? icon : `/static/images/logo.png`;
+            document.getElementById('platform-icon').src = iconUrl;
             document.getElementById('platform-icon').onerror = function () {
-                this.src = '/images/logo.png';
+                this.src = '/static/images/logo.png';
             };
         }
 

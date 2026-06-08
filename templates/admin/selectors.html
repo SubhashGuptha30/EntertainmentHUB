@@ -18,10 +18,10 @@
         <span>Admin<span class="accent">Hub</span></span>
       </div>
       <nav class="sidebar-nav">
-        <a href="/admin/dashboard.html" class="nav-item"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
-        <a href="/admin/content.html" class="nav-item"><i class='bx bx-movie-play'></i><span>Content</span></a>
-        <a href="/admin/users.html" class="nav-item"><i class='bx bxs-group'></i><span>Users</span></a>
-        <a href="/admin/selectors.html" class="nav-item active"><i class='bx bx-slider'></i><span>Selectors</span></a>
+        <a href="/admin/dashboard" class="nav-item"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
+        <a href="/admin/content" class="nav-item"><i class='bx bx-movie-play'></i><span>Content</span></a>
+        <a href="/admin/users" class="nav-item"><i class='bx bxs-group'></i><span>Users</span></a>
+        <a href="/admin/selectors" class="nav-item active"><i class='bx bx-slider'></i><span>Selectors</span></a>
       </nav>
       <div class="sidebar-footer">
         <span id="admin-name" class="admin-label"></span>
@@ -39,6 +39,7 @@
       <div class="filter-tabs" style="margin-bottom:1.5rem;">
         <button class="filter-tab active" data-cat="rating">Rating</button>
         <button class="filter-tab" data-cat="tags">Tags / Genres</button>
+        <button class="filter-tab" data-cat="languages">Languages</button>
         <button class="filter-tab" data-cat="watch_options">Watch Options</button>
         <button class="filter-tab" data-cat="cast">Cast Members</button>
         <button class="filter-tab" data-cat="franchises">Franchises</button>
@@ -146,10 +147,10 @@
           ${items.map(item => `
             <div class="sel-chip-row">
               <span class="sel-chip">${item.value}</span>
-              <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${item.id}, '${item.value.replace(/'/g, "\\'")}')">
+              <button class="btn-icon btn-edit" title="Edit" onclick="openEdit('${item.id}', '${item.value.replace(/'/g, "\\'")}')">
                 <i class='bx bx-pencil'></i>
               </button>
-              <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${item.id}, '${item.value.replace(/'/g, "\\'")}')">
+              <button class="btn-icon btn-del" title="Delete" onclick="askDelete('${item.id}', '${item.value.replace(/'/g, "\\'")}')">
                 <i class='bx bx-trash'></i>
               </button>
             </div>`).join('')}
@@ -175,8 +176,8 @@
               </div>
               <span class="watch-card-name">${p.name}</span>
               <div class="watch-card-actions">
-                <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${p.id}, ${JSON.stringify(p.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
-                <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${p.id}, '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+                <button class="btn-icon btn-edit" title="Edit" onclick="openEdit('${p.id}', ${JSON.stringify(p.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
+                <button class="btn-icon btn-del" title="Delete" onclick="askDelete('${p.id}', '${p.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
               </div>
             </div>`).join('')}
         </div>`;
@@ -219,8 +220,8 @@
           <td><strong>${m.name}</strong></td>
           <td style="font-size:.75rem;color:var(--text-muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;">${m.image || '—'}</td>
           <td class="action-cell">
-            <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${m.id}, ${JSON.stringify(m.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
-            <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${m.id}, '${m.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+            <button class="btn-icon btn-edit" title="Edit" onclick="openEdit('${m.id}', ${JSON.stringify(m.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
+            <button class="btn-icon btn-del" title="Delete" onclick="askDelete('${m.id}', '${m.name.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
           </td>
         </tr>`).join('');
 
@@ -256,16 +257,16 @@
             <div class="franchise-sel-card">
               <div class="franchise-sel-img-wrap">
                 ${f.image
-                  ? `<img src="${f.image}" alt="${f.title}" onerror="this.style.display='none'" />`
-                  : `<i class='bx bx-film franchise-sel-placeholder'></i>`}
+          ? `<img src="${f.image}" alt="${f.title}" onerror="this.style.display='none'" />`
+          : `<i class='bx bx-film franchise-sel-placeholder'></i>`}
               </div>
               <div class="franchise-sel-info">
                 <span class="franchise-sel-title">${f.title}</span>
                 <p class="franchise-sel-desc">${f.description}</p>
               </div>
               <div class="franchise-sel-actions">
-                <button class="btn-icon btn-edit" title="Edit" onclick="openEdit(${f.id}, ${JSON.stringify(f.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
-                <button class="btn-icon btn-del" title="Delete" onclick="askDelete(${f.id}, '${f.title.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
+                <button class="btn-icon btn-edit" title="Edit" onclick="openEdit('${f.id}', ${JSON.stringify(f.raw).replace(/"/g, '&quot;')})"><i class='bx bx-pencil'></i></button>
+                <button class="btn-icon btn-del" title="Delete" onclick="askDelete('${f.id}', '${f.title.replace(/'/g, "\\'")}')"><i class='bx bx-trash'></i></button>
               </div>
             </div>`).join('')}
         </div>`;
@@ -332,7 +333,7 @@
             <textarea id="new-franchise-desc" rows="2" placeholder="Short description of the franchise…" style="width:100%;resize:vertical;"></textarea>
           </div>`;
       } else {
-        const labels = { rating: 'Rating value (e.g. PG-13)', tags: 'Tag / Genre name' };
+        const labels = { rating: 'Rating value (e.g. PG-13)', tags: 'Tag / Genre name', languages: 'Language (e.g. English, Hindi)' };
         box.innerHTML = `
           <div class="form-group">
             <label>${labels[currentCat] || 'New value'}</label>
@@ -474,7 +475,7 @@
             <textarea id="edit-franchise-desc" rows="3" style="width:100%;resize:vertical;">${(m.description || '').replace(/</g, '&lt;')}</textarea>
           </div>
           <div style="display:flex;justify-content:center;">
-            ${ m.image ? `<img id="edit-franchise-preview" src="${m.image}" style="max-height:80px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'" />` : '' }
+            ${m.image ? `<img id="edit-franchise-preview" src="${m.image}" style="max-height:80px;object-fit:cover;border-radius:6px;" onerror="this.style.display='none'" />` : ''}
           </div>`;
       } else {
         box.innerHTML = `

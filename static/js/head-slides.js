@@ -12,7 +12,7 @@ function generateheadSlideHTML(slide) {
   return `
       <div class="swiper-slide">
         <div class="head-box">
-          <img src="${slide['h-image'] || slide.posterHorizontal || slide.imgSrc}" alt="${slide.title}" class="head-img" onerror="this.src='/images/default-banner.jpg'" />
+          <img src="${slide['h-image'] || slide.posterHorizontal || slide.imgSrc}" alt="${slide.title}" class="head-img" onerror="this.src='/static/images/default-banner.jpg'" />
           <div class="head-text">
             <div class="head-text-info">
               <h1 class="head-title">${slide.title}</h1>

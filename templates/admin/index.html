@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -30,14 +30,14 @@
           <i class='bx bx-log-in'></i> Login to Admin Panel
         </button>
       </form>
-      <a href="/index.html" class="back-link"><i class='bx bx-arrow-back'></i> Back to Site</a>
+      <a href="/" class="back-link"><i class='bx bx-arrow-back'></i> Back to Site</a>
     </div>
   </div>
 
   <script>
     // If already logged in, redirect to dashboard
     fetch('/api/admin/check')
-      .then(r => r.ok ? window.location.href = '/admin/dashboard.html' : null)
+      .then(r => r.ok ? window.location.href = '/admin/dashboard' : null)
       .catch(() => {});
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -58,7 +58,7 @@
       });
       const data = await res.json();
       if (res.ok) {
-        window.location.href = '/admin/dashboard.html';
+        window.location.href = '/admin/dashboard';
       } else {
         errDiv.textContent = data.error || 'Login failed';
         errDiv.style.display = 'block';

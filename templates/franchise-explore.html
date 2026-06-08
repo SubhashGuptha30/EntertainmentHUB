@@ -1,108 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Franchise | Entertainment Hub</title>
+    <title> Entertainment Hub </title>
     <link rel="stylesheet" href="/static/css/styles.css" />
     <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <style>
-        /* Specific header layout for franchise */
-        .franchise-header {
+        /* ── Hero Banner ──────────────────────────────────────────── */
+        .fex-hero {
             position: relative;
             width: 100%;
-            height: 60vh;
+            min-height: 70vh;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            margin-top: 60px; /* offset header */
+            margin-top: 60px;
         }
 
-        .franchise-header::after {
+        .fex-hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .fex-hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(6px) brightness(0.4) saturate(1.3);
+            transform: scale(1.15);
+        }
+
+        .fex-hero-bg::after {
             content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, #0b0f19 5%, rgba(11,15,25,0.4) 100%);
-            z-index: 1;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(15, 15, 17, 0.2) 0%, #0f0f11 100%),
+                linear-gradient(to right, rgba(15, 15, 17, 0.5) 0%, transparent 60%);
         }
 
-        .franchise-banner {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            filter: blur(8px) brightness(0.4);
-            transform: scale(1.05); /* hide blurred edges */
-        }
-
-        .franchise-info {
+        .fex-hero-content {
             position: relative;
             z-index: 2;
-            text-align: center;
-            max-width: 800px;
-            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            width: 100%;
         }
 
-        .franchise-logo {
-            width: 250px;
-            height: 250px;
+        .fex-logo {
+            width: 240px;
+            height: 240px;
             object-fit: contain;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            margin-bottom: 2rem;
-            background: rgba(0,0,0,0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,180,58,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 180, 58, 0.25);
+            flex-shrink: 0;
             animation: float 6s ease-in-out infinite;
         }
 
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-12px);
+            }
         }
 
-        .franchise-info h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+        .fex-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .fex-info h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
             color: #fff;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.1;
         }
 
-        .franchise-info p {
+        .fex-info p {
             font-size: 1.1rem;
-            color: #ccc;
-            line-height: 1.6;
+            color: #bbb;
+            line-height: 1.7;
+            max-width: 600px;
         }
 
-        /* Movie Grid */
-        .franchise-content-section {
-            padding: 4rem 2rem;
-            max-width: 1400px;
+
+        .fex-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.5rem;
+            border-radius: var(--radius-full);
+            background: var(--glass-bg);
+            border: var(--glass-border);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            text-decoration: none;
+            margin-top: 1rem;
+            width: fit-content;
+        }
+
+        .fex-back-btn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        /* ── Content Grid Section ─────────────────────────────────── */
+        .fex-content-section {
+            padding: 3rem 2rem 5rem;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        .content-heading {
-            font-size: 1.8rem;
+        .fex-section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
             margin-bottom: 2rem;
-            border-bottom: 2px solid var(--primary, #ffb43a);
-            padding-bottom: 0.5rem;
-            display: inline-block;
         }
 
-        .grid-container {
+        .fex-section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+            border-left: 4px solid var(--primary);
+            padding-left: 1rem;
+        }
+
+        .fex-title-count {
+            background: var(--glass-bg);
+            border: var(--glass-border);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-full);
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .fex-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
         }
 
-        /* Loading & Error States */
-        #loader-msg { text-align: center; padding: 50px; color: #aaa; font-size: 1.2rem; }
-        .no-content-msg { text-align: center; padding: 60px; color: #888; font-size: 1.2rem; grid-column: 1 / -1; }
+        @media (min-width: 768px) {
+            .fex-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        /* Loading & Empty */
+        .fex-loader {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 4rem;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .fex-loader i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .fex-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            grid-column: 1 / -1;
+        }
+
+        .fex-empty i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            opacity: 0.5;
+        }
+
+        /* ── Mobile ───────────────────────────────────────────────── */
+        @media (max-width: 768px) {
+            .fex-hero {
+                min-height: 50vh;
+            }
+
+            .fex-hero-content {
+                flex-direction: column-reverse;
+                text-align: center;
+                gap: 1.5rem;
+                padding: 3rem 1.5rem;
+            }
+
+            .fex-logo {
+                width: 160px;
+                height: 160px;
+            }
+
+            .fex-info h1 {
+                font-size: 2.2rem;
+            }
+
+            .fex-info p {
+                font-size: 1rem;
+            }
+
+            .fex-info {
+                align-items: center;
+            }
+
+            .fex-back-btn {
+                margin: 0.5rem auto 0;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div id="preloader">
         <div class="loader">
@@ -113,23 +248,30 @@
     <div id="main-content" style="opacity: 0; transition: opacity 0.5s ease;">
         <div id="global-header"></div>
 
-        <!-- Dynamic Header -->
-        <header class="franchise-header" id="f-header" style="display:none;">
-            <img src="" id="f-banner" class="franchise-banner" alt="Banner Background">
-            <div class="franchise-info">
-                <img src="" id="f-logo" class="franchise-logo" alt="Franchise Logo">
-                <h1 id="f-name">Franchise Name</h1>
-                <p id="f-desc">Loading description...</p>
+        <!-- Hero -->
+        <section class="fex-hero" id="fex-hero">
+            <div class="fex-hero-bg">
+                <img src="" id="fex-banner" alt="Banner">
             </div>
-        </header>
+            <div class="fex-hero-content">
+                <div class="fex-info">
+                    <h1 id="fex-name">Loading…</h1>
+                    <p id="fex-desc"></p>
+                    <a class="fex-back-btn" id="fex-back"><i class='bx bx-arrow-back'></i> Back</a>
+                </div>
+                <img src="" id="fex-logo" class="fex-logo" alt="Franchise Logo" style="display:none;">
+            </div>
+        </section>
 
-        <!-- Dynamic Content Grid -->
-        <section class="franchise-content-section container">
-            <h2 class="content-heading">Titles in this Franchise</h2>
-            <div id="loader-msg"><i class='bx bx-loader-alt bx-spin'></i> Assembling the universe...</div>
-            <div class="grid-container" id="f-grid">
-                <!-- Content injected here via JS -->
+        <!-- Content Grid -->
+        <section class="fex-content-section">
+            <div class="fex-section-header">
+                <h2 class="fex-section-title">Titles in this Franchise</h2>
             </div>
+            <div class="fex-loader" id="fex-loader">
+                <i class='bx bx-loader-alt bx-spin'></i> Assembling the universe…
+            </div>
+            <div class="fex-grid" id="fex-grid"></div>
         </section>
 
         <!--Footer-->
@@ -138,62 +280,126 @@
 
     <script src="/static/js/main.js"></script>
     <script>
+        /* ── Franchise database (same data as franchise.js cards) ── */
+        const FRANCHISE_DB = [
+            { title: "MCU", img: "mcu.jpeg", desc: "The Marvel Cinematic Universe is a media franchise and shared universe centered on a series of superhero films." },
+            { title: "DCEU", img: "dceu.jpeg", desc: "The DC Extended Universe is an American media franchise and shared universe centered on superhero films." },
+            { title: "Pokemon", img: "pokemon.png", desc: "Pokemon is a Japanese media franchise managed by The Pokemon Company, centered on fictional creatures called 'Pokemon'." },
+            { title: "One Piece", img: "onepiece.jpeg", desc: "One Piece is a Japanese manga series written and illustrated by Eiichiro Oda." },
+            { title: "Arrowverse", img: "arrowverse.png", desc: "The Arrowverse is an American media franchise centered on interconnected television series." },
+            { title: "Breaking Bad", img: "breakingbad.jpg", desc: "Breaking Bad is an American neo-Western crime drama television series created by Vince Gilligan." },
+            { title: "Star Wars", img: "starwars.jpeg", desc: "Star Wars is a space opera media franchise created by George Lucas." },
+            { title: "Harry Potter", img: "harrypotter.jpeg", desc: "Harry Potter is a British-American film series based on the eponymous novels by J.K. Rowling." },
+            { title: "Lord of the Rings", img: "lotr.png", desc: "The Lord of the Rings is an epic high-fantasy novel series by J.R.R. Tolkien." },
+            { title: "Star Trek", img: "startrek.jpeg", desc: "Star Trek is a science fiction media franchise that began with the 1960s TV series." },
+            { title: "Jurassic Park", img: "jurassicpark.jpg", desc: "Jurassic Park is a media franchise centered on cloned dinosaurs." },
+            { title: "Transformers", img: "transformers.jpeg", desc: "Transformers is a media franchise produced by Hasbro, featuring giant transforming robots." },
+            { title: "Game of Thrones", img: "got.jpg", desc: "Game of Thrones is a fantasy drama television series based on George R.R. Martin's novels." },
+            { title: "Fast & Furious", img: "fastandfurious.jpeg", desc: "Fast & Furious is an American media franchise centered on action films involving street racing and heists." },
+            { title: "The Simpsons", img: "simpsons.jpeg", desc: "The Simpsons is an American animated sitcom created by Matt Groening." },
+            { title: "James Bond", img: "jamesbond.jpeg", desc: "James Bond is a British spy film series based on the character created by Ian Fleming." },
+            { title: "Mission Impossible", img: "missionimpossible.jpg", desc: "Mission Impossible is an American media franchise of action spy films starring Tom Cruise." },
+            { title: "Indiana Jones", img: "indianajones.jpeg", desc: "Indiana Jones is an American media franchise based on the adventures of Dr. Henry 'Indiana' Jones." },
+            { title: "Doctor Who", img: "doctorwho.jpg", desc: "Doctor Who is a British science fiction television series about the adventures of the Doctor." },
+            { title: "The Witcher", img: "witcher.jpg", desc: "The Witcher is a Polish-American fantasy drama series based on the book series by Andrzej Sapkowski." },
+            { title: "Naruto", img: "naruto.jpeg", desc: "Naruto is a Japanese manga series centered on a young ninja, Naruto Uzumaki." },
+            { title: "Dragon Ball", img: "dragonball.jpg", desc: "Dragon Ball is a Japanese media franchise featuring the adventures of Goku and his friends." },
+            { title: "Attack on Titan", img: "attackontitan.png", desc: "Attack on Titan is a Japanese manga series set in a world with enormous walls and Titans." },
+            { title: "My Hero Academia", img: "myheroacademia.png", desc: "My Hero Academia is a Japanese superhero manga series following Izuku Midoriya." },
+            { title: "Demon Slayer", img: "demonslayer.jpg", desc: "Demon Slayer is a Japanese manga series following Tanjiro Kamado's quest." },
+            { title: "Fullmetal Alchemist", img: "fullmetalalchemist.jpg", desc: "Fullmetal Alchemist is a Japanese manga series set in a world where alchemy is real." },
+            { title: "One Punch Man", img: "onepunchman.jpg", desc: "One Punch Man follows Saitama, a hero who can defeat any opponent with a single punch." },
+            { title: "Bleach", img: "bleach.jpg", desc: "Bleach follows Ichigo Kurosaki after he obtains the powers of a Soul Reaper." },
+            { title: "Toy Story", img: "toystory.jpeg", desc: "Toy Story is a Pixar animated film series centered on toys that come to life." },
+            { title: "The Incredibles", img: "theincredibles.jpg", desc: "The Incredibles is a Pixar animated film series about a family of superheroes." },
+            { title: "Monsters, Inc.", img: "monstersinc.jpeg", desc: "Monsters, Inc. is a Pixar animated film series set in a world of friendly monsters." },
+            { title: "Cars", img: "cars.jpeg", desc: "Cars is a Pixar animated film series centered on anthropomorphic cars." },
+            { title: "Kung Fu Panda", img: "kungfupanda.jpg", desc: "Kung Fu Panda follows Po, a clumsy panda who becomes a kung fu master." },
+            { title: "Shrek", img: "shrek.jpeg", desc: "Shrek features the adventures of Shrek, an ogre, and his friends." },
+            { title: "Despicable Me", img: "despicableme.jpeg", desc: "Despicable Me is centered on Gru, a supervillain, and his Minions." },
+            { title: "How to Train Your Dragon", img: "howtotrainyourdragon.jpeg", desc: "How to Train Your Dragon focuses on Hiccup and his dragon Toothless." },
+            { title: "Ice Age", img: "iceage.jpeg", desc: "Ice Age is a CGI animated film series about prehistoric animals surviving the Ice Age." },
+        ];
+
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const franchiseName = urlParams.get('franchise');
-            const imgFile = urlParams.get('img');
-            const desc = urlParams.get('desc');
 
             if (!franchiseName) {
-                window.location.href = '/franchises.html';
+                window.location.href = '/franchises';
                 return;
             }
 
-            // Populate header immediately if possible
-            document.title = `${franchiseName} - Entertainment Hub`;
-            document.getElementById('f-name').textContent = franchiseName;
-            
+            /* ── Look up franchise info from DB ──────────────────── */
+            const fInfo = FRANCHISE_DB.find(f => f.title.toLowerCase() === franchiseName.toLowerCase());
+
+            // Use URL params as fallback (for backward compat with Explore buttons)
+            const imgFile = fInfo ? fInfo.img : urlParams.get('img');
+            const desc = fInfo ? fInfo.desc : urlParams.get('desc');
+
+            document.title = `Entertainment Hub | ${franchiseName}`;
+            document.getElementById('fex-name').textContent = franchiseName;
+
             if (imgFile) {
-                document.getElementById('f-logo').src = `/images/franchise/${imgFile}`;
-                document.getElementById('f-banner').src = `/images/franchise/${imgFile}`;
-                document.getElementById('f-header').style.display = 'flex';
+                const logoEl = document.getElementById('fex-logo');
+                const bannerEl = document.getElementById('fex-banner');
+                logoEl.src = `/images/franchise/${imgFile}`;
+                bannerEl.src = `/images/franchise/${imgFile}`;
+                logoEl.onload = () => { logoEl.style.display = 'block'; };
             }
             if (desc) {
-                document.getElementById('f-desc').textContent = desc;
+                document.getElementById('fex-desc').textContent = desc;
             }
+
+            // Back button
+            document.getElementById('fex-back').addEventListener('click', (e) => {
+                e.preventDefault();
+                if (history.length > 1) history.back();
+                else window.location.href = '/franchises';
+            });
 
             // Show main layout
             document.getElementById('main-content').style.opacity = '1';
 
-            // Wait until DataManager finishes loading all content
+            // Wait for DataManager
             const waitForData = () => new Promise(resolve => {
                 if (DataManager.isLoaded) return resolve();
                 window.addEventListener('dataLoaded', resolve, { once: true });
             });
 
             await waitForData();
-            
-            // Collect all items matching the franchise
+
+            // Collect matching items
             const allItems = DataManager.getAllItems();
             const matchingItems = allItems.filter(item => item.franchise && item.franchise.toLowerCase() === franchiseName.toLowerCase());
 
-            const grid = document.getElementById('f-grid');
-            document.getElementById('loader-msg').style.display = 'none';
+            const grid = document.getElementById('fex-grid');
+            document.getElementById('fex-loader').style.display = 'none';
+
+
+
+            // Hide preloader
+            const p = document.getElementById('preloader');
+            if (p) { p.style.opacity = '0'; setTimeout(() => p.style.display = 'none', 500); }
 
             if (matchingItems.length === 0) {
-                grid.innerHTML = `<div class="no-content-msg">No titles have been added to the <strong>${franchiseName}</strong> franchise yet. Stay tuned!</div>`;
+                grid.innerHTML = `<div class="fex-empty">
+                    <i class='bx bx-film'></i>
+                    No titles have been added to <strong>${franchiseName}</strong> yet.<br>Stay tuned!
+                </div>`;
                 return;
             }
 
-            // Render movie boxes
-            const html = matchingItems.map(slide => `
-                <div class="movie-box">
-                    <img src="${slide['v-image'] || '/images/default-poster.jpg'}" alt="${slide.title}" class="movie-box-img" onerror="this.src='/images/default-poster.jpg'" />
+            // Render with staggered animation
+            const categoryLabels = { movies: 'Movie', animes: 'Anime', webSeries: 'Web Series' };
+            grid.innerHTML = matchingItems.map((slide, idx) => `
+                <div class="movie-box" style="animation: fadeInUp 0.4s ease forwards; animation-delay: ${idx * 50}ms; opacity: 0;">
+                    <img src="${slide['v-image'] || '/static/images/default-poster.jpg'}" alt="${slide.title}" class="movie-box-img" onerror="this.src='/static/images/default-poster.jpg'" />
                     <div class="box-text">
                         <div class="movie-info">
                             <h2 class="movie-title">${slide.title}</h2>
                             <span class="movie-type">
-                                ${slide.genreDisplay || slide.genre || (slide.tags ? slide.tags.join(' • ') : '')}
+                                ${categoryLabels[slide.type] || slide.type} &middot; ${slide.tags ? slide.tags.slice(0, 2).join(' • ') : ''}
                             </span>
                         </div>
                         <div class="play-btn-box" title="Play Now">
@@ -204,9 +410,8 @@
                     </div>
                 </div>
             `).join('');
-
-            grid.innerHTML = html;
         });
     </script>
 </body>
+
 </html>

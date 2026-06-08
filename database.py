@@ -1,117 +1,107 @@
 """
-database.py — SQLite setup for Entertainment Hub
-Also imported by app.py for the get_db() helper.
+database.py — Firestore backend for Entertainment Hub (GCP deployment)
+Replaces the SQLite backend with Google Cloud Firestore (NoSQL).
+
+Collections:
+  - users      : {username, email, password, gender, age, profile_pic, is_admin, created_at}
+  - content    : {slug, type, title, h_image, v_image, rating, status, description,
+                  tags, cast, watchOptions, video_url, genreDisplay, sections, franchise}
+                  Document ID = "{type}_{slug}" (natural composite key)
+  - selectors  : {category, value}
 """
 
-import sqlite3
 import json
-import os
 import hashlib
+from datetime import datetime
+from google.cloud import firestore
 
-DB_PATH = os.path.join(os.path.dirname(__file__), 'entertainmenthub.db')
+# Firestore client — auto-authenticates on Cloud Run via service account
+_db_client = None
 
 
 def get_db():
-    """Open a new database connection. Used by Flask request context."""
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode=WAL")
-    return conn
+    """Return a Firestore client (lazily initialised, reused)."""
+    global _db_client
+    if _db_client is None:
+        _db_client = firestore.Client()
+    return _db_client
 
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
 
+# ── Collection references ────────────────────────────────────────────────
+
+def _users_col():
+    return get_db().collection('users')
+
+def _content_col():
+    return get_db().collection('content')
+
+def _selectors_col():
+    return get_db().collection('selectors')
+
+
+# ── Content helpers ──────────────────────────────────────────────────────
+
+def content_doc_id(ctype, slug):
+    """Generate a deterministic document ID for content: '{type}_{slug}'."""
+    return f"{ctype}_{slug}"
+
+
+def content_to_dict(doc):
+    """Convert a Firestore content document to the frontend-expected dict."""
+    if not doc.exists:
+        return None
+    d = doc.to_dict()
+    d['id'] = doc.id  # preserve the Firestore doc ID for admin operations
+    return d
+
+
+def user_to_dict(doc):
+    """Convert a Firestore user document to dict."""
+    if not doc.exists:
+        return None
+    d = doc.to_dict()
+    d['id'] = doc.id
+    # Convert Firestore Timestamp to ISO string for JSON serialisation
+    if isinstance(d.get('created_at'), datetime):
+        d['created_at'] = d['created_at'].isoformat()
+    return d
+
+
+# ── Init / Seed ──────────────────────────────────────────────────────────
+
 def init_db():
-    """Create all tables if they don't exist, then seed data."""
-    conn = get_db()
-    c = conn.cursor()
+    """Seed default data into Firestore if collections are empty.
+    Safe to call on every startup — idempotent."""
+    db = get_db()
 
-    # ── Users table ──────────────────────────────────────────────────────────
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS users (
-            id          INTEGER PRIMARY KEY AUTOINCREMENT,
-            username    TEXT    UNIQUE NOT NULL,
-            email       TEXT    UNIQUE NOT NULL,
-            password    TEXT    NOT NULL,
-            gender      TEXT,
-            age         INTEGER,
-            profile_pic TEXT    DEFAULT '/images/user.png',
-            is_admin    INTEGER DEFAULT 0,
-            created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-
-    # ── Content table (movies, anime, web-series all in one) ─────────────────
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS content (
-            id           INTEGER PRIMARY KEY AUTOINCREMENT,
-            slug         TEXT    NOT NULL,
-            type         TEXT    NOT NULL,          -- 'movies' | 'animes' | 'webSeries'
-            title        TEXT    NOT NULL,
-            h_image      TEXT    DEFAULT '',
-            v_image      TEXT    DEFAULT '',
-            rating       TEXT    DEFAULT '4.5',
-            status       TEXT    DEFAULT 'Released',
-            description  TEXT    DEFAULT '',
-            tags         TEXT    DEFAULT '[]',      -- JSON array stored as text
-            cast_data    TEXT    DEFAULT '[]',      -- JSON array stored as text
-            watch_options TEXT   DEFAULT '[]',      -- JSON array stored as text
-            video_url    TEXT    DEFAULT '',
-            genre_display TEXT   DEFAULT '',
-            sections     TEXT    DEFAULT '[]',      -- JSON array stored as text
-            franchise    TEXT    DEFAULT '',
-            UNIQUE(slug, type)
-        )
-    '''
-    )
-
-    # ── Selectors table (manages dropdown options for the admin form) ──────────
-    c.execute('''
-        CREATE TABLE IF NOT EXISTS selectors (
-            id       INTEGER PRIMARY KEY AUTOINCREMENT,
-            category TEXT    NOT NULL,
-            value    TEXT    NOT NULL,
-            UNIQUE(category, value)
-        )
-    ''')
-
-    conn.commit()
-
-    # ── Seed default selectors (only on first run) ────────────────────────────
-    if c.execute('SELECT COUNT(*) FROM selectors').fetchone()[0] == 0:
-        _seed_selectors(c)
-        conn.commit()
-        print('[DB] Selectors seeded with defaults')
-
-    # ── Seed admin user ───────────────────────────────────────────────────────
-    existing_admin = c.execute(
-        "SELECT id FROM users WHERE username = 'admin'"
-    ).fetchone()
-    if not existing_admin:
-        c.execute('''
-            INSERT INTO users (username, email, password, gender, age, is_admin)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', ('admin', 'admin@entertainmenthub.com', hash_password('admin123'),
-              'Other', 0, 1))
-        conn.commit()
+    # ── Seed admin user ──────────────────────────────────────────────────
+    admin_query = _users_col().where('username', '==', 'admin').limit(1).get()
+    if not list(admin_query):
+        _users_col().add({
+            'username':    'admin',
+            'email':       'admin@entertainmenthub.com',
+            'password':    hash_password('admin123'),
+            'gender':      'Other',
+            'age':         0,
+            'profile_pic': '/images/user.png',
+            'is_admin':    True,
+            'created_at':  firestore.SERVER_TIMESTAMP,
+        })
         print("[DB] Admin user created  ->  username: admin | password: admin123")
 
-
-    # ── Migrate existing cast members into selectors (idempotent) ─────────────
-    if c.execute("SELECT COUNT(*) FROM selectors WHERE category='cast'").fetchone()[0] == 0:
-        _migrate_cast_to_selectors(c, conn)
-
-    # ── Ensure watch_options selectors use JSON format (idempotent) ────────────
-    _migrate_watch_options_to_json(c, conn)
-
-    conn.close()
+    # ── Seed default selectors ───────────────────────────────────────────
+    existing_selectors = list(_selectors_col().limit(1).get())
+    if not existing_selectors:
+        _seed_selectors()
+        print('[DB] Selectors seeded with defaults')
 
 
-
-def _seed_selectors(cursor):
-    """Seed default dropdown options into selectors table."""
+def _seed_selectors():
+    """Seed default dropdown options into the selectors collection."""
     defaults = {
         'rating': [
             'G', 'PG', 'PG-13', 'R', 'NC-17',
@@ -129,90 +119,279 @@ def _seed_selectors(cursor):
             'Sony LIV', 'Zee5', 'MX Player', 'YouTube Premium', 'Paramount+'
         ],
     }
+    batch = get_db().batch()
     for category, values in defaults.items():
         for val in values:
-            # watch_options: seed as JSON {name, logo} from start
             if category == 'watch_options':
                 db_val = json.dumps({'name': val, 'logo': ''}, ensure_ascii=False)
             else:
                 db_val = val
-            cursor.execute(
-                'INSERT OR IGNORE INTO selectors (category, value) VALUES (?, ?)',
-                (category, db_val)
-            )
+            doc_ref = _selectors_col().document()  # auto-ID
+            batch.set(doc_ref, {'category': category, 'value': db_val})
+    batch.commit()
 
 
-def _migrate_cast_to_selectors(cursor, conn):
-    """Extract unique cast members from content.cast_data into selectors."""
-    rows = cursor.execute(
-        "SELECT cast_data FROM content WHERE cast_data != '[]' AND cast_data != ''"
-    ).fetchall()
-    seen = set()
-    for row in rows:
+# ── User queries ─────────────────────────────────────────────────────────
+
+def find_user_by_username(username, admin_only=False):
+    """Find a user by username. Returns (doc_id, user_dict) or (None, None)."""
+    query = _users_col().where('username', '==', username)
+    if admin_only:
+        query = query.where('is_admin', '==', True)
+    else:
+        query = query.where('is_admin', '==', False)
+    results = list(query.limit(1).get())
+    if results:
+        doc = results[0]
+        d = doc.to_dict()
+        d['id'] = doc.id
+        return doc.id, d
+    return None, None
+
+
+def find_user_by_username_or_email(username, email):
+    """Check if username or email already exists (for registration)."""
+    q1 = list(_users_col().where('username', '==', username).limit(1).get())
+    if q1:
+        return True
+    q2 = list(_users_col().where('email', '==', email).limit(1).get())
+    if q2:
+        return True
+    return False
+
+
+def create_user(username, email, password, gender, age):
+    """Create a new regular user. Returns the doc ID."""
+    _, doc_ref = _users_col().add({
+        'username':    username,
+        'email':       email,
+        'password':    hash_password(password),
+        'gender':      gender,
+        'age':         age,
+        'profile_pic': '/images/user.png',
+        'is_admin':    False,
+        'created_at':  firestore.SERVER_TIMESTAMP,
+    })
+    return doc_ref.id
+
+
+def get_user_by_id(user_id):
+    """Fetch a single user by Firestore doc ID."""
+    doc = _users_col().document(user_id).get()
+    return user_to_dict(doc)
+
+
+def update_user(user_id, data):
+    """Update user fields. `data` is a dict of fields to update."""
+    _users_col().document(user_id).update(data)
+
+
+def list_users(admin=False):
+    """List all non-admin users (for admin dashboard)."""
+    query = _users_col().where('is_admin', '==', admin)
+    docs = query.get()
+    users = []
+    for doc in docs:
+        d = doc.to_dict()
+        d['id'] = doc.id
+        if isinstance(d.get('created_at'), datetime):
+            d['created_at'] = d['created_at'].isoformat()
+        # Strip password from listing
+        d.pop('password', None)
+        users.append(d)
+    # Sort by created_at descending in Python (avoids needing a composite index)
+    users.sort(key=lambda u: u.get('created_at', ''), reverse=True)
+    return users
+
+
+def delete_user(user_id):
+    """Delete a non-admin user."""
+    doc = _users_col().document(user_id).get()
+    if doc.exists and not doc.to_dict().get('is_admin', False):
+        _users_col().document(user_id).delete()
+        return True
+    return False
+
+
+# ── Content queries ──────────────────────────────────────────────────────
+
+def get_all_content():
+    """Fetch all content, grouped by type."""
+    result = {'movies': {}, 'animes': {}, 'webSeries': {}}
+    for doc in _content_col().stream():
+        d = doc.to_dict()
+        d['id'] = doc.id
+        ctype = d.get('type')
+        slug  = d.get('slug')
+        if ctype in result and slug:
+            result[ctype][slug] = d
+    return result
+
+
+def get_content_by_type(ctype):
+    """Fetch all content of a specific type."""
+    result = {}
+    docs = _content_col().where('type', '==', ctype).get()
+    for doc in docs:
+        d = doc.to_dict()
+        d['id'] = doc.id
+        result[d['slug']] = d
+    return result
+
+
+def get_single_content(ctype, slug):
+    """Fetch a single content item by type + slug."""
+    doc_id = content_doc_id(ctype, slug)
+    doc = _content_col().document(doc_id).get()
+    return content_to_dict(doc)
+
+
+def add_content(data):
+    """Add a new content item. Returns slug or raises ValueError on duplicate."""
+    slug = data['slug']
+    ctype = data['type']
+    doc_id = content_doc_id(ctype, slug)
+
+    # Check for duplicate
+    existing = _content_col().document(doc_id).get()
+    if existing.exists:
+        raise ValueError('Slug already exists for this type')
+
+    _content_col().document(doc_id).set(data)
+    return slug
+
+
+def update_content(content_id, data):
+    """Update a content item by its Firestore document ID."""
+    doc = _content_col().document(content_id).get()
+    if not doc.exists:
+        return None
+    _content_col().document(content_id).update(data)
+    return doc.to_dict()
+
+
+def delete_content(content_id):
+    """Delete a content item by its Firestore document ID."""
+    _content_col().document(content_id).delete()
+
+
+def get_content_list(ctype=None):
+    """List content for admin panel. Optional type filter."""
+    if ctype:
+        docs = _content_col().where('type', '==', ctype).get()
+    else:
+        docs = _content_col().get()
+    items = []
+    for doc in docs:
+        d = doc.to_dict()
+        d['id'] = doc.id
+        items.append(d)
+    # Sort: by type, then newest-first (no created_at on content, so sort by title)
+    items.sort(key=lambda x: (x.get('type', ''), x.get('title', '')))
+    return items
+
+
+def get_content_stats():
+    """Get content counts for admin dashboard."""
+    from google.cloud.firestore_v1.aggregation import AggregationQuery
+
+    db = get_db()
+    col = _content_col()
+
+    def _count(query):
+        agg = AggregationQuery(query)
+        agg.count(alias='total')
+        results = agg.get()
+        for r in results:
+            for ar in r:
+                return ar.value
+        return 0
+
+    movies = _count(col.where('type', '==', 'movies'))
+    animes = _count(col.where('type', '==', 'animes'))
+    series = _count(col.where('type', '==', 'webSeries'))
+    users  = _count(_users_col().where('is_admin', '==', False))
+
+    return {
+        'movies': movies,
+        'animes': animes,
+        'series': series,
+        'users':  users,
+        'total_content': movies + animes + series,
+    }
+
+
+# ── Selector queries ─────────────────────────────────────────────────────
+
+def get_all_selectors():
+    """Get all selectors grouped by category."""
+    result = {}
+    for doc in _selectors_col().stream():
+        d = doc.to_dict()
+        cat = d['category']
+        if cat not in result:
+            result[cat] = []
+        result[cat].append({'id': doc.id, 'value': d['value']})
+    # Sort values within each category
+    for cat in result:
+        result[cat].sort(key=lambda x: x['value'])
+    return result
+
+
+def get_selectors_by_category(category):
+    """Get selectors for a specific category."""
+    docs = _selectors_col().where('category', '==', category).get()
+    items = [{'id': doc.id, 'value': doc.to_dict()['value']} for doc in docs]
+    items.sort(key=lambda x: x['value'])
+    return items
+
+
+def search_cast_selectors(query_str):
+    """Search cast selectors by name (case-insensitive substring match)."""
+    docs = _selectors_col().where('category', '==', 'cast').get()
+    results = []
+    q = query_str.lower().strip()
+    for doc in docs:
         try:
-            members = json.loads(row[0])
-            for m in members:
-                name = (m.get('name') or '').strip()
-                if name and name not in seen:
-                    seen.add(name)
-                    val = json.dumps(
-                        {'name': name, 'image': m.get('image', '')},
-                        ensure_ascii=False
-                    )
-                    cursor.execute(
-                        'INSERT OR IGNORE INTO selectors (category, value) VALUES (?, ?)',
-                        ('cast', val)
-                    )
+            m = json.loads(doc.to_dict()['value'])
+            if not q or q in m.get('name', '').lower():
+                results.append({
+                    'id':    doc.id,
+                    'name':  m.get('name', ''),
+                    'image': m.get('image', ''),
+                })
         except Exception:
             pass
-    conn.commit()
-    print(f'[DB] Migrated {len(seen)} cast members into selectors')
+    results.sort(key=lambda x: x['name'])
+    return results[:20]
 
 
-def _migrate_watch_options_to_json(cursor, conn):
-    """Convert any watch_options selector still stored as plain string to
-    JSON {name, logo} format. Idempotent - already-JSON rows are skipped."""
-    rows = cursor.execute(
-        "SELECT id, value FROM selectors WHERE category='watch_options'"
-    ).fetchall()
-    migrated = 0
-    for row in rows:
-        try:
-            json.loads(row[1])  # already JSON — skip
-        except (ValueError, TypeError):
-            new_val = json.dumps({'name': row[1], 'logo': ''}, ensure_ascii=False)
-            cursor.execute('UPDATE selectors SET value=? WHERE id=?', (new_val, row[0]))
-            migrated += 1
-    if migrated:
-        conn.commit()
-        print(f'[DB] Migrated {migrated} watch_options selectors to JSON format')
+def add_selector(category, value):
+    """Add a new selector. Returns (doc_id, created)."""
+    # Check for duplicate
+    existing = list(
+        _selectors_col()
+        .where('category', '==', category)
+        .where('value', '==', value)
+        .limit(1).get()
+    )
+    if existing:
+        return existing[0].id, False
+    _, doc_ref = _selectors_col().add({'category': category, 'value': value})
+    return doc_ref.id, True
 
-def row_to_dict(row):
-    """Convert a sqlite3.Row to a regular dict, parsing JSON fields."""
-    d = dict(row)
-    for field in ('tags', 'cast_data', 'watch_options', 'sections'):
-        if field in d and isinstance(d[field], str):
-            try:
-                d[field] = json.loads(d[field])
-            except Exception:
-                d[field] = []
-    # Rename cast_data → cast for frontend compatibility
-    if 'cast_data' in d:
-        d['cast'] = d.pop('cast_data')
-    if 'watch_options' in d:
-        d['watchOptions'] = d.pop('watch_options')
-    if 'h_image' in d:
-        d['h-image'] = d.pop('h_image')
-    if 'v_image' in d:
-        d['v-image'] = d.pop('v_image')
-    if 'genre_display' in d:
-        d['genreDisplay'] = d.pop('genre_display')
-    if 'status' in d:
-        d['Status'] = d.pop('status')
-    return d
+
+def update_selector(selector_id, value):
+    """Update a selector's value."""
+    _selectors_col().document(selector_id).update({'value': value})
+
+
+def delete_selector(selector_id):
+    """Delete a selector."""
+    _selectors_col().document(selector_id).delete()
 
 
 if __name__ == '__main__':
-    print("[DB] Initializing database...")
+    print("[DB] Initializing Firestore...")
     init_db()
     print("[DB] Done.")

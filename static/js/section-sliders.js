@@ -9,7 +9,7 @@ function generateVerticalSlideHTML(slide) {
   return `
   <div class="swiper-slide">
     <div class="movie-box">
-      <img src="${slide['v-image'] || '/images/default-poster.jpg'}" alt="${slide.title}" class="movie-box-img" onerror="this.src='/images/default-poster.jpg'" />
+      <img src="${slide['v-image'] || '/static/images/default-poster.jpg'}" alt="${slide.title}" class="movie-box-img" onerror="this.src='/static/images/default-poster.jpg'" />
       <div class="box-text">
         <div class="movie-info">
           <h2 class="movie-title">${slide.title}</h2>
@@ -36,12 +36,16 @@ function renderSections() {
   }
 
   const sections = [
-    { sectionKey: 'popular', wrapperId: 'popular-slides', seeAllLink: '/all-pop', max: 8, sliderSelector: '.popular-content' },
-    { sectionKey: 'new-releases', wrapperId: 'new-slides', seeAllLink: '/all-new', max: 9, sliderSelector: '#new .new-content' },
-    { sectionKey: 'most-watched', wrapperId: 'most-watched-slides', seeAllLink: '/all-most-watched', max: 8, sliderSelector: '#most-watched .new-content' },
-    { sectionKey: 'top-rated', wrapperId: 'top-rated-slides', seeAllLink: '/all-top-rated', max: 8, sliderSelector: '#top-rated .new-content' },
-    { sectionKey: 'coming-soon', wrapperId: 'coming-soon-slides', seeAllLink: '/all-coming-soon', max: 8, sliderSelector: '#coming-soon .new-content' }
+    { sectionKey: 'popular', wrapperId: 'popular-slides', seeAllLink: '/see-all?section=popular', max: 8, sliderSelector: '.popular-content' },
+    { sectionKey: 'new-releases', wrapperId: 'new-slides', seeAllLink: '/see-all?section=new-releases', max: 9, sliderSelector: '#new .new-content' },
+    { sectionKey: 'most-watched', wrapperId: 'most-watched-slides', seeAllLink: '/see-all?section=most-watched', max: 8, sliderSelector: '#most-watched .new-content' },
+    { sectionKey: 'top-rated', wrapperId: 'top-rated-slides', seeAllLink: '/see-all?section=top-rated', max: 8, sliderSelector: '#top-rated .new-content' },
+    { sectionKey: 'coming-soon', wrapperId: 'coming-soon-slides', seeAllLink: '/see-all?section=coming-soon', max: 8, sliderSelector: '#coming-soon .new-content' }
   ];
+
+  // Detect page type for appending to see-all links
+  const pageCategory = DataManager.getPageCategory();
+  const typeSuffix = pageCategory ? `&type=${pageCategory}` : '';
 
   sections.forEach(config => {
     const swiperWrapper = document.getElementById(config.wrapperId);
@@ -56,7 +60,7 @@ function renderSections() {
     const viewMoreSlide = `
     <div class="swiper-slide">
       <div class="view-more-box" title="View More">
-        <a href="${config.seeAllLink}" class="view-more-btn">
+        <a href="${config.seeAllLink}${typeSuffix}" class="view-more-btn">
           <span class="view-more-btn-box">
             <i class="bx bx-chevron-right-circle"></i>
             <span class="view-more">View More</span>

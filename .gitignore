@@ -1,11 +1,18 @@
-# Entertainment Hub - Ignore Rules
+# ── Python ───────────────────────────────
 __pycache__/
 *.pyc
 *.pyo
+*.egg-info/
 venv/
 .env
+
+# ── Database (local dev only) ────────────
 *.db
-backups/
-*.log
+
+# ── OS / Editor ──────────────────────────
 .DS_Store
 Thumbs.db
+*.log
+
+# ── GCP / Docker ─────────────────────────
+.gcloudignore

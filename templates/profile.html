@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Entertainment Hub - Profile</title>
+  <title>Entertainment Hub | Profile</title>
   <link rel="stylesheet" href="/static/css/styles.css" />
   <link rel="stylesheet" href="/static/css/profile.css" />
   <link rel="shortcut icon" href="/static/images/logo.png" type="image/x-icon" />
@@ -92,8 +92,8 @@
           <div class="profile-section more">
             <h3>More</h3>
             <div class="more-links">
-              <a href="/contact/contactus.html" class="btn">Contact Us</a>
-              <a href="/aboutus.html" class="btn">About Us</a>
+              <a href="/contact/contactus" class="btn">Contact Us</a>
+              <a href="/aboutus" class="btn">About Us</a>
             </div>
           </div>
           <div class="profile-section logout-section">
@@ -133,19 +133,20 @@
       try {
         const res = await fetch('/api/auth/me');
         if (!res.ok) {
-          // Not logged in on server side; fall back to localStorage for display
-          const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+          // Not logged in on server side; fall back to cached data
+          const cached = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
           if (cached) populateUI(cached);
-          else window.location.href = '/index.html';
+          else window.location.href = '/';
           return;
         }
         const user = await res.json();
-        // Keep localStorage in sync for display
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        localStorage.setItem('signedIn', 'true');
+        // Keep whichever storage is in use in sync
+        const store = localStorage.getItem('signedIn') === 'true' ? localStorage : sessionStorage;
+        store.setItem('currentUser', JSON.stringify(user));
+        store.setItem('signedIn', 'true');
         populateUI(user);
       } catch {
-        const cached = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        const cached = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
         if (cached) populateUI(cached);
       }
     }
@@ -202,9 +203,9 @@
       event.preventDefault();
       const body = {
         username: document.getElementById('edit-username').value,
-        email:    document.getElementById('edit-email').value,
-        gender:   document.getElementById('edit-gender').value,
-        age:      parseInt(document.getElementById('edit-age').value),
+        email: document.getElementById('edit-email').value,
+        gender: document.getElementById('edit-gender').value,
+        age: parseInt(document.getElementById('edit-age').value),
       };
 
       const res = await fetch('/api/auth/me', {
@@ -229,7 +230,7 @@
     async function changePassword(event) {
       event.preventDefault();
       const currentPassword = document.getElementById('current-password').value;
-      const newPassword     = document.getElementById('new-password').value;
+      const newPassword = document.getElementById('new-password').value;
       const confirmPassword = document.getElementById('confirm-password').value;
 
       if (newPassword !== confirmPassword) {
@@ -258,9 +259,11 @@
     async function logout() {
       await fetch('/api/auth/logout', { method: 'POST' });
       localStorage.removeItem('currentUser');
-      localStorage.setItem('signedIn', 'false');
+      localStorage.removeItem('signedIn');
+      sessionStorage.removeItem('currentUser');
+      sessionStorage.removeItem('signedIn');
       alert('Logged out successfully!');
-      window.location.replace('/index.html');
+      window.location.replace('/');
     }
   </script>
 </body>

@@ -17,10 +17,10 @@
       <span>Admin<span class="accent">Hub</span></span>
     </div>
     <nav class="sidebar-nav">
-      <a href="/admin/dashboard.html" class="nav-item"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
-      <a href="/admin/content.html"   class="nav-item active"><i class='bx bx-movie-play'></i><span>Content</span></a>
-      <a href="/admin/users.html"     class="nav-item"><i class='bx bxs-group'></i><span>Users</span></a>
-      <a href="/admin/selectors.html" class="nav-item"><i class='bx bx-slider'></i><span>Selectors</span></a>
+      <a href="/admin/dashboard" class="nav-item"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
+      <a href="/admin/content"   class="nav-item active"><i class='bx bx-movie-play'></i><span>Content</span></a>
+      <a href="/admin/users"     class="nav-item"><i class='bx bxs-group'></i><span>Users</span></a>
+      <a href="/admin/selectors" class="nav-item"><i class='bx bx-slider'></i><span>Selectors</span></a>
     </nav>
     <div class="sidebar-footer">
       <span id="admin-name" class="admin-label"></span>
@@ -161,6 +161,13 @@
         </div>
       </div>
 
+      <div class="form-row">
+        <div class="form-group">
+          <label>Language</label>
+          <select id="f-language"><option value="">— select —</option></select>
+        </div>
+      </div>
+
       <!-- ── ARTWORK ──────────────────────────────────────────────── -->
       <div class="form-section-label"><i class='bx bx-image'></i> Artwork</div>
 
@@ -277,6 +284,7 @@
     selectors = await res.json();
     buildRatingSelect();
     buildFranchiseSelect();
+    buildLanguageSelect();
     buildChips('tags-chips',  selectors.tags  || [], selectedTags);
     buildChips('watch-chips', selectors.watch_options || [], selectedWatch);
   }
@@ -308,6 +316,18 @@
       opt.value = fTitle; 
       opt.textContent = fTitle;
       if (fTitle === cur) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function buildLanguageSelect() {
+    const sel = document.getElementById('f-language');
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— select —</option>';
+    (selectors.languages || []).forEach(l => {
+      const opt = document.createElement('option');
+      opt.value = l.value; opt.textContent = l.value;
+      if (l.value === cur) opt.selected = true;
       sel.appendChild(opt);
     });
   }
@@ -475,8 +495,8 @@
     const typeLabels = { movies: 'Movie', animes: 'Anime', webSeries: 'Series' };
     tbody.innerHTML = paged.map(item => `
       <tr>
-        <td><img src="${item['v-image']||item['h-image']||'/static/images/logo.png'}"
-                 class="table-poster" onerror="this.src='/static/images/logo.png'" /></td>
+        <td><img src="${item['v-image']||item['h-image']||'/static/images/default-poster.jpg'}"
+                 class="table-poster" onerror="this.src='/static/images/default-poster.jpg'" /></td>
         <td class="title-cell">
           <span class="item-title">${item.title}</span>
           <span class="item-slug">${item.slug}</span>
@@ -486,8 +506,8 @@
         <td>${item.rating||'—'}</td>
         <td class="sections-cell">${(item.tags||[]).slice(0,3).join(', ')||'—'}</td>
         <td class="action-cell">
-          <button class="btn-icon btn-edit" onclick="openEdit(${item.id})"><i class='bx bx-edit'></i></button>
-          <button class="btn-icon btn-del"  onclick="openDelete(${item.id}, '${item.title.replace(/'/g,"\\'")}')"><i class='bx bx-trash'></i></button>
+          <button class="btn-icon btn-edit" onclick="openEdit('${item.id}')"><i class='bx bx-edit'></i></button>
+          <button class="btn-icon btn-del"  onclick="openDelete('${item.id}', '${item.title.replace(/'/g,"\\'")}')"><i class='bx bx-trash'></i></button>
         </td>
       </tr>`).join('');
 
@@ -528,6 +548,9 @@
     document.getElementById('f-franchise-check').checked = hasFranchise;
     document.getElementById('f-franchise').value = hasFranchise ? item.franchise : '';
     document.getElementById('f-franchise-group').style.display = hasFranchise ? 'block' : 'none';
+
+    // Language
+    document.getElementById('f-language').value = item ? (item.language || '') : '';
 
     // Artwork
     vImagePath = item ? (item['v-image'] || '') : '';
@@ -612,7 +635,8 @@
       tags:        [...selectedTags],
       watchOptions:[...selectedWatch],
       cast:        selectedCast.map(m => ({ name: m.name, image: m.image, role: m.role })),
-      franchise:   document.getElementById('f-franchise-check').checked ? document.getElementById('f-franchise').value : ''
+      franchise:   document.getElementById('f-franchise-check').checked ? document.getElementById('f-franchise').value : '',
+      language:    document.getElementById('f-language').value
     };
 
     const url    = isEdit ? `/api/admin/content/${id}` : '/api/admin/content';
