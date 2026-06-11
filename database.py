@@ -11,9 +11,12 @@ Collections:
 """
 
 import json
+import os
+import secrets
 import hashlib
 from datetime import datetime
 from google.cloud import firestore
+import bcrypt
 
 # Firestore client — auto-authenticates on Cloud Run via service account
 _db_client = None
@@ -28,7 +31,29 @@ def get_db():
 
 
 def hash_password(password):
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Hash a password using bcrypt (salted + key-stretched)."""
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+
+def check_password(password, hashed):
+    """Verify a password against a hash. Supports both bcrypt and legacy SHA-256."""
+    if _is_legacy_hash(hashed):
+        return hashed == hashlib.sha256(password.encode()).hexdigest()
+    return bcrypt.checkpw(password.encode(), hashed.encode())
+
+
+def _is_legacy_hash(hashed):
+    """Detect old SHA-256 hex hashes (64 hex chars) vs bcrypt ($2b$ prefix)."""
+    return len(hashed) == 64 and not hashed.startswith('$2')
+
+
+def migrate_password_if_needed(user_id, password, current_hash):
+    """If the stored hash is legacy SHA-256, re-hash with bcrypt and update."""
+    if _is_legacy_hash(current_hash):
+        new_hash = hash_password(password)
+        _users_col().document(user_id).update({'password': new_hash})
+        return new_hash
+    return current_hash
 
 
 # ── Collection references ────────────────────────────────────────────────
@@ -81,17 +106,21 @@ def init_db():
     # ── Seed admin user ──────────────────────────────────────────────────
     admin_query = _users_col().where('username', '==', 'admin').limit(1).get()
     if not list(admin_query):
+        admin_pw = os.environ.get('ADMIN_PASSWORD', '')
+        if not admin_pw:
+            admin_pw = secrets.token_urlsafe(16)
+            print(f'[DB] Generated admin password (save this!): {admin_pw}')
         _users_col().add({
             'username':    'admin',
             'email':       'admin@entertainmenthub.com',
-            'password':    hash_password('admin123'),
+            'password':    hash_password(admin_pw),
             'gender':      'Other',
             'age':         0,
-            'profile_pic': '/images/user.png',
+            'profile_pic': '/static/images/user.png',
             'is_admin':    True,
             'created_at':  firestore.SERVER_TIMESTAMP,
         })
-        print("[DB] Admin user created  ->  username: admin | password: admin123")
+        print('[DB] Admin user created')
 
     # ── Seed default selectors ───────────────────────────────────────────
     existing_selectors = list(_selectors_col().limit(1).get())

@@ -3,6 +3,13 @@
  * Included by all admin pages.
  */
 
+// ── XSS Protection ───────────────────────────────────────────────────────────
+function escapeHtml(str) {
+  if (!str) return '';
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
 // ── Auth Guard ────────────────────────────────────────────────────────────────
 async function requireAdmin() {
   try {
@@ -62,7 +69,7 @@ function showToast(message, type = 'success') {
   const icon = type === 'success' ? 'bx-check-circle' : 'bx-error-circle';
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.innerHTML = `<i class='bx ${icon}'></i><span>${message}</span>`;
+  toast.innerHTML = `<i class='bx ${icon}'></i><span>${escapeHtml(message)}</span>`;
   document.body.appendChild(toast);
 
   setTimeout(() => {

@@ -10,7 +10,9 @@ import os
 from datetime import timedelta
 import uuid
 from functools import wraps
-from flask import (Flask, request, jsonify, session, send_from_directory)
+from flask import (Flask, request, jsonify, session, send_from_directory, abort)
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Database layer (Firestore)
 import database as db
@@ -43,11 +45,42 @@ app = Flask(
 # SECRET_KEY from environment (set via Secret Manager on Cloud Run)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-change-me')
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = True          # HTTPS only
+app.config['SESSION_COOKIE_HTTPONLY'] = True          # No JS access to cookie
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=15)
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024   # 5 MB upload limit
+
+# Rate limiter (in-memory; resets on restart — fine for Cloud Run)
+limiter = Limiter(get_remote_address, app=app, default_limits=[])
 
 # Initialise DB on startup
 with app.app_context():
     db.init_db()
+
+
+# ── Security Middleware ─────────────────────────────────────────────────
+
+@app.before_request
+def csrf_protection():
+    """Reject state-changing requests that don't send JSON content-type.
+    Browsers can't send application/json cross-origin without a CORS preflight."""
+    if request.method in ('POST', 'PUT', 'DELETE'):
+        # Skip for file uploads (multipart)
+        ct = request.content_type or ''
+        if 'multipart/form-data' not in ct and 'application/json' not in ct:
+            return jsonify({'error': 'Invalid content type'}), 415
+
+
+@app.after_request
+def set_security_headers(response):
+    """Add HTTP security headers to every response."""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()'
+    return response
 
 
 # ── Cloud Storage helper ────────────────────────────────────────────────
@@ -102,21 +135,31 @@ def serve_page(filename):
     Flask automatically handles /css/, /js/, /images/ etc. via static_folder.
     This route only handles HTML page requests.
     """
+    # ── Path traversal protection ──────────────────────────────────────
+    if '..' in filename or filename.startswith('/'):
+        abort(400)
+
     # Only intercept .html files (or clean URL paths)
     if '.' not in filename or filename.endswith('.html'):
         # Try exact match in templates/
         tmpl_path = os.path.join(TEMPLATES_DIR, filename)
-        if os.path.isfile(tmpl_path):
-            directory = os.path.dirname(tmpl_path)
-            file_only = os.path.basename(tmpl_path)
+        real_path = os.path.realpath(tmpl_path)
+        if not real_path.startswith(os.path.realpath(TEMPLATES_DIR)):
+            abort(403)
+        if os.path.isfile(real_path):
+            directory = os.path.dirname(real_path)
+            file_only = os.path.basename(real_path)
             return send_from_directory(directory, file_only)
 
         # Try with .html extension appended
         if not filename.endswith('.html'):
             html_path = os.path.join(TEMPLATES_DIR, filename + '.html')
-            if os.path.isfile(html_path):
-                directory = os.path.dirname(html_path)
-                file_only = os.path.basename(html_path)
+            real_html = os.path.realpath(html_path)
+            if not real_html.startswith(os.path.realpath(TEMPLATES_DIR)):
+                abort(403)
+            if os.path.isfile(real_html):
+                directory = os.path.dirname(real_html)
+                file_only = os.path.basename(real_html)
                 return send_from_directory(directory, file_only)
 
     # Note: We must check if 404.html exists first, to avoid sending error if missing.
@@ -126,6 +169,25 @@ def serve_page(filename):
 
 
 # ── FILE UPLOAD API ─────────────────────────────────────────────────────
+
+# Magic bytes for validating actual image content
+_IMAGE_MAGIC = {
+    b'\xff\xd8\xff': '.jpg',       # JPEG
+    b'\x89PNG':     '.png',       # PNG
+    b'RIFF':       '.webp',      # WebP (starts with RIFF)
+    b'GIF8':       '.gif',       # GIF
+}
+
+
+def _validate_image_magic(file_obj):
+    """Read the first 12 bytes to verify the file is a real image."""
+    header = file_obj.read(12)
+    file_obj.seek(0)  # Reset for subsequent read
+    for magic in _IMAGE_MAGIC:
+        if header.startswith(magic):
+            return True
+    return False
+
 
 @app.route('/api/admin/upload', methods=['POST'])
 @admin_required
@@ -138,6 +200,11 @@ def upload_file():
     ext = os.path.splitext(file.filename)[1].lower()
     if ext not in ('.jpg', '.jpeg', '.png', '.webp', '.gif'):
         return jsonify({'error': 'Unsupported file type. Use JPG, PNG, WebP, or GIF.'}), 400
+
+    # Validate file content matches an image (prevents disguised uploads)
+    if not _validate_image_magic(file):
+        return jsonify({'error': 'File content does not match a valid image format'}), 400
+
     # Each upload type has its own directory under images/
     allowed_folders = {'cast', 'vertical', 'horizontal', 'watch', 'franchise'}
     folder = request.args.get('folder', '').strip()
@@ -234,6 +301,7 @@ def register():
 
 
 @app.route('/api/auth/login', methods=['POST'])
+@limiter.limit('5/minute')
 def login():
     data = request.get_json(silent=True) or {}
     username = (data.get('username') or '').strip()
@@ -243,8 +311,11 @@ def login():
         return jsonify({'error': 'Username and password required'}), 400
 
     user_id, user = db.find_user_by_username(username, admin_only=False)
-    if not user or user['password'] != db.hash_password(password):
+    if not user or not db.check_password(password, user['password']):
         return jsonify({'error': 'Invalid username or password'}), 401
+
+    # Auto-migrate legacy SHA-256 hash to bcrypt
+    db.migrate_password_if_needed(user_id, password, user['password'])
 
     # Remember Me: set session.permanent so cookie survives browser close
     remember = data.get('remember_me', False)
@@ -301,7 +372,7 @@ def update_me():
     new_password     = data.get('new_password')
     current_password = data.get('current_password')
     if new_password:
-        if not current_password or user['password'] != db.hash_password(current_password):
+        if not current_password or not db.check_password(current_password, user['password']):
             return jsonify({'error': 'Current password is incorrect'}), 400
         hashed = db.hash_password(new_password)
     else:
@@ -384,14 +455,18 @@ def get_single_item(ctype, slug):
 # ── ADMIN AUTH API ──────────────────────────────────────────────────────
 
 @app.route('/api/admin/login', methods=['POST'])
+@limiter.limit('5/minute')
 def admin_login():
     data = request.get_json(silent=True) or {}
     username = (data.get('username') or '').strip()
     password = data.get('password') or ''
 
     user_id, admin = db.find_user_by_username(username, admin_only=True)
-    if not admin or admin['password'] != db.hash_password(password):
+    if not admin or not db.check_password(password, admin['password']):
         return jsonify({'error': 'Invalid admin credentials'}), 401
+
+    # Auto-migrate legacy SHA-256 hash to bcrypt
+    db.migrate_password_if_needed(user_id, password, admin['password'])
 
     session['admin_id']       = user_id
     session['admin_username'] = admin['username']
@@ -537,4 +612,5 @@ if __name__ == '__main__':
     print("  http://localhost:5000")
     print("  Admin Panel: http://localhost:5000/admin/index.html")
     print("=" * 60)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true',
+            host='0.0.0.0', port=5000)
