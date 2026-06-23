@@ -117,13 +117,7 @@
       }, 800);
     });
 
-    // Auth Logic - Auto redirect disabled
-    // document.addEventListener('DOMContentLoaded', () => {
-    //   const signedIn = localStorage.getItem('signedIn');
-    //   if (signedIn === 'true') {
-    //     window.location.href = 'home.html';
-    //   }
-    // });
+    // Auth redirect for logged-in users is now handled server-side in app.py
 
     function scrollToSection(id) {
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });

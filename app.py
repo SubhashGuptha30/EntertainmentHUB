@@ -10,7 +10,7 @@ import os
 from datetime import timedelta
 import uuid
 from functools import wraps
-from flask import (Flask, request, jsonify, session, send_from_directory, abort)
+from flask import (Flask, request, jsonify, session, send_from_directory, abort, redirect)
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -44,11 +44,18 @@ app = Flask(
 )
 # SECRET_KEY from environment (set via Secret Manager on Cloud Run)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-change-me')
+app.config['SESSION_COOKIE_NAME'] = '__session'     # Firebase Hosting strips all cookies except __session
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_SECURE'] = True          # HTTPS only
 app.config['SESSION_COOKIE_HTTPONLY'] = True          # No JS access to cookie
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=15)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024   # 5 MB upload limit
+
+# Cloud Run terminates TLS at its load balancer and forwards HTTP internally.
+# Without ProxyFix, Flask sees requests as HTTP and won't set Secure cookies,
+# which breaks the entire session/login flow.
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
 # Rate limiter (in-memory; resets on restart — fine for Cloud Run)
 limiter = Limiter(get_remote_address, app=app, default_limits=[])
@@ -123,8 +130,40 @@ def legacy_images(filename):
     return send_from_directory(os.path.join(STATIC_DIR, 'images'), filename)
 
 
+# Pages that do NOT require login
+# Everything else (home, movies, anime, profile, play, etc.) requires auth.
+_PUBLIC_PAGES = {
+    'index.html',
+    'login/login.html', 'login/register.html', 'login/success.html',
+    'aboutus.html', 'contact/contactus.html',
+    '404.html', 'preloader.html',
+    'admin/index.html',  # admin has its own auth guard
+}
+
+
+def _is_public_page(resolved_filename):
+    """Check if a resolved template filename is publicly accessible."""
+    # Normalise to forward slashes for comparison
+    norm = resolved_filename.replace('\\', '/').lower()
+    for pub in _PUBLIC_PAGES:
+        if norm.endswith(pub.lower()):
+            return True
+    # Admin sub-pages have their own JS-level guard via requireAdmin()
+    if norm.startswith('admin/'):
+        return True
+    return False
+
+
+def _is_logged_in():
+    """True if a regular user has a valid session."""
+    return 'user_id' in session
+
+
 @app.route('/')
 def index():
+    # If user is already logged in, send them straight to /home
+    if _is_logged_in():
+        return redirect('/home')
     return send_from_directory(TEMPLATES_DIR, 'index.html')
 
 
@@ -134,6 +173,7 @@ def serve_page(filename):
     Serve HTML pages from templates/ and static assets from static/.
     Flask automatically handles /css/, /js/, /images/ etc. via static_folder.
     This route only handles HTML page requests.
+    Protected pages require a valid user session.
     """
     # ── Path traversal protection ──────────────────────────────────────
     if '..' in filename or filename.startswith('/'):
@@ -147,6 +187,10 @@ def serve_page(filename):
         if not real_path.startswith(os.path.realpath(TEMPLATES_DIR)):
             abort(403)
         if os.path.isfile(real_path):
+            rel = os.path.relpath(real_path, os.path.realpath(TEMPLATES_DIR))
+            # ── Auth guard: redirect to landing if not logged in ──
+            if not _is_public_page(rel) and not _is_logged_in():
+                return redirect('/')
             directory = os.path.dirname(real_path)
             file_only = os.path.basename(real_path)
             return send_from_directory(directory, file_only)
@@ -158,6 +202,10 @@ def serve_page(filename):
             if not real_html.startswith(os.path.realpath(TEMPLATES_DIR)):
                 abort(403)
             if os.path.isfile(real_html):
+                rel = os.path.relpath(real_html, os.path.realpath(TEMPLATES_DIR))
+                # ── Auth guard: redirect to landing if not logged in ──
+                if not _is_public_page(rel) and not _is_logged_in():
+                    return redirect('/')
                 directory = os.path.dirname(real_html)
                 file_only = os.path.basename(real_html)
                 return send_from_directory(directory, file_only)
@@ -338,9 +386,16 @@ def login():
 
 @app.route('/api/auth/logout', methods=['POST'])
 def logout():
-    session.pop('user_id', None)
-    session.pop('username', None)
+    session.clear()
     return jsonify({'message': 'Logged out'})
+
+
+@app.route('/api/auth/check', methods=['GET'])
+def auth_check():
+    """Frontend calls this to verify the session is still valid."""
+    if 'user_id' in session:
+        return jsonify({'logged_in': True, 'username': session.get('username')})
+    return jsonify({'logged_in': False}), 401
 
 
 @app.route('/api/auth/me', methods=['GET'])

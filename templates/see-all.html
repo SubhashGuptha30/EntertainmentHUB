@@ -198,10 +198,18 @@
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (localStorage.getItem('signedIn') !== 'true') {
-        window.location.href = '/'; return;
-      }
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('/api/auth/check');
+        if (!res.ok) {
+          localStorage.removeItem('signedIn');
+          localStorage.removeItem('currentUser');
+          sessionStorage.removeItem('signedIn');
+          sessionStorage.removeItem('currentUser');
+          window.location.replace('/');
+          return;
+        }
+      } catch (e) { /* offline — don't redirect */ }
     });
   </script>
   <script src="/static/js/main.js"></script>

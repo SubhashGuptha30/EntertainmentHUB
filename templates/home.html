@@ -147,11 +147,19 @@
 
   <!-- JavaScript -->
   <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-      // Check if the user is signed in
-      if (localStorage.getItem('signedIn') !== 'true' && sessionStorage.getItem('signedIn') !== 'true') {
-        // Redirect to the landing page if not signed in
-        window.location.href = '/';
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Verify session with the server (localStorage can be stale/faked)
+      try {
+        const res = await fetch('/api/auth/check');
+        if (!res.ok) {
+          localStorage.removeItem('signedIn');
+          localStorage.removeItem('currentUser');
+          sessionStorage.removeItem('signedIn');
+          sessionStorage.removeItem('currentUser');
+          window.location.replace('/');
+        }
+      } catch (e) {
+        // Network error — don't redirect (offline scenario)
       }
     });
   </script>

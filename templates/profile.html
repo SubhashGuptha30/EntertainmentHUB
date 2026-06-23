@@ -22,86 +22,148 @@
     <div id="global-header"></div>
 
     <div class="profile-container">
+      <!-- Top Banner (Cover Image) -->
+      <div class="profile-banner"></div>
 
-      <div class="profile-wrapper">
-        <div class="profile-header">
+      <div class="profile-layout">
+        <!-- Sidebar Navigation -->
+        <div class="profile-sidebar clay-card">
           <div class="profile-pic-wrapper">
             <img src="/static/images/user.png" alt="Profile Picture" class="profile-img" id="profile-img" />
-            <button class="btn edit-btn" onclick="document.getElementById('upload-profile-pic').click()">Edit</button>
+            <div class="edit-pic-overlay" onclick="document.getElementById('upload-profile-pic').click()">
+              <i class='bx bx-camera'></i>
+            </div>
             <input type="file" id="upload-profile-pic" style="display:none" accept="image/*" />
           </div>
-          <h2 id="profile-username">Username</h2>
+          <h2 id="profile-username" class="clay-text">Username</h2>
+          
+          <div class="profile-tabs">
+            <button class="tab-btn active" data-target="overview"><i class='bx bx-user'></i> Overview</button>
+            <button class="tab-btn" data-target="edit-profile"><i class='bx bx-edit'></i> Edit Profile</button>
+            <button class="tab-btn" data-target="security"><i class='bx bx-shield-quarter'></i> Security</button>
+            <button class="tab-btn" data-target="more"><i class='bx bx-dots-horizontal-rounded'></i> More</button>
+          </div>
         </div>
-        <div class="profile-details">
-          <div class="profile-box">
-            <div class="profile-section">
-              <h3>Email:</h3>
-              <p id="profile-email">user@example.com</p>
-            </div>
-            <div class="profile-section">
-              <h3>Gender:</h3>
-              <p id="profile-gender">Not specified</p>
-            </div>
-            <div class="profile-section">
-              <h3>Age:</h3>
-              <p id="profile-age">Not specified</p>
-            </div>
-          </div>
-          <div class="changer">
-            <div class="profile-section">
-              <button class="btn" onclick="toggleEditProfile()">Edit Profile Information</button>
-              <form id="edit-profile-form" style="display: none;">
-                <div class="form-group">
-                  <label for="edit-username">Username:</label>
-                  <input type="text" id="edit-username" name="edit-username" />
+
+        <!-- Main Content Area -->
+        <div class="profile-content clay-card">
+          
+          <!-- Overview Tab -->
+          <div id="overview" class="tab-pane active fade-in">
+            <h3 class="pane-title">Profile Overview</h3>
+            <div class="overview-grid">
+              <div class="info-box clay-deboss">
+                <i class='bx bx-envelope'></i>
+                <div>
+                  <span class="info-label">Email</span>
+                  <p id="profile-email" class="info-value">user@example.com</p>
                 </div>
-                <div class="form-group">
-                  <label for="edit-email">Email:</label>
-                  <input type="email" id="edit-email" name="edit-email" />
+              </div>
+              <div class="info-box clay-deboss">
+                <i class='bx bx-male-female'></i>
+                <div>
+                  <span class="info-label">Gender</span>
+                  <p id="profile-gender" class="info-value">Not specified</p>
                 </div>
-                <div class="form-group">
-                  <label for="edit-gender">Gender:</label>
-                  <input type="text" id="edit-gender" name="edit-gender" />
+              </div>
+              <div class="info-box clay-deboss">
+                <i class='bx bx-calendar'></i>
+                <div>
+                  <span class="info-label">Age</span>
+                  <p id="profile-age" class="info-value">Not specified</p>
                 </div>
-                <div class="form-group">
-                  <label for="edit-age">Age:</label>
-                  <input type="number" id="edit-age" name="edit-age" />
-                </div>
-                <button type="submit" class="btn">Save Changes</button>
-              </form>
-            </div>
-            <div class="profile-section">
-              <button class="btn" onclick="toggleChangePassword()">Change Password</button>
-              <form id="change-password-form" style="display: none;">
-                <div class="form-group">
-                  <label for="current-password">Current Password:</label>
-                  <input type="password" id="current-password" name="current-password" />
-                </div>
-                <div class="form-group">
-                  <label for="new-password">New Password:</label>
-                  <input type="password" id="new-password" name="new-password" />
-                </div>
-                <div class="form-group">
-                  <label for="confirm-password">Confirm New Password:</label>
-                  <input type="password" id="confirm-password" name="confirm-password" />
-                </div>
-                <button type="submit" class="btn">Change Password</button>
-              </form>
+              </div>
             </div>
           </div>
-          <div class="profile-section more">
-            <h3>More</h3>
-            <div class="more-links">
-              <a href="/contact/contactus" class="btn">Contact Us</a>
-              <a href="/aboutus" class="btn">About Us</a>
+
+          <!-- Edit Profile Tab -->
+          <div id="edit-profile" class="tab-pane fade-in">
+            <h3 class="pane-title">Edit Information</h3>
+            <form id="edit-profile-form">
+              <div class="form-group">
+                <label for="edit-username">Username</label>
+                <div class="input-icon-wrapper">
+                  <i class='bx bx-user'></i>
+                  <input type="text" id="edit-username" name="edit-username" class="clay-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="edit-email">Email</label>
+                <div class="input-icon-wrapper">
+                  <i class='bx bx-envelope'></i>
+                  <input type="email" id="edit-email" name="edit-email" class="clay-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="edit-gender">Gender</label>
+                <div class="input-icon-wrapper">
+                  <i class='bx bx-male-female'></i>
+                  <input type="text" id="edit-gender" name="edit-gender" class="clay-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="edit-age">Age</label>
+                <div class="input-icon-wrapper">
+                  <i class='bx bx-calendar'></i>
+                  <input type="number" id="edit-age" name="edit-age" class="clay-input" />
+                </div>
+              </div>
+              <button type="submit" class="clay-btn primary-btn mt-4">Save Changes</button>
+            </form>
+          </div>
+
+          <!-- Security Tab -->
+          <div id="security" class="tab-pane fade-in">
+            <h3 class="pane-title">Change Password</h3>
+            <form id="change-password-form">
+              <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <div class="input-icon-wrapper">
+                  <i class='bx bx-lock-open-alt'></i>
+                  <input type="password" id="current-password" name="current-password" class="clay-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="new-password">New Password</label>
+                <div class="input-icon-wrapper">
+                  <i class='bx bx-lock-alt'></i>
+                  <input type="password" id="new-password" name="new-password" class="clay-input" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <div class="input-icon-wrapper">
+                  <i class='bx bx-check-shield'></i>
+                  <input type="password" id="confirm-password" name="confirm-password" class="clay-input" />
+                </div>
+              </div>
+              <button type="submit" class="clay-btn primary-btn mt-4">Update Password</button>
+            </form>
+          </div>
+
+          <!-- More Options Tab -->
+          <div id="more" class="tab-pane fade-in">
+            <h3 class="pane-title">More Options</h3>
+            <div class="more-options-grid">
+              <a href="/contact/contactus" class="clay-btn secondary-btn">
+                <i class='bx bx-message-square-dots'></i> Contact Us
+              </a>
+              <a href="/aboutus" class="clay-btn secondary-btn">
+                <i class='bx bx-info-circle'></i> About Us
+              </a>
+            </div>
+            
+            <div class="danger-zone clay-deboss mt-4">
+              <h4>Danger Zone</h4>
+              <p>Logging out will clear your current session.</p>
+              <button class="clay-btn danger-btn mt-2" id="logout-button">
+                <i class='bx bx-log-out'></i> Logout
+              </button>
             </div>
           </div>
-          <div class="profile-section logout-section">
-            <button class="btn logout-btn" id="logout-button">Logout</button>
-          </div>
+
         </div>
       </div>
-
     </div>
   </div>
 
@@ -133,10 +195,12 @@
       try {
         const res = await fetch('/api/auth/me');
         if (!res.ok) {
-          // Not logged in on server side; fall back to cached data
-          const cached = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
-          if (cached) populateUI(cached);
-          else window.location.href = '/';
+          // Session expired or not logged in — redirect to landing
+          localStorage.removeItem('signedIn');
+          localStorage.removeItem('currentUser');
+          sessionStorage.removeItem('signedIn');
+          sessionStorage.removeItem('currentUser');
+          window.location.replace('/');
           return;
         }
         const user = await res.json();
@@ -169,15 +233,21 @@
       }
     }
 
-    function toggleEditProfile() {
-      const form = document.getElementById('edit-profile-form');
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function toggleChangePassword() {
-      const form = document.getElementById('change-password-form');
-      form.style.display = form.style.display === 'none' ? 'block' : 'none';
-    }
+    // Tab Switching Logic
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons and panes
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        
+        // Add active class to clicked button
+        btn.classList.add('active');
+        
+        // Show corresponding pane
+        const targetId = btn.getAttribute('data-target');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
 
     function handleProfilePicUpload() {
       const file = this.files[0];
