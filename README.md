@@ -5,9 +5,13 @@
 Entertainment Hub is a full-stack OTT (Over-The-Top) streaming platform built as a college project using:
 
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend**: Python Flask
-- **Database**: SQLite (via Python's built-in `sqlite3`)
-- **Self-hosted**: runs entirely on your local machine — no cloud required
+- **Backend**: Python Flask (gunicorn), containerized with Docker
+- **Database**: MongoDB Atlas (free M0 cluster)
+- **Media storage**: Cloudinary (free plan)
+- **Hosting**: Render (free web service) at https://ehub.subhashguptha.online
+
+Environment variables: `MONGODB_URI`, `CLOUDINARY_URL`, `SECRET_KEY`, `ADMIN_PASSWORD`.
+Tests: `python -m pytest -q` (runs against an in-memory MongoDB).
 
 ---
 

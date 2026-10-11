@@ -1,9 +1,9 @@
 """
-app.py — Entertainment Hub | Flask Backend (GCP Cloud Run version)
-Runs on Cloud Run with Firestore + Cloud Storage.
+app.py — Entertainment Hub | Flask Backend
+Runs on Render with MongoDB Atlas + Cloudinary (all free tiers).
 
 Local dev:  python app.py
-Cloud Run:  gunicorn --bind :$PORT app:app
+Production: gunicorn --bind :$PORT app:app
 """
 
 import os
@@ -14,19 +14,19 @@ from flask import (Flask, request, jsonify, session, send_from_directory, abort,
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-# Database layer (Firestore)
+# Database layer (MongoDB)
 import database as db
 
-# Cloud Storage for file uploads
-from google.cloud import storage as gcs
+# Cloudinary for file uploads (reads CLOUDINARY_URL from the environment)
+import cloudinary.uploader
 
 # App Setup
 BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR     = os.path.join(BASE_DIR, 'static')
 TEMPLATES_DIR  = os.path.join(BASE_DIR, 'templates')
 
-# Cloud Storage bucket name for uploaded images (set via env var)
-UPLOAD_BUCKET = os.environ.get('UPLOAD_BUCKET', '')
+# Uploads go to Cloudinary when configured, else to local static/ (dev)
+USE_CLOUDINARY = bool(os.environ.get('CLOUDINARY_URL'))
 
 # Status → sections mapping (admin no longer needs to set sections manually)
 STATUS_SECTIONS = {
@@ -42,22 +42,22 @@ app = Flask(
     static_folder=STATIC_DIR,
     static_url_path='/static',   # Serve assets at /static/css/, /static/js/ etc.
 )
-# SECRET_KEY from environment (set via Secret Manager on Cloud Run)
+# SECRET_KEY from environment (set in the Render dashboard)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-change-me')
-app.config['SESSION_COOKIE_NAME'] = '__session'     # Firebase Hosting strips all cookies except __session
+app.config['SESSION_COOKIE_NAME'] = '__session'
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_SECURE'] = True          # HTTPS only
 app.config['SESSION_COOKIE_HTTPONLY'] = True          # No JS access to cookie
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=15)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024   # 5 MB upload limit
 
-# Cloud Run terminates TLS at its load balancer and forwards HTTP internally.
+# Render terminates TLS at its load balancer and forwards HTTP internally.
 # Without ProxyFix, Flask sees requests as HTTP and won't set Secure cookies,
 # which breaks the entire session/login flow.
 from werkzeug.middleware.proxy_fix import ProxyFix
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 
-# Rate limiter (in-memory; resets on restart — fine for Cloud Run)
+# Rate limiter (in-memory; resets on restart — fine for a single instance)
 limiter = Limiter(get_remote_address, app=app, default_limits=[])
 
 # Initialise DB on startup
@@ -90,16 +90,13 @@ def set_security_headers(response):
     return response
 
 
-# ── Cloud Storage helper ────────────────────────────────────────────────
+# ── Cloudinary helper ───────────────────────────────────────────────────
 
-def _upload_to_gcs(file_obj, folder, filename):
-    """Upload a file to Cloud Storage and return its public URL."""
-    client = gcs.Client()
-    bucket = client.bucket(UPLOAD_BUCKET)
-    blob_path = f"images/{folder}/{filename}"
-    blob = bucket.blob(blob_path)
-    blob.upload_from_file(file_obj, content_type=file_obj.content_type)
-    return blob.public_url
+def _upload_to_cloudinary(file_obj, folder, filename):
+    """Upload a file to Cloudinary and return its public HTTPS URL."""
+    public_id = f"ehub/images/{folder}/{os.path.splitext(filename)[0]}"
+    result = cloudinary.uploader.upload(file_obj, public_id=public_id, overwrite=False)
+    return result['secure_url']
 
 
 # ── Auth Decorators ─────────────────────────────────────────────────────
@@ -261,12 +258,12 @@ def upload_file():
 
     filename = str(uuid.uuid4()) + ext
 
-    # Upload to Cloud Storage if bucket is configured, otherwise fall back to local
-    if UPLOAD_BUCKET:
-        public_url = _upload_to_gcs(file, folder, filename)
+    # Upload to Cloudinary if configured, otherwise fall back to local
+    if USE_CLOUDINARY:
+        public_url = _upload_to_cloudinary(file, folder, filename)
         return jsonify({'path': public_url})
     else:
-        # Local fallback (for development without GCS)
+        # Local fallback (for development without Cloudinary)
         save_dir = os.path.join(BASE_DIR, 'static', 'images', folder)
         os.makedirs(save_dir, exist_ok=True)
         file.save(os.path.join(save_dir, filename))

@@ -1,33 +1,55 @@
 """
-database.py — Firestore backend for Entertainment Hub (GCP deployment)
-Replaces the SQLite backend with Google Cloud Firestore (NoSQL).
+database.py — MongoDB backend for Entertainment Hub (MongoDB Atlas free tier)
 
 Collections:
   - users      : {username, email, password, gender, age, profile_pic, is_admin, created_at}
   - content    : {slug, type, title, h_image, v_image, rating, status, description,
                   tags, cast, watchOptions, video_url, genreDisplay, sections, franchise}
-                  Document ID = "{type}_{slug}" (natural composite key)
+                  _id = "{type}_{slug}" (natural composite key)
   - selectors  : {category, value}
+
+All _id values are strings (kept from the original Firestore document IDs),
+so routes that pass IDs around are unchanged.
 """
 
 import json
 import os
 import secrets
 import hashlib
-from datetime import datetime
-from google.cloud import firestore
+from datetime import datetime, timezone
+from bson import ObjectId
+from pymongo import MongoClient
 import bcrypt
 
-# Firestore client — auto-authenticates on Cloud Run via service account
-_db_client = None
+_db = None
 
 
 def get_db():
-    """Return a Firestore client (lazily initialised, reused)."""
-    global _db_client
-    if _db_client is None:
-        _db_client = firestore.Client()
-    return _db_client
+    """Return the MongoDB database (lazily initialised, reused)."""
+    global _db
+    if _db is None:
+        client = MongoClient(os.environ['MONGODB_URI'])
+        _db = client[os.environ.get('MONGODB_DB', 'entertainmenthub')]
+    return _db
+
+
+def _new_id():
+    return str(ObjectId())
+
+
+def _now():
+    return datetime.now(timezone.utc)
+
+
+def _out(doc):
+    """Mongo document -> dict with string 'id' (and no '_id')."""
+    if doc is None:
+        return None
+    d = dict(doc)
+    d['id'] = d.pop('_id')
+    if isinstance(d.get('created_at'), datetime):
+        d['created_at'] = d['created_at'].isoformat()
+    return d
 
 
 def hash_password(password):
@@ -51,7 +73,7 @@ def migrate_password_if_needed(user_id, password, current_hash):
     """If the stored hash is legacy SHA-256, re-hash with bcrypt and update."""
     if _is_legacy_hash(current_hash):
         new_hash = hash_password(password)
-        _users_col().document(user_id).update({'password': new_hash})
+        _users_col().update_one({'_id': user_id}, {'$set': {'password': new_hash}})
         return new_hash
     return current_hash
 
@@ -59,13 +81,13 @@ def migrate_password_if_needed(user_id, password, current_hash):
 # ── Collection references ────────────────────────────────────────────────
 
 def _users_col():
-    return get_db().collection('users')
+    return get_db()['users']
 
 def _content_col():
-    return get_db().collection('content')
+    return get_db()['content']
 
 def _selectors_col():
-    return get_db().collection('selectors')
+    return get_db()['selectors']
 
 
 # ── Content helpers ──────────────────────────────────────────────────────
@@ -76,41 +98,28 @@ def content_doc_id(ctype, slug):
 
 
 def content_to_dict(doc):
-    """Convert a Firestore content document to the frontend-expected dict."""
-    if not doc.exists:
-        return None
-    d = doc.to_dict()
-    d['id'] = doc.id  # preserve the Firestore doc ID for admin operations
-    return d
+    return _out(doc)
 
 
 def user_to_dict(doc):
-    """Convert a Firestore user document to dict."""
-    if not doc.exists:
-        return None
-    d = doc.to_dict()
-    d['id'] = doc.id
-    # Convert Firestore Timestamp to ISO string for JSON serialisation
-    if isinstance(d.get('created_at'), datetime):
-        d['created_at'] = d['created_at'].isoformat()
-    return d
+    return _out(doc)
 
 
 # ── Init / Seed ──────────────────────────────────────────────────────────
 
 def init_db():
-    """Seed default data into Firestore if collections are empty.
-    Safe to call on every startup — idempotent."""
-    db = get_db()
+    """Seed default data if collections are empty. Idempotent."""
+    _users_col().create_index('username')
+    _content_col().create_index('type')
+    _selectors_col().create_index('category')
 
-    # ── Seed admin user ──────────────────────────────────────────────────
-    admin_query = _users_col().where('username', '==', 'admin').limit(1).get()
-    if not list(admin_query):
+    if not _users_col().find_one({'username': 'admin'}):
         admin_pw = os.environ.get('ADMIN_PASSWORD', '')
         if not admin_pw:
             admin_pw = secrets.token_urlsafe(16)
             print(f'[DB] Generated admin password (save this!): {admin_pw}')
-        _users_col().add({
+        _users_col().insert_one({
+            '_id':         _new_id(),
             'username':    'admin',
             'email':       'admin@entertainmenthub.com',
             'password':    hash_password(admin_pw),
@@ -118,13 +127,11 @@ def init_db():
             'age':         0,
             'profile_pic': '/static/images/user.png',
             'is_admin':    True,
-            'created_at':  firestore.SERVER_TIMESTAMP,
+            'created_at':  _now(),
         })
         print('[DB] Admin user created')
 
-    # ── Seed default selectors ───────────────────────────────────────────
-    existing_selectors = list(_selectors_col().limit(1).get())
-    if not existing_selectors:
+    if not _selectors_col().find_one():
         _seed_selectors()
         print('[DB] Selectors seeded with defaults')
 
@@ -148,50 +155,36 @@ def _seed_selectors():
             'Sony LIV', 'Zee5', 'MX Player', 'YouTube Premium', 'Paramount+'
         ],
     }
-    batch = get_db().batch()
+    docs = []
     for category, values in defaults.items():
         for val in values:
             if category == 'watch_options':
-                db_val = json.dumps({'name': val, 'logo': ''}, ensure_ascii=False)
-            else:
-                db_val = val
-            doc_ref = _selectors_col().document()  # auto-ID
-            batch.set(doc_ref, {'category': category, 'value': db_val})
-    batch.commit()
+                val = json.dumps({'name': val, 'logo': ''}, ensure_ascii=False)
+            docs.append({'_id': _new_id(), 'category': category, 'value': val})
+    _selectors_col().insert_many(docs)
 
 
 # ── User queries ─────────────────────────────────────────────────────────
 
 def find_user_by_username(username, admin_only=False):
     """Find a user by username. Returns (doc_id, user_dict) or (None, None)."""
-    query = _users_col().where('username', '==', username)
-    if admin_only:
-        query = query.where('is_admin', '==', True)
-    else:
-        query = query.where('is_admin', '==', False)
-    results = list(query.limit(1).get())
-    if results:
-        doc = results[0]
-        d = doc.to_dict()
-        d['id'] = doc.id
-        return doc.id, d
+    doc = _users_col().find_one({'username': username, 'is_admin': bool(admin_only)})
+    if doc:
+        d = _out(doc)
+        return d['id'], d
     return None, None
 
 
 def find_user_by_username_or_email(username, email):
     """Check if username or email already exists (for registration)."""
-    q1 = list(_users_col().where('username', '==', username).limit(1).get())
-    if q1:
-        return True
-    q2 = list(_users_col().where('email', '==', email).limit(1).get())
-    if q2:
-        return True
-    return False
+    return _users_col().find_one({'$or': [{'username': username}, {'email': email}]}) is not None
 
 
 def create_user(username, email, password, gender, age):
     """Create a new regular user. Returns the doc ID."""
-    _, doc_ref = _users_col().add({
+    user_id = _new_id()
+    _users_col().insert_one({
+        '_id':         user_id,
         'username':    username,
         'email':       email,
         'password':    hash_password(password),
@@ -199,47 +192,31 @@ def create_user(username, email, password, gender, age):
         'age':         age,
         'profile_pic': '/images/user.png',
         'is_admin':    False,
-        'created_at':  firestore.SERVER_TIMESTAMP,
+        'created_at':  _now(),
     })
-    return doc_ref.id
+    return user_id
 
 
 def get_user_by_id(user_id):
-    """Fetch a single user by Firestore doc ID."""
-    doc = _users_col().document(user_id).get()
-    return user_to_dict(doc)
+    """Fetch a single user by ID."""
+    return _out(_users_col().find_one({'_id': user_id}))
 
 
 def update_user(user_id, data):
     """Update user fields. `data` is a dict of fields to update."""
-    _users_col().document(user_id).update(data)
+    _users_col().update_one({'_id': user_id}, {'$set': data})
 
 
 def list_users(admin=False):
-    """List all non-admin users (for admin dashboard)."""
-    query = _users_col().where('is_admin', '==', admin)
-    docs = query.get()
-    users = []
-    for doc in docs:
-        d = doc.to_dict()
-        d['id'] = doc.id
-        if isinstance(d.get('created_at'), datetime):
-            d['created_at'] = d['created_at'].isoformat()
-        # Strip password from listing
-        d.pop('password', None)
-        users.append(d)
-    # Sort by created_at descending in Python (avoids needing a composite index)
-    users.sort(key=lambda u: u.get('created_at', ''), reverse=True)
+    """List users (non-admin by default) for the admin dashboard, newest first."""
+    users = [_out(d) for d in _users_col().find({'is_admin': admin}, {'password': 0})]
+    users.sort(key=lambda u: u.get('created_at') or '', reverse=True)
     return users
 
 
 def delete_user(user_id):
     """Delete a non-admin user."""
-    doc = _users_col().document(user_id).get()
-    if doc.exists and not doc.to_dict().get('is_admin', False):
-        _users_col().document(user_id).delete()
-        return True
-    return False
+    return _users_col().delete_one({'_id': user_id, 'is_admin': False}).deleted_count > 0
 
 
 # ── Content queries ──────────────────────────────────────────────────────
@@ -247,11 +224,9 @@ def delete_user(user_id):
 def get_all_content():
     """Fetch all content, grouped by type."""
     result = {'movies': {}, 'animes': {}, 'webSeries': {}}
-    for doc in _content_col().stream():
-        d = doc.to_dict()
-        d['id'] = doc.id
-        ctype = d.get('type')
-        slug  = d.get('slug')
+    for doc in _content_col().find():
+        d = _out(doc)
+        ctype, slug = d.get('type'), d.get('slug')
         if ctype in result and slug:
             result[ctype][slug] = d
     return result
@@ -259,88 +234,51 @@ def get_all_content():
 
 def get_content_by_type(ctype):
     """Fetch all content of a specific type."""
-    result = {}
-    docs = _content_col().where('type', '==', ctype).get()
-    for doc in docs:
-        d = doc.to_dict()
-        d['id'] = doc.id
-        result[d['slug']] = d
-    return result
+    return {d['slug']: d for d in map(_out, _content_col().find({'type': ctype}))}
 
 
 def get_single_content(ctype, slug):
     """Fetch a single content item by type + slug."""
-    doc_id = content_doc_id(ctype, slug)
-    doc = _content_col().document(doc_id).get()
-    return content_to_dict(doc)
+    return _out(_content_col().find_one({'_id': content_doc_id(ctype, slug)}))
 
 
 def add_content(data):
     """Add a new content item. Returns slug or raises ValueError on duplicate."""
-    slug = data['slug']
-    ctype = data['type']
-    doc_id = content_doc_id(ctype, slug)
-
-    # Check for duplicate
-    existing = _content_col().document(doc_id).get()
-    if existing.exists:
+    doc_id = content_doc_id(data['type'], data['slug'])
+    if _content_col().find_one({'_id': doc_id}, {'_id': 1}):
         raise ValueError('Slug already exists for this type')
-
-    _content_col().document(doc_id).set(data)
-    return slug
+    _content_col().insert_one({**data, '_id': doc_id})
+    return data['slug']
 
 
 def update_content(content_id, data):
-    """Update a content item by its Firestore document ID."""
-    doc = _content_col().document(content_id).get()
-    if not doc.exists:
+    """Update a content item by its document ID. Returns the old document or None."""
+    old = _content_col().find_one_and_update({'_id': content_id}, {'$set': data})
+    if old is None:
         return None
-    _content_col().document(content_id).update(data)
-    return doc.to_dict()
+    old.pop('_id', None)
+    return old
 
 
 def delete_content(content_id):
-    """Delete a content item by its Firestore document ID."""
-    _content_col().document(content_id).delete()
+    """Delete a content item by its document ID."""
+    _content_col().delete_one({'_id': content_id})
 
 
 def get_content_list(ctype=None):
     """List content for admin panel. Optional type filter."""
-    if ctype:
-        docs = _content_col().where('type', '==', ctype).get()
-    else:
-        docs = _content_col().get()
-    items = []
-    for doc in docs:
-        d = doc.to_dict()
-        d['id'] = doc.id
-        items.append(d)
-    # Sort: by type, then newest-first (no created_at on content, so sort by title)
+    items = [_out(d) for d in _content_col().find({'type': ctype} if ctype else {})]
     items.sort(key=lambda x: (x.get('type', ''), x.get('title', '')))
     return items
 
 
 def get_content_stats():
     """Get content counts for admin dashboard."""
-    from google.cloud.firestore_v1.aggregation import AggregationQuery
-
-    db = get_db()
-    col = _content_col()
-
-    def _count(query):
-        agg = AggregationQuery(query)
-        agg.count(alias='total')
-        results = agg.get()
-        for r in results:
-            for ar in r:
-                return ar.value
-        return 0
-
-    movies = _count(col.where('type', '==', 'movies'))
-    animes = _count(col.where('type', '==', 'animes'))
-    series = _count(col.where('type', '==', 'webSeries'))
-    users  = _count(_users_col().where('is_admin', '==', False))
-
+    count = _content_col().count_documents
+    movies = count({'type': 'movies'})
+    animes = count({'type': 'animes'})
+    series = count({'type': 'webSeries'})
+    users = _users_col().count_documents({'is_admin': False})
     return {
         'movies': movies,
         'animes': animes,
@@ -355,13 +293,8 @@ def get_content_stats():
 def get_all_selectors():
     """Get all selectors grouped by category."""
     result = {}
-    for doc in _selectors_col().stream():
-        d = doc.to_dict()
-        cat = d['category']
-        if cat not in result:
-            result[cat] = []
-        result[cat].append({'id': doc.id, 'value': d['value']})
-    # Sort values within each category
+    for d in _selectors_col().find():
+        result.setdefault(d['category'], []).append({'id': d['_id'], 'value': d['value']})
     for cat in result:
         result[cat].sort(key=lambda x: x['value'])
     return result
@@ -369,26 +302,20 @@ def get_all_selectors():
 
 def get_selectors_by_category(category):
     """Get selectors for a specific category."""
-    docs = _selectors_col().where('category', '==', category).get()
-    items = [{'id': doc.id, 'value': doc.to_dict()['value']} for doc in docs]
+    items = [{'id': d['_id'], 'value': d['value']} for d in _selectors_col().find({'category': category})]
     items.sort(key=lambda x: x['value'])
     return items
 
 
 def search_cast_selectors(query_str):
     """Search cast selectors by name (case-insensitive substring match)."""
-    docs = _selectors_col().where('category', '==', 'cast').get()
     results = []
     q = query_str.lower().strip()
-    for doc in docs:
+    for d in _selectors_col().find({'category': 'cast'}):
         try:
-            m = json.loads(doc.to_dict()['value'])
+            m = json.loads(d['value'])
             if not q or q in m.get('name', '').lower():
-                results.append({
-                    'id':    doc.id,
-                    'name':  m.get('name', ''),
-                    'image': m.get('image', ''),
-                })
+                results.append({'id': d['_id'], 'name': m.get('name', ''), 'image': m.get('image', '')})
         except Exception:
             pass
     results.sort(key=lambda x: x['name'])
@@ -397,30 +324,25 @@ def search_cast_selectors(query_str):
 
 def add_selector(category, value):
     """Add a new selector. Returns (doc_id, created)."""
-    # Check for duplicate
-    existing = list(
-        _selectors_col()
-        .where('category', '==', category)
-        .where('value', '==', value)
-        .limit(1).get()
-    )
+    existing = _selectors_col().find_one({'category': category, 'value': value}, {'_id': 1})
     if existing:
-        return existing[0].id, False
-    _, doc_ref = _selectors_col().add({'category': category, 'value': value})
-    return doc_ref.id, True
+        return existing['_id'], False
+    sel_id = _new_id()
+    _selectors_col().insert_one({'_id': sel_id, 'category': category, 'value': value})
+    return sel_id, True
 
 
 def update_selector(selector_id, value):
     """Update a selector's value."""
-    _selectors_col().document(selector_id).update({'value': value})
+    _selectors_col().update_one({'_id': selector_id}, {'$set': {'value': value}})
 
 
 def delete_selector(selector_id):
     """Delete a selector."""
-    _selectors_col().document(selector_id).delete()
+    _selectors_col().delete_one({'_id': selector_id})
 
 
 if __name__ == '__main__':
-    print("[DB] Initializing Firestore...")
+    print("[DB] Initializing MongoDB...")
     init_db()
     print("[DB] Done.")

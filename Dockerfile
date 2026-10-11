@@ -1,7 +1,7 @@
-# ── Entertainment Hub — Cloud Run Dockerfile ─────────────────────────
+# ── Entertainment Hub — Dockerfile (Render) ─────────────────────────
 FROM python:3.12-slim
 
-# Prevent Python from buffering stdout/stderr (important for Cloud Run logs)
+# Prevent Python from buffering stdout/stderr (important for container logs)
 ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
@@ -13,6 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Cloud Run sets the PORT env var (default 8080)
+# The host sets the PORT env var (default 8080)
 # Use 2 workers + 4 threads for a lightweight container
 CMD exec gunicorn --bind :${PORT:-8080} --workers 2 --threads 4 --timeout 120 app:app
