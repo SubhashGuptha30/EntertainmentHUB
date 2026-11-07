@@ -1,0 +1,228 @@
+/* One & Done page + shared title cards (also used on home rows) */
+
+.od-top {
+    padding: 7rem 2rem 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.od-top h1 {
+    font-size: 2.2rem;
+    color: #fff;
+}
+
+.od-top p {
+    color: var(--text-muted);
+    margin: 0.3rem 0 1.2rem;
+    max-width: 640px;
+}
+
+.od-filter-label {
+    display: block;
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0.8rem 0 0.4rem;
+}
+
+.od-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 1.4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 2rem 4rem;
+}
+
+.od-count {
+    max-width: 1400px;
+    margin: 1.2rem auto 0;
+    padding: 0 2rem;
+    color: #999;
+    font-size: 0.85rem;
+}
+
+/* ── Title card ───────────────────────────────────────────── */
+.tcard {
+    position: relative;
+    display: block;
+    border-radius: 14px;
+    overflow: hidden;
+    aspect-ratio: 2 / 3;
+    background: #1a1a1d;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    text-decoration: none;
+}
+
+.tcard:hover,
+.tcard:focus-visible {
+    transform: translateY(-6px);
+    border-color: var(--primary);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    outline: none;
+}
+
+.tcard img,
+.tcard .tcard-art {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tcard .tcard-art {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.18);
+    font-weight: 900;
+    font-size: 3.2rem;
+    letter-spacing: 2px;
+    line-height: 1;
+}
+
+.tcard .tcard-art span {
+    transform: translateY(-15%);
+}
+
+.tcard-badge {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    z-index: 2;
+    padding: 0.15rem 0.6rem;
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.75);
+    color: var(--primary);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tcard-info {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 2.5rem 0.8rem 0.8rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+}
+
+.tcard-title {
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.25;
+}
+
+.tcard-meta {
+    color: #bbb;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.tcard-meta b {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.tcard-progress {
+    height: 4px;
+    margin-top: 0.5rem;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+}
+
+.tcard-progress div {
+    height: 100%;
+    background: var(--primary);
+}
+
+/* ── Horizontal rows on home ─────────────────────────────── */
+.hrow {
+    margin-top: 2.5rem;
+}
+
+.hrow-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.hrow-head h2 {
+    font-size: 1.4rem;
+    color: #fff;
+}
+
+.hrow-head p {
+    color: #999;
+    font-size: 0.85rem;
+}
+
+.hrow-head a {
+    color: var(--primary);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.hrow-track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(160px, 180px);
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 0.4rem 0 0.8rem;
+    scrollbar-width: thin;
+}
+
+.hrow-track > * {
+    scroll-snap-align: start;
+}
+
+.hrow-track.wide {
+    grid-auto-columns: minmax(260px, 300px);
+}
+
+.hrow-track.wide .tcard {
+    aspect-ratio: 16 / 9;
+}
+
+@media (max-width: 600px) {
+    .od-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 0.9rem;
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .od-top {
+        padding: 6rem 1rem 0;
+    }
+
+    .hrow-track {
+        grid-auto-columns: 140px;
+    }
+
+    .hrow-track.wide {
+        grid-auto-columns: 240px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tcard {
+        transition: none;
+    }
+
+    .tcard:hover {
+        transform: none;
+    }
+}

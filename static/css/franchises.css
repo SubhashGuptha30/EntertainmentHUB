@@ -1,0 +1,198 @@
+/* Franchise Page Styles */
+
+.franchises-top {
+    padding: 7rem 2rem 0;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.franchises-heading {
+    font-size: 2.2rem;
+    color: #fff;
+}
+
+.franchises-sub {
+    color: var(--text-muted);
+    margin: 0.3rem 0 1.2rem;
+}
+
+.franchise-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.franchise-chip {
+    padding: 0.45rem 1.1rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    color: #ddd;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.85rem;
+}
+
+.franchise-chip.active,
+.franchise-chip:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #000;
+}
+
+.franchise-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.franchise-stat {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.franchise-stat b {
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.franchise-stat span {
+    color: #bbb;
+    font-size: 0.65rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.franchise-kind {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    z-index: 2;
+    padding: 0.2rem 0.7rem;
+    border-radius: 50px;
+    background: rgba(0, 0, 0, 0.7);
+    color: var(--primary);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.franchises-section {
+    padding: 2rem 2rem 4rem 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.franchise-card {
+    display: block;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    background: #111;
+    cursor: pointer;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.franchise-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+    border-color: var(--primary);
+    z-index: 2;
+}
+
+.franchise-img-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.franchise-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.franchise-card:hover .franchise-img {
+    transform: scale(1.1);
+    filter: brightness(0.4);
+}
+
+.franchise-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+    /* keep title + stats row visible until hover */
+    transform: translateY(calc(100% - 6.5rem));
+    transition: transform 0.4s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.franchise-card:hover .franchise-content {
+    transform: translateY(0);
+}
+
+.franchise-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.franchise-desc {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.1s;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.franchise-card:hover .franchise-desc {
+    opacity: 1;
+}
+
+.view-btn {
+    align-self: flex-start;
+    padding: 0.6rem 1.2rem;
+    background: var(--primary);
+    color: #000;
+    border: none;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease 0.2s;
+}
+
+.franchise-card:hover .view-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.view-btn:hover {
+    background: #fff;
+    color: var(--primary);
+}

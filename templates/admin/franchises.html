@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Franchises | Admin | Entertainment Hub</title>
+  <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/admin/admin.css" />
+  <style>
+    .fr-layout { display: grid; grid-template-columns: 280px 1fr; gap: 1.5rem; align-items: start; }
+    .fr-list { padding: 1rem; }
+    .fr-list-item { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: .6rem .8rem; border-radius: 8px; background: transparent; border: 1px solid transparent; color: inherit; font: inherit; cursor: pointer; text-align: left; }
+    .fr-list-item:hover, .fr-list-item.active { border-color: var(--primary, #ffb43a); }
+    .fr-list-item small { color: var(--text-muted); }
+    .fr-editor { padding: 1.5rem; }
+    .fr-entries { width: 100%; border-collapse: collapse; margin-top: .75rem; font-size: .85rem; }
+    .fr-entries th { text-align: left; color: var(--text-muted); font-weight: 500; padding: .4rem; }
+    .fr-entries td { padding: .3rem; vertical-align: middle; }
+    .fr-entries input, .fr-entries select { width: 100%; padding: .35rem .45rem; font-size: .85rem; }
+    .fr-entries input[type=checkbox] { width: auto; }
+    .fr-entries .num { width: 60px; }
+    .fr-entries .content-col { min-width: 220px; }
+    .fr-row-actions { display: flex; gap: .25rem; }
+    .fr-actions { display: flex; gap: .75rem; margin-top: 1.5rem; }
+    .fr-hint { color: var(--text-muted); font-size: .8rem; margin-top: .4rem; }
+    @media (max-width: 1000px) { .fr-layout { grid-template-columns: 1fr; } .fr-editor { overflow-x: auto; } }
+  </style>
+</head>
+
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <i class='bx bx-shield-quarter'></i>
+        <span>Admin<span class="accent">Hub</span></span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/admin/dashboard" class="nav-item"><i class='bx bxs-dashboard'></i><span>Dashboard</span></a>
+        <a href="/admin/content" class="nav-item"><i class='bx bx-movie-play'></i><span>Content</span></a>
+        <a href="/admin/franchises" class="nav-item active"><i class='bx bx-git-branch'></i><span>Franchises</span></a>
+        <a href="/admin/users" class="nav-item"><i class='bx bxs-group'></i><span>Users</span></a>
+        <a href="/admin/selectors" class="nav-item"><i class='bx bx-slider'></i><span>Selectors</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <span id="admin-name" class="admin-label"></span>
+        <button class="btn-logout" id="logoutBtn"><i class='bx bx-log-out'></i> Logout</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <h2><i class='bx bx-git-branch'></i> Franchises</h2>
+        <span class="page-subtitle">Group titles into franchises and set their watch order</span>
+      </div>
+
+      <div class="fr-layout">
+        <div class="table-wrapper fr-list">
+          <button class="btn-primary" id="new-btn" style="width:100%;margin-bottom:1rem;"><i class='bx bx-plus'></i> New franchise</button>
+          <div id="fr-list"><i class='bx bx-loader-alt bx-spin'></i> Loading…</div>
+        </div>
+
+        <div class="table-wrapper fr-editor" id="fr-editor" hidden>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" id="f-title" placeholder="e.g. Middle-earth" />
+            </div>
+            <div class="form-group">
+              <label>Kind</label>
+              <select id="f-kind">
+                <option value="universe">Universe — shared world, several story lines</option>
+                <option value="saga">Saga — one line of sequels/spin-offs (4+)</option>
+                <option value="anime">Anime — watch order is non-trivial</option>
+                <option value="trilogy">Trilogy — exactly 3 films</option>
+                <option value="duology">Duology — exactly 2 films</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="f-status">
+                <option value="ongoing">Ongoing</option>
+                <option value="complete">Complete</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Card image</label>
+              <div style="display:flex;gap:.5rem;">
+                <input type="text" id="f-image" placeholder="/static/images/franchise/mcu.jpeg" style="flex:1;" />
+                <label class="btn-secondary" style="cursor:pointer;margin:0;"><i class='bx bx-upload'></i>
+                  <input type="file" accept="image/*" data-target="f-image" style="display:none;" />
+                </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Banner <small>(optional, wide image)</small></label>
+              <div style="display:flex;gap:.5rem;">
+                <input type="text" id="f-banner" placeholder="defaults to first entry's banner" style="flex:1;" />
+                <label class="btn-secondary" style="cursor:pointer;margin:0;"><i class='bx bx-upload'></i>
+                  <input type="file" accept="image/*" data-target="f-banner" style="display:none;" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="f-desc" rows="3" style="width:100%;resize:vertical;"></textarea>
+          </div>
+
+          <label class="checkbox-label" style="display:flex;gap:.5rem;align-items:center;">
+            <input type="checkbox" id="f-featured" style="width:auto;" /> Featured (shown first)
+          </label>
+
+          <div class="form-section-label" style="margin-top:1.5rem;"><i class='bx bx-list-ol'></i> Entries — top to bottom = release order</div>
+          <table class="fr-entries">
+            <thead>
+              <tr>
+                <th class="content-col">Title</th>
+                <th>Label <small>(e.g. Season 2)</small></th>
+                <th class="num">Year</th>
+                <th>Phase / Arc</th>
+                <th class="num" title="Position in chronological order. Blank = same as release.">Chrono #</th>
+                <th class="num" title="Runtime of this entry in minutes (e.g. one season)">Min</th>
+                <th>Canon</th>
+                <th title="Uncheck for skippable entries">Essential</th>
+                <th>Note</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="entries-body"></tbody>
+          </table>
+          <button class="btn-secondary" id="add-entry" style="margin-top:.75rem;"><i class='bx bx-plus'></i> Add entry</button>
+          <p class="fr-hint">Add a series several times with labels "Season 1", "Season 2"… to place seasons separately on the timeline.</p>
+
+          <div class="fr-actions">
+            <button class="btn-primary" id="save-btn"><i class='bx bx-save'></i> Save</button>
+            <a class="btn-secondary" id="view-btn" target="_blank" hidden>View page</a>
+            <button class="btn-danger" id="delete-btn" hidden style="margin-left:auto;"><i class='bx bx-trash'></i> Delete</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/static/admin/admin.js"></script>
+  <script>
+    requireAdmin();
+
+    let franchises = [];
+    let contentOptions = '';
+    let currentSlug = null;   // null = creating a new franchise
+
+    const $ = id => document.getElementById(id);
+    const typeLabels = { movies: 'Movie', animes: 'Anime', webSeries: 'Series' };
+
+    async function loadContent() {
+      const res = await adminFetch('/api/admin/content');
+      if (!res) return;
+      const items = await res.json();
+      contentOptions = '<option value="">— choose title —</option>' + items.map(c =>
+        `<option value="${escapeHtml(c.id)}">${escapeHtml(c.title)} (${typeLabels[c.type] || escapeHtml(c.type)})</option>`).join('');
+    }
+
+    async function loadList() {
+      const res = await adminFetch('/api/franchises');
+      if (!res) return;
+      franchises = await res.json();
+      $('fr-list').innerHTML = franchises.length ? franchises.map(f => `
+        <button class="fr-list-item ${f.slug === currentSlug ? 'active' : ''}" data-slug="${escapeHtml(f.slug)}">
+          <span>${escapeHtml(f.title)}</span><small>${escapeHtml(f.kind)} · ${f.entry_count}</small>
+        </button>`).join('') : '<p style="color:var(--text-muted)">No franchises yet.</p>';
+    }
+
+    function entryRow(e = {}) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="content-col"><select data-f="content_id">${contentOptions}</select></td>
+        <td><input data-f="label" /></td>
+        <td><input data-f="year" type="number" class="num" min="1900" max="2100" /></td>
+        <td><input data-f="phase" /></td>
+        <td><input data-f="chrono" type="number" class="num" min="1" /></td>
+        <td><input data-f="runtime_min" type="number" class="num" min="1" /></td>
+        <td><select data-f="canon">
+          <option value="canon">Canon</option><option value="filler">Filler</option>
+          <option value="optional">Optional</option><option value="noncanon">Non-canon</option>
+        </select></td>
+        <td style="text-align:center"><input data-f="essential" type="checkbox" /></td>
+        <td><input data-f="note" /></td>
+        <td class="fr-row-actions">
+          <button class="btn-icon" data-act="up" title="Move up"><i class='bx bx-up-arrow-alt'></i></button>
+          <button class="btn-icon" data-act="down" title="Move down"><i class='bx bx-down-arrow-alt'></i></button>
+          <button class="btn-icon btn-del" data-act="remove" title="Remove"><i class='bx bx-x'></i></button>
+        </td>`;
+      tr.querySelector('[data-f=content_id]').value = e.content_id || '';
+      tr.querySelector('[data-f=label]').value = e.label || '';
+      tr.querySelector('[data-f=year]').value = e.year ?? '';
+      tr.querySelector('[data-f=phase]').value = e.phase || '';
+      tr.querySelector('[data-f=chrono]').value = e.chrono ?? '';
+      tr.querySelector('[data-f=runtime_min]').value = e.runtime_min ?? '';
+      tr.querySelector('[data-f=canon]').value = e.canon || 'canon';
+      tr.querySelector('[data-f=essential]').checked = e.essential !== false;
+      tr.querySelector('[data-f=note]').value = e.note || '';
+      $('entries-body').appendChild(tr);
+    }
+
+    function openEditor(f) {
+      currentSlug = f ? f.slug : null;
+      $('fr-editor').hidden = false;
+      $('f-title').value = f?.title || '';
+      $('f-kind').value = f?.kind || 'saga';
+      $('f-status').value = f?.status || 'ongoing';
+      $('f-image').value = f?.image || '';
+      $('f-banner').value = f?.banner || '';
+      $('f-desc').value = f?.description || '';
+      $('f-featured').checked = !!f?.featured;
+      $('entries-body').innerHTML = '';
+      (f?.entries || []).forEach(entryRow);
+      if (!f) entryRow();
+      $('delete-btn').hidden = !f;
+      $('view-btn').hidden = !f;
+      if (f) $('view-btn').href = `/franchise/${encodeURIComponent(f.slug)}`;
+      document.querySelectorAll('.fr-list-item').forEach(b => b.classList.toggle('active', b.dataset.slug === currentSlug));
+    }
+
+    function collect() {
+      const entries = [...$('entries-body').rows].map(tr => {
+        const v = f => tr.querySelector(`[data-f=${f}]`);
+        return {
+          content_id: v('content_id').value, label: v('label').value, year: v('year').value,
+          phase: v('phase').value, chrono: v('chrono').value, canon: v('canon').value,
+          runtime_min: v('runtime_min').value,
+          essential: v('essential').checked, note: v('note').value,
+        };
+      }).filter(e => e.content_id);
+      return {
+        title: $('f-title').value, kind: $('f-kind').value, status: $('f-status').value,
+        image: $('f-image').value, banner: $('f-banner').value, description: $('f-desc').value,
+        featured: $('f-featured').checked, entries,
+      };
+    }
+
+    $('fr-list').addEventListener('click', async ev => {
+      const btn = ev.target.closest('.fr-list-item');
+      if (!btn) return;
+      const res = await adminFetch(`/api/admin/franchises/${encodeURIComponent(btn.dataset.slug)}`);
+      if (res && res.ok) openEditor(await res.json());
+    });
+
+    $('new-btn').addEventListener('click', () => openEditor(null));
+    $('add-entry').addEventListener('click', () => entryRow());
+
+    $('entries-body').addEventListener('click', ev => {
+      const btn = ev.target.closest('[data-act]');
+      if (!btn) return;
+      const tr = btn.closest('tr');
+      if (btn.dataset.act === 'up' && tr.previousElementSibling) tr.parentNode.insertBefore(tr, tr.previousElementSibling);
+      if (btn.dataset.act === 'down' && tr.nextElementSibling) tr.parentNode.insertBefore(tr.nextElementSibling, tr);
+      if (btn.dataset.act === 'remove') tr.remove();
+    });
+
+    document.querySelectorAll('input[type=file][data-target]').forEach(input => input.addEventListener('change', async () => {
+      const file = input.files[0];
+      if (!file) return;
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/upload?folder=franchise', { method: 'POST', credentials: 'same-origin', body: fd });
+      const data = await res.json();
+      if (res.ok) { $(input.dataset.target).value = data.path; showToast('Image uploaded!'); }
+      else showToast(data.error || 'Upload failed', 'error');
+      input.value = '';
+    }));
+
+    $('save-btn').addEventListener('click', async () => {
+      const body = JSON.stringify(collect());
+      const res = currentSlug
+        ? await adminFetch(`/api/admin/franchises/${encodeURIComponent(currentSlug)}`, { method: 'PUT', body })
+        : await adminFetch('/api/admin/franchises', { method: 'POST', body });
+      if (!res) return;
+      const data = await res.json();
+      if (!res.ok) return showToast(data.error || 'Save failed', 'error');
+      if (!currentSlug) currentSlug = data.slug;
+      showToast('Franchise saved');
+      await loadList();
+      const again = await adminFetch(`/api/admin/franchises/${encodeURIComponent(currentSlug)}`);
+      if (again && again.ok) openEditor(await again.json());
+    });
+
+    $('delete-btn').addEventListener('click', async () => {
+      if (!currentSlug || !confirm(`Delete franchise "${$('f-title').value}"? Titles themselves are kept.`)) return;
+      const res = await adminFetch(`/api/admin/franchises/${encodeURIComponent(currentSlug)}`, { method: 'DELETE' });
+      if (!res || !res.ok) return showToast('Delete failed', 'error');
+      showToast('Franchise deleted');
+      currentSlug = null;
+      $('fr-editor').hidden = true;
+      loadList();
+    });
+
+    loadContent().then(loadList);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entertainment Hub | Franchise</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+        /* ── Hero ─────────────────────────────────────────────────── */
+        .fex-hero {
+            position: relative;
+            min-height: 55vh;
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .fex-hero-bg {
+            position: absolute;
+            inset: 0;
+        }
+
+        .fex-hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.45) saturate(1.2);
+        }
+
+        .fex-hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(15, 15, 17, 0.1) 0%, #0f0f11 100%),
+                linear-gradient(to right, rgba(15, 15, 17, 0.8) 0%, transparent 70%);
+        }
+
+        .fex-hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 3rem 2rem 2rem;
+            max-width: 1100px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .fex-kind {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .fex-hero h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.1;
+            margin: 0.3rem 0 0.8rem;
+        }
+
+        .fex-hero p {
+            color: #ccc;
+            line-height: 1.6;
+            max-width: 640px;
+        }
+
+        .fex-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 1.4rem;
+        }
+
+        .fex-stat b {
+            display: block;
+            font-size: 1.6rem;
+            color: var(--primary);
+        }
+
+        .fex-stat span {
+            font-size: 0.7rem;
+            color: #aaa;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .fex-progress {
+            margin-top: 1.4rem;
+            max-width: 420px;
+        }
+
+        .fex-progress-bar {
+            height: 6px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            overflow: hidden;
+        }
+
+        .fex-progress-bar div {
+            height: 100%;
+            width: 0;
+            background: var(--primary);
+            transition: width 0.4s ease;
+        }
+
+        .fex-progress small {
+            color: #aaa;
+            display: block;
+            margin-top: 0.4rem;
+        }
+
+        /* ── Controls ─────────────────────────────────────────────── */
+        .fex-main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem 5rem;
+        }
+
+        .fex-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .fex-toggle {
+            display: inline-flex;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .fex-toggle button {
+            background: transparent;
+            border: 0;
+            color: #ddd;
+            padding: 0.55rem 1.2rem;
+            font: inherit;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .fex-toggle button.active {
+            background: var(--primary);
+            color: #000;
+            font-weight: 600;
+        }
+
+        .fex-search {
+            flex: 1;
+            max-width: 280px;
+            padding: 0.55rem 1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font: inherit;
+        }
+
+        /* ── Timeline ─────────────────────────────────────────────── */
+        .fex-timeline {
+            position: relative;
+            padding-left: 5.5rem;
+        }
+
+        .fex-timeline::before {
+            content: '';
+            position: absolute;
+            left: 4.4rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .fex-phase {
+            margin: 2rem 0 1rem -1.1rem;
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .fex-entry {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.7rem 0.9rem;
+            margin-bottom: 0.7rem;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .fex-entry:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 180, 58, 0.4);
+        }
+
+        .fex-entry::before {
+            content: '';
+            position: absolute;
+            left: -1.45rem;
+            top: 50%;
+            width: 12px;
+            height: 12px;
+            margin-top: -6px;
+            border-radius: 50%;
+            background: #0f0f11;
+            border: 2px solid var(--primary);
+        }
+
+        .fex-entry.watched::before {
+            background: var(--primary);
+        }
+
+        .fex-entry.watched .fex-entry-poster {
+            opacity: 0.5;
+        }
+
+        .fex-year {
+            position: absolute;
+            left: -5.5rem;
+            width: 3.6rem;
+            text-align: right;
+            color: #aaa;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .fex-num {
+            color: #666;
+            font-weight: 700;
+            min-width: 1.6rem;
+        }
+
+        .fex-entry-poster {
+            width: 54px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .fex-entry-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fex-entry-title {
+            color: #fff;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+        }
+
+        .fex-entry-title:hover {
+            color: var(--primary);
+        }
+
+        .fex-entry-label {
+            color: #bbb;
+            font-size: 0.85rem;
+        }
+
+        .fex-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.35rem;
+        }
+
+        .fex-badge {
+            font-size: 0.68rem;
+            padding: 0.15rem 0.55rem;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .fex-badge.filler,
+        .fex-badge.noncanon {
+            background: rgba(255, 80, 80, 0.18);
+            color: #ff8a8a;
+        }
+
+        .fex-badge.optional {
+            background: rgba(90, 160, 255, 0.18);
+            color: #8fc0ff;
+        }
+
+        .fex-note {
+            color: #999;
+            font-size: 0.8rem;
+            margin-top: 0.3rem;
+        }
+
+        .fex-check {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: #aaa;
+            font-size: 0.8rem;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .fex-check input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .fex-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .fex-hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .fex-timeline {
+                padding-left: 1.6rem;
+            }
+
+            .fex-timeline::before {
+                left: 0.5rem;
+            }
+
+            .fex-entry::before {
+                left: -1.4rem;
+            }
+
+            .fex-phase {
+                margin-left: 0;
+            }
+
+            .fex-year,
+            .fex-num,
+            .fex-check span {
+                display: none;
+            }
+
+            .fex-year-badge {
+                display: inline-block !important;
+            }
+
+            .fex-entry {
+                gap: 0.7rem;
+                padding: 0.6rem;
+            }
+
+            .fex-entry-poster {
+                width: 44px;
+                height: 66px;
+            }
+
+            .fex-main {
+                padding: 1rem 1rem 4rem;
+            }
+
+            .fex-toggle {
+                max-width: 100%;
+                overflow-x: auto;
+            }
+
+            .fex-toggle button {
+                padding: 0.5rem 0.8rem;
+                white-space: nowrap;
+            }
+
+            .fex-search {
+                max-width: none;
+            }
+        }
+
+        .fex-badge.fex-year-badge {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="loader">
+            <div class="inner"></div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div id="global-header"></div>
+
+        <section class="fex-hero">
+            <div class="fex-hero-bg"><img src="" id="fex-banner" alt=""></div>
+            <div class="fex-hero-content">
+                <div class="fex-kind" id="fex-kind"></div>
+                <h1 id="fex-name">Loading…</h1>
+                <p id="fex-desc"></p>
+                <div class="fex-stats" id="fex-stats"></div>
+                <div class="fex-progress" id="fex-progress" hidden>
+                    <div class="fex-progress-bar"><div id="fex-progress-fill"></div></div>
+                    <small id="fex-progress-text"></small>
+                </div>
+            </div>
+        </section>
+
+        <main class="fex-main">
+            <div class="fex-controls">
+                <div class="fex-toggle" role="group" aria-label="Watch order">
+                    <button class="active" data-order="release">Release order</button>
+                    <button data-order="chrono">Chronological</button>
+                    <button data-order="essential">Essentials only</button>
+                </div>
+                <input type="search" class="fex-search" id="fex-search" placeholder="Search this franchise…" aria-label="Search this franchise">
+            </div>
+            <div class="fex-timeline" id="fex-timeline"></div>
+        </main>
+
+        <div id="global-footer"></div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const slug = decodeURIComponent(location.pathname.split('/')[2] || '');
+            const timeline = document.getElementById('fex-timeline');
+            const typeLabels = { movies: 'Movie', animes: 'Anime', webSeries: 'Series' };
+            const statLabels = { movies: 'Movies', webSeries: 'Series', animes: 'Anime' };
+            let order = 'release';
+            let query = '';
+            let watched = new Set();
+
+            const res = await fetch('/api/franchises/' + encodeURIComponent(slug));
+            if (!res.ok) {
+                document.getElementById('fex-name').textContent = 'Franchise not found';
+                timeline.innerHTML = `<div class="fex-empty"><a href="/franchises" style="color:var(--primary)">Browse all franchises</a></div>`;
+                return;
+            }
+            const f = await res.json();
+
+            // Progress needs a session; ignore failures (page still works read-only)
+            try {
+                const pr = await fetch('/api/me/progress');
+                if (pr.ok) watched = new Set(await pr.json());
+            } catch (e) { /* offline */ }
+
+            document.title = `Entertainment Hub | ${f.title}`;
+            document.getElementById('fex-kind').textContent = `${f.kind} · ${f.status}`;
+            document.getElementById('fex-name').textContent = f.title;
+            document.getElementById('fex-desc').textContent = f.description || '';
+            const firstBanner = f.entries.map(e => e.content['h-image']).find(Boolean);
+            const banner = document.getElementById('fex-banner');
+            const bannerSrc = f.banner || firstBanner || f.image;
+            if (bannerSrc) {
+                banner.src = bannerSrc;
+                banner.onerror = () => { banner.src = '/static/images/default-banner.jpg'; };
+            } else {   // no artwork yet: tinted gradient instead of a stock image
+                banner.remove();
+                document.querySelector('.fex-hero-bg').setAttribute('style', artStyle(f.title));
+            }
+
+            const counts = {};
+            f.entries.forEach(e => { counts[e.content.type] = (counts[e.content.type] || 0) + 1; });
+            document.getElementById('fex-stats').innerHTML =
+                `<div class="fex-stat"><b>${f.entries.length}</b><span>Entries</span></div>` +
+                Object.entries(counts).map(([t, n]) =>
+                    `<div class="fex-stat"><b>${n}</b><span>${statLabels[t] || esc(t)}</span></div>`).join('') +
+                (f.total_minutes ? `<div class="fex-stat"><b>${f.runtime_complete ? '' : '~'}${fmtRuntime(f.total_minutes)}</b><span>To watch it all</span></div>` : '');
+
+            function updateProgress() {
+                const box = document.getElementById('fex-progress');
+                const total = f.entries.length;
+                if (!total) return;
+                const done = f.entries.filter(e => watched.has(e.key)).length;
+                const left = f.entries.filter(e => !watched.has(e.key)).reduce((s, e) => s + (e.runtime_min || 0), 0);
+                box.hidden = false;
+                document.getElementById('fex-progress-fill').style.width = `${(done / total) * 100}%`;
+                document.getElementById('fex-progress-text').textContent =
+                    done === total ? `All ${total} watched 🎉`
+                        : `${done} of ${total} watched${left ? ` · about ${fmtRuntime(left)} left` : ''}`;
+            }
+
+            function visibleEntries() {
+                let list = [...f.entries];
+                if (order === 'essential') list = list.filter(e => e.essential && e.canon !== 'filler');
+                if (order === 'chrono') list.sort((a, b) => a.chrono - b.chrono || a.release - b.release);
+                if (query) list = list.filter(e => `${e.content.title} ${e.label} ${e.phase}`.toLowerCase().includes(query));
+                return list;
+            }
+
+            function render() {
+                const list = visibleEntries();
+                if (!f.entries.length) {
+                    timeline.innerHTML = `<div class="fex-empty"><i class='bx bx-film' style="font-size:3rem"></i><p>No titles added to ${esc(f.title)} yet.</p></div>`;
+                    return;
+                }
+                if (!list.length) {
+                    timeline.innerHTML = `<div class="fex-empty">Nothing matches.</div>`;
+                    return;
+                }
+                let lastPhase = null;
+                timeline.innerHTML = list.map((e, i) => {
+                    const c = e.content;
+                    // phases are release groupings; in chronological view they would repeat out of order
+                    const phaseHead = order !== 'chrono' && e.phase && e.phase !== lastPhase ? `<h3 class="fex-phase">${esc(e.phase)}</h3>` : '';
+                    lastPhase = e.phase || lastPhase;
+                    const badges = [
+                        e.year ? `<span class="fex-badge fex-year-badge">${esc(e.year)}</span>` : '',
+                        `<span class="fex-badge">${typeLabels[c.type] || esc(c.type)}</span>`,
+                        e.runtime_min ? `<span class="fex-badge">${fmtRuntime(e.runtime_min)}</span>` : '',
+                        e.canon !== 'canon' ? `<span class="fex-badge ${esc(e.canon)}">${e.canon === 'noncanon' ? 'non-canon' : esc(e.canon)}</span>` : '',
+                        e.essential ? '' : `<span class="fex-badge optional">skippable</span>`,
+                    ].join('');
+                    const isWatched = watched.has(e.key);
+                    const href = esc(DataManager.getItemPath(c));
+                    return `${phaseHead}
+                        <div class="fex-entry ${isWatched ? 'watched' : ''}">
+                            <span class="fex-year">${e.year || ''}</span>
+                            <span class="fex-num">${i + 1}</span>
+                            <a href="${href}" tabindex="-1" aria-hidden="true">${c['v-image']
+                                ? `<img class="fex-entry-poster" src="${esc(c['v-image'])}" alt="" loading="lazy" onerror="this.src='/static/images/default-poster.jpg'">`
+                                : `<div class="fex-entry-poster" style="${artStyle(c.title)}"></div>`}</a>
+                            <div class="fex-entry-info">
+                                <a class="fex-entry-title" href="${href}">${esc(c.title)}</a>
+                                ${e.label ? `<div class="fex-entry-label">${esc(e.label)}</div>` : ''}
+                                <div class="fex-badges">${badges}</div>
+                                ${e.note ? `<div class="fex-note">${esc(e.note)}</div>` : ''}
+                            </div>
+                            <label class="fex-check" title="Mark as watched">
+                                <input type="checkbox" data-key="${esc(e.key)}" ${isWatched ? 'checked' : ''}>
+                                <span>Watched</span>
+                            </label>
+                        </div>`;
+                }).join('');
+            }
+
+            const markRow = (box, on) => {
+                box.checked = on;
+                on ? watched.add(box.dataset.key) : watched.delete(box.dataset.key);
+                box.closest('.fex-entry').classList.toggle('watched', on);
+                updateProgress();
+            };
+
+            timeline.addEventListener('change', async ev => {
+                const box = ev.target.closest('input[data-key]');
+                if (!box) return;
+                const on = box.checked;
+                markRow(box, on);
+                const r = await fetch('/api/me/progress', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key: box.dataset.key, watched: on }),
+                }).catch(() => null);
+                if (!r || !r.ok) markRow(box, !on);  // roll back so UI matches the server
+            });
+
+            document.querySelectorAll('.fex-toggle button').forEach(btn => btn.addEventListener('click', () => {
+                document.querySelectorAll('.fex-toggle button').forEach(b => b.classList.toggle('active', b === btn));
+                order = btn.dataset.order;
+                render();
+            }));
+
+            document.getElementById('fex-search').addEventListener('input', ev => {
+                query = ev.target.value.trim().toLowerCase();
+                render();
+            });
+
+            render();
+            updateProgress();
+        });
+    </script>
+</body>
+
+</html>

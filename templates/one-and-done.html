@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entertainment Hub | One &amp; Done</title>
+  <link rel="stylesheet" href="/static/css/styles.css" />
+  <link rel="stylesheet" href="/static/css/franchises.css" />
+  <link rel="stylesheet" href="/static/css/one-and-done.css" />
+  <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="preloader">
+    <div class="loader">
+      <div class="inner"></div>
+    </div>
+  </div>
+
+  <div id="main-content">
+    <div id="global-header"></div>
+
+    <div class="od-top">
+      <h1>One &amp; Done</h1>
+      <p>Stories that actually end. Standalone films, duologies, trilogies and series with three
+        seasons or fewer — pick by how much time you have.</p>
+
+      <span class="od-filter-label" id="time-label">I have…</span>
+      <div class="franchise-filters" role="group" aria-labelledby="time-label" id="time-filters">
+        <button class="franchise-chip active" data-max="">Any time</button>
+        <button class="franchise-chip" data-max="150">One evening (≤ 2½h)</button>
+        <button class="franchise-chip" data-max="360">An afternoon (≤ 6h)</button>
+        <button class="franchise-chip" data-max="720">A weekend (≤ 12h)</button>
+        <button class="franchise-chip" data-max="1500">A week (≤ 25h)</button>
+      </div>
+
+      <span class="od-filter-label" id="kind-label">Type</span>
+      <div class="franchise-filters" role="group" aria-labelledby="kind-label" id="kind-filters">
+        <button class="franchise-chip active" data-kind="">All</button>
+        <button class="franchise-chip" data-kind="standalone">Standalone films</button>
+        <button class="franchise-chip" data-kind="duology">Duologies</button>
+        <button class="franchise-chip" data-kind="trilogy">Trilogies</button>
+        <button class="franchise-chip" data-kind="limited">Short series</button>
+      </div>
+    </div>
+
+    <p class="od-count" id="od-count" aria-live="polite"></p>
+    <section class="od-grid" id="od-grid"></section>
+
+    <div id="global-footer"></div>
+  </div>
+
+  <script src="/static/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const grid = document.getElementById('od-grid');
+      const count = document.getElementById('od-count');
+      const kindLabels = { standalone: 'Film', duology: 'Duology', trilogy: 'Trilogy', limited: 'Short series' };
+      const state = { kind: '', max: '' };
+
+      const meta = i => [
+        i.year ? esc(i.year) : '',
+        i.runtime_min ? `<b>${fmtRuntime(i.runtime_min)}</b>` : '',
+        i.count ? `${i.count} films` : '',
+        i.seasons ? `${i.seasons} season${i.seasons > 1 ? 's' : ''}` : '',
+      ].filter(Boolean).join(' · ');
+
+      async function load() {
+        const q = new URLSearchParams();
+        if (state.kind) q.set('kind', state.kind);
+        if (state.max) q.set('max_minutes', state.max);
+        try {
+          const res = await fetch('/api/compact?' + q);
+          if (!res.ok) throw new Error(res.status);
+          const items = await res.json();
+          count.textContent = items.length ? `${items.length} stories, shortest first` : '';
+          grid.innerHTML = items.length
+            ? items.map(i => titleCard({ href: i.href, title: i.title, image: i.image,
+                badge: kindLabels[i.kind], meta: meta(i) })).join('')
+            : `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:3rem 0;">
+                 Nothing fits that yet — try a bigger time budget.</p>`;
+        } catch (e) {
+          console.error('One & Done load failed', e);
+          grid.innerHTML = `<p style="grid-column:1/-1;text-align:center;color:var(--text-muted);">Could not load titles. Please try again.</p>`;
+        }
+      }
+
+      const wire = (groupId, attr, key) => document.querySelectorAll(`#${groupId} .franchise-chip`).forEach(btn =>
+        btn.addEventListener('click', () => {
+          document.querySelectorAll(`#${groupId} .franchise-chip`).forEach(b => {
+            b.classList.toggle('active', b === btn);
+            b.setAttribute('aria-pressed', b === btn);
+          });
+          state[key] = btn.dataset[attr];
+          load();
+        }));
+      wire('time-filters', 'max', 'max');
+      wire('kind-filters', 'kind', 'kind');
+      load();
+    });
+  </script>
+</body>
+
+</html>

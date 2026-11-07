@@ -1,0 +1,837 @@
+"""
+app.py — Entertainment Hub | Flask Backend
+Runs on Render with MongoDB Atlas + Cloudinary (all free tiers).
+
+Local dev:  python app.py
+Production: gunicorn --bind :$PORT app:app
+"""
+
+import os
+import re
+import secrets
+from datetime import timedelta
+import uuid
+from functools import wraps
+from flask import (Flask, request, jsonify, session, send_from_directory, abort, redirect)
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+# Database layer (MongoDB)
+import database as db
+
+# Cloudinary for file uploads (reads CLOUDINARY_URL from the environment)
+import cloudinary.uploader
+
+# App Setup
+BASE_DIR       = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR     = os.path.join(BASE_DIR, 'static')
+TEMPLATES_DIR  = os.path.join(BASE_DIR, 'templates')
+
+# Uploads go to Cloudinary when configured, else to local static/ (dev)
+USE_CLOUDINARY = bool(os.environ.get('CLOUDINARY_URL'))
+
+# Status → sections mapping (admin no longer needs to set sections manually)
+STATUS_SECTIONS = {
+    'Released':    ['new-releases', 'popular', 'most-watched'],
+    'New Release': ['new-releases', 'popular'],
+    'Top Rated':   ['top-rated', 'popular'],
+    'Coming Soon': ['coming-soon'],
+    'Ongoing':     ['popular', 'most-watched'],
+}
+
+app = Flask(
+    __name__,
+    static_folder=STATIC_DIR,
+    static_url_path='/static',   # Serve assets at /static/css/, /static/js/ etc.
+)
+# SECRET_KEY from environment (set in the Render dashboard). Never fall back to a fixed,
+# public string: anyone could forge a session cookie (including admin_id) with it.
+app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+if not os.environ.get('SECRET_KEY'):
+    print('[WARN] SECRET_KEY not set: using a random key; sessions reset on every restart.')
+app.config['SESSION_COOKIE_NAME'] = '__session'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = True          # HTTPS only
+app.config['SESSION_COOKIE_HTTPONLY'] = True          # No JS access to cookie
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=15)
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024   # 5 MB upload limit
+
+# Render terminates TLS at its load balancer and forwards HTTP internally.
+# Without ProxyFix, Flask sees requests as HTTP and won't set Secure cookies,
+# which breaks the entire session/login flow.
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+
+# Rate limiter (in-memory; resets on restart — fine for a single instance)
+limiter = Limiter(get_remote_address, app=app, default_limits=[])
+
+# Initialise DB on startup
+with app.app_context():
+    db.init_db()
+
+
+def _json_body():
+    """Request JSON as a dict; anything else (list, string, invalid) becomes {}."""
+    data = request.get_json(silent=True)
+    return data if isinstance(data, dict) else {}
+
+
+# ── Security Middleware ─────────────────────────────────────────────────
+
+@app.before_request
+def csrf_protection():
+    """Reject state-changing requests that don't send JSON content-type.
+    Browsers can't send application/json cross-origin without a CORS preflight."""
+    if request.method in ('POST', 'PUT', 'DELETE'):
+        # Skip for file uploads (multipart)
+        ct = request.content_type or ''
+        if 'multipart/form-data' not in ct and 'application/json' not in ct:
+            return jsonify({'error': 'Invalid content type'}), 415
+
+
+@app.after_request
+def set_security_headers(response):
+    """Add HTTP security headers to every response."""
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'DENY'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    response.headers['Permissions-Policy'] = 'camera=(), microphone=(), geolocation=()'
+    return response
+
+
+# ── Cloudinary helper ───────────────────────────────────────────────────
+
+def _upload_to_cloudinary(file_obj, folder, filename):
+    """Upload a file to Cloudinary and return its public HTTPS URL."""
+    public_id = f"ehub/images/{folder}/{os.path.splitext(filename)[0]}"
+    result = cloudinary.uploader.upload(file_obj, public_id=public_id, overwrite=False)
+    return result['secure_url']
+
+
+# ── Auth Decorators ─────────────────────────────────────────────────────
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'user_id' not in session:
+            return jsonify({'error': 'Not logged in'}), 401
+        return f(*args, **kwargs)
+    return decorated
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'admin_id' not in session:
+            return jsonify({'error': 'Admin access required'}), 403
+        return f(*args, **kwargs)
+    return decorated
+
+
+# ── HTML Page Serving (from templates/) ─────────────────────────────────
+
+@app.route('/images/<path:filename>')
+def legacy_images(filename):
+    """Backward-compat: serve old /images/ paths from the new static/images/ dir."""
+    return send_from_directory(os.path.join(STATIC_DIR, 'images'), filename)
+
+
+# Pages that do NOT require login
+# Everything else (home, movies, anime, profile, play, etc.) requires auth.
+_PUBLIC_PAGES = {
+    'index.html',
+    'login/login.html', 'login/register.html', 'login/success.html',
+    'aboutus.html', 'contact/contactus.html',
+    '404.html', 'preloader.html',
+    'admin/index.html',  # admin has its own auth guard
+}
+
+
+def _is_public_page(resolved_filename):
+    """Check if a resolved template filename is publicly accessible."""
+    # Normalise to forward slashes for comparison
+    norm = resolved_filename.replace('\\', '/').lower()
+    for pub in _PUBLIC_PAGES:
+        if norm.endswith(pub.lower()):
+            return True
+    # Admin sub-pages have their own JS-level guard via requireAdmin()
+    if norm.startswith('admin/'):
+        return True
+    return False
+
+
+def _is_logged_in():
+    """True if a regular user has a valid session."""
+    return 'user_id' in session
+
+
+@app.route('/')
+def index():
+    # If user is already logged in, send them straight to /home
+    if _is_logged_in():
+        return redirect('/home')
+    return send_from_directory(TEMPLATES_DIR, 'index.html')
+
+
+@app.route('/<path:filename>')
+def serve_page(filename):
+    """
+    Serve HTML pages from templates/ and static assets from static/.
+    Flask automatically handles /css/, /js/, /images/ etc. via static_folder.
+    This route only handles HTML page requests.
+    Protected pages require a valid user session.
+    """
+    # ── Path traversal protection ──────────────────────────────────────
+    if '..' in filename or filename.startswith('/'):
+        abort(400)
+
+    # Only intercept .html files (or clean URL paths)
+    if '.' not in filename or filename.endswith('.html'):
+        # Try exact match in templates/
+        tmpl_path = os.path.join(TEMPLATES_DIR, filename)
+        real_path = os.path.realpath(tmpl_path)
+        if not real_path.startswith(os.path.realpath(TEMPLATES_DIR)):
+            abort(403)
+        if os.path.isfile(real_path):
+            rel = os.path.relpath(real_path, os.path.realpath(TEMPLATES_DIR))
+            # ── Auth guard: redirect to landing if not logged in ──
+            if not _is_public_page(rel) and not _is_logged_in():
+                return redirect('/')
+            directory = os.path.dirname(real_path)
+            file_only = os.path.basename(real_path)
+            return send_from_directory(directory, file_only)
+
+        # Try with .html extension appended
+        if not filename.endswith('.html'):
+            html_path = os.path.join(TEMPLATES_DIR, filename + '.html')
+            real_html = os.path.realpath(html_path)
+            if not real_html.startswith(os.path.realpath(TEMPLATES_DIR)):
+                abort(403)
+            if os.path.isfile(real_html):
+                rel = os.path.relpath(real_html, os.path.realpath(TEMPLATES_DIR))
+                # ── Auth guard: redirect to landing if not logged in ──
+                if not _is_public_page(rel) and not _is_logged_in():
+                    return redirect('/')
+                directory = os.path.dirname(real_html)
+                file_only = os.path.basename(real_html)
+                return send_from_directory(directory, file_only)
+
+    # Note: We must check if 404.html exists first, to avoid sending error if missing.
+    if os.path.isfile(os.path.join(TEMPLATES_DIR, '404.html')):
+        return send_from_directory(TEMPLATES_DIR, '404.html'), 404
+    return "404 Not Found", 404
+
+
+# ── FILE UPLOAD API ─────────────────────────────────────────────────────
+
+# Magic bytes for validating actual image content
+_IMAGE_MAGIC = {
+    b'\xff\xd8\xff': '.jpg',       # JPEG
+    b'\x89PNG':     '.png',       # PNG
+    b'RIFF':       '.webp',      # WebP (starts with RIFF)
+    b'GIF8':       '.gif',       # GIF
+}
+
+
+def _validate_image_magic(file_obj):
+    """Read the first 12 bytes to verify the file is a real image."""
+    header = file_obj.read(12)
+    file_obj.seek(0)  # Reset for subsequent read
+    for magic in _IMAGE_MAGIC:
+        if header.startswith(magic):
+            return True
+    return False
+
+
+@app.route('/api/admin/upload', methods=['POST'])
+@admin_required
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file provided'}), 400
+    file = request.files['file']
+    if not file.filename:
+        return jsonify({'error': 'Empty filename'}), 400
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in ('.jpg', '.jpeg', '.png', '.webp', '.gif'):
+        return jsonify({'error': 'Unsupported file type. Use JPG, PNG, WebP, or GIF.'}), 400
+
+    # Validate file content matches an image (prevents disguised uploads)
+    if not _validate_image_magic(file):
+        return jsonify({'error': 'File content does not match a valid image format'}), 400
+
+    # Each upload type has its own directory under images/
+    allowed_folders = {'cast', 'vertical', 'horizontal', 'watch', 'franchise'}
+    folder = request.args.get('folder', '').strip()
+    if folder not in allowed_folders:
+        return jsonify({'error': f'Unknown folder "{folder}". Use one of: {sorted(allowed_folders)}'}), 400
+
+    filename = str(uuid.uuid4()) + ext
+
+    # Upload to Cloudinary if configured, otherwise fall back to local
+    if USE_CLOUDINARY:
+        public_url = _upload_to_cloudinary(file, folder, filename)
+        return jsonify({'path': public_url})
+    else:
+        # Local fallback (for development without Cloudinary)
+        save_dir = os.path.join(BASE_DIR, 'static', 'images', folder)
+        os.makedirs(save_dir, exist_ok=True)
+        file.save(os.path.join(save_dir, filename))
+        return jsonify({'path': f'/static/images/{folder}/{filename}'})
+
+
+# ── SELECTORS API (manages dropdown options) ────────────────────────────
+
+@app.route('/api/admin/selectors', methods=['GET'])
+@admin_required
+def get_all_selectors():
+    return jsonify(db.get_all_selectors())
+
+
+@app.route('/api/admin/selectors/<category>', methods=['GET'])
+@admin_required
+def get_selectors_by_category(category):
+    return jsonify(db.get_selectors_by_category(category))
+
+
+@app.route('/api/admin/selectors/cast/search', methods=['GET'])
+@admin_required
+def search_cast():
+    q = request.args.get('q', '')
+    return jsonify(db.search_cast_selectors(q))
+
+
+@app.route('/api/admin/selectors', methods=['POST'])
+@admin_required
+def add_selector():
+    data = _json_body()
+    category = (data.get('category') or '').strip()
+    value    = (data.get('value') or '').strip()
+    if not category or not value:
+        return jsonify({'error': 'category and value are required'}), 400
+
+    doc_id, created = db.add_selector(category, value)
+    if created:
+        return jsonify({'id': doc_id, 'message': 'Selector added'}), 201
+    return jsonify({'id': doc_id, 'message': 'Selector already exists'}), 200
+
+
+@app.route('/api/admin/selectors/<selector_id>', methods=['DELETE'])
+@admin_required
+def delete_selector(selector_id):
+    db.delete_selector(selector_id)
+    return jsonify({'message': 'Selector deleted'})
+
+
+@app.route('/api/admin/selectors/<selector_id>', methods=['PUT'])
+@admin_required
+def update_selector(selector_id):
+    data  = _json_body()
+    value = (data.get('value') or '').strip()
+    if not value:
+        return jsonify({'error': 'value is required'}), 400
+    db.update_selector(selector_id, value)
+    return jsonify({'message': 'Selector updated'})
+
+
+# ── USER AUTH API ───────────────────────────────────────────────────────
+
+_USERNAME_RE = re.compile(r'^[A-Za-z0-9_.-]{3,30}$')
+_EMAIL_RE    = re.compile(r'^[^@\s]{1,64}@[^@\s]{1,189}\.[^@\s]{2,}$')
+_PIC_RE      = re.compile(r'^(data:image/(png|jpeg|jpg|webp|gif);base64,[A-Za-z0-9+/=]+|https://\S+|/(static/)?images/\S+)$')
+_MAX_PIC_LEN = 1_500_000   # ~1.1 MB image as base64
+
+
+def _str_field(data, key):
+    """JSON string field or '' (rejects objects/arrays smuggled in as values)."""
+    v = data.get(key)
+    return v.strip() if isinstance(v, str) else ''
+
+
+def _password_error(pw):
+    if not isinstance(pw, str) or not 8 <= len(pw) <= 128:
+        return 'Password must be 8–128 characters'
+    return None
+
+
+@app.route('/api/auth/register', methods=['POST'])
+@limiter.limit('10/hour')
+def register():
+    data = request.get_json(silent=True)
+    data = data if isinstance(data, dict) else {}
+    username = _str_field(data, 'username')
+    email    = _str_field(data, 'email')
+    password = data.get('password') or ''
+    gender   = _str_field(data, 'gender')[:20]
+    age      = _bounded_int(data.get('age'), 0, 120) or 0
+
+    if not username or not email or not password:
+        return jsonify({'error': 'Username, email and password are required'}), 400
+    if not _USERNAME_RE.match(username):
+        return jsonify({'error': 'Username must be 3–30 letters, digits, _ . or -'}), 400
+    if len(email) > 254 or not _EMAIL_RE.match(email):
+        return jsonify({'error': 'Enter a valid email address'}), 400
+    if _password_error(password):
+        return jsonify({'error': _password_error(password)}), 400
+
+    if db.find_user_by_username_or_email(username, email):
+        return jsonify({'error': 'Username or email already exists'}), 409
+
+    doc_id = db.create_user(username, email, password, gender, age)
+    return jsonify({'message': 'Registration successful'}), 201
+
+
+@app.route('/api/auth/login', methods=['POST'])
+@limiter.limit('5/minute')
+def login():
+    data = _json_body()
+    username = _str_field(data, 'username')
+    password = data['password'] if isinstance(data.get('password'), str) else ''
+
+    if not username or not password:
+        return jsonify({'error': 'Username and password required'}), 400
+
+    user_id, user = db.find_user_by_username(username, admin_only=False)
+    if not user or not db.check_password(password, user['password']):
+        return jsonify({'error': 'Invalid username or password'}), 401
+
+    # Auto-migrate legacy SHA-256 hash to bcrypt
+    db.migrate_password_if_needed(user_id, password, user['password'])
+
+    # Remember Me: set session.permanent so cookie survives browser close
+    remember = data.get('remember_me', False)
+    session.permanent = bool(remember)
+
+    session['user_id']  = user_id
+    session['username'] = user['username']
+    return jsonify({
+        'message': 'Login successful',
+        'user': {
+            'id':          user_id,
+            'username':    user['username'],
+            'email':       user['email'],
+            'gender':      user.get('gender', ''),
+            'age':         user.get('age', 0),
+            'profile_pic': user.get('profile_pic', ''),
+        }
+    })
+
+
+@app.route('/api/auth/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return jsonify({'message': 'Logged out'})
+
+
+@app.route('/api/auth/check', methods=['GET'])
+def auth_check():
+    """Frontend calls this to verify the session is still valid."""
+    if 'user_id' in session:
+        return jsonify({'logged_in': True, 'username': session.get('username')})
+    return jsonify({'logged_in': False}), 401
+
+
+@app.route('/api/auth/me', methods=['GET'])
+@login_required
+def get_me():
+    user = db.get_user_by_id(session['user_id'])
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    # Strip sensitive fields
+    user.pop('password', None)
+    user.pop('is_admin', None)
+    return jsonify(user)
+
+
+@app.route('/api/auth/me', methods=['PUT'])
+@login_required
+def update_me():
+    data = request.get_json(silent=True)
+    data = data if isinstance(data, dict) else {}
+    user = db.get_user_by_id(session['user_id'])
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    username    = _str_field(data, 'username') or user['username']
+    email       = _str_field(data, 'email') or user['email']
+    gender      = _str_field(data, 'gender')[:20] if 'gender' in data else user.get('gender', '')
+    age         = (_bounded_int(data.get('age'), 0, 120) or 0) if 'age' in data else user.get('age', 0)
+    profile_pic = data.get('profile_pic', user.get('profile_pic', ''))
+
+    if username != user['username'] and not _USERNAME_RE.match(username):
+        return jsonify({'error': 'Username must be 3–30 letters, digits, _ . or -'}), 400
+    if email != user['email'] and (len(email) > 254 or not _EMAIL_RE.match(email)):
+        return jsonify({'error': 'Enter a valid email address'}), 400
+    # Without this, a user could rename themselves to someone else's username/email
+    if (username != user['username'] or email != user['email']) and \
+            db.username_or_email_taken(username, email, exclude_id=session['user_id']):
+        return jsonify({'error': 'Username or email already exists'}), 409
+    if profile_pic and (not isinstance(profile_pic, str) or len(profile_pic) > _MAX_PIC_LEN
+                        or not _PIC_RE.match(profile_pic)):
+        return jsonify({'error': 'Profile picture must be a PNG/JPEG/WebP/GIF under 1 MB'}), 400
+
+    new_password     = data.get('new_password')
+    current_password = data.get('current_password')
+    if new_password:
+        if not isinstance(current_password, str) or not db.check_password(current_password, user['password']):
+            return jsonify({'error': 'Current password is incorrect'}), 400
+        if _password_error(new_password):
+            return jsonify({'error': _password_error(new_password)}), 400
+        hashed = db.hash_password(new_password)
+    else:
+        hashed = user['password']
+
+    db.update_user(session['user_id'], {
+        'username':    username,
+        'email':       email,
+        'gender':      gender,
+        'age':         age,
+        'profile_pic': profile_pic,
+        'password':    hashed,
+    })
+    session['username'] = username
+    return jsonify({'message': 'Profile updated'})
+
+
+# ── PUBLIC SELECTORS (franchise list, watch logos for frontend) ─────────
+
+@app.route('/api/selectors/watch_options', methods=['GET'])
+def public_watch_options():
+    """Return watch option selectors (name + logo) for the play page."""
+    items = db.get_selectors_by_category('watch_options')
+    result = {}
+    for item in items:
+        try:
+            m = __import__('json').loads(item['value'])
+        except Exception:
+            m = {'name': item['value']}
+        name = m.get('name', item['value'])
+        result[name.lower().replace(' ', '')] = {
+            'name': name,
+            'logo': m.get('logo', ''),
+        }
+    return jsonify(result)
+
+
+# ── FRANCHISE API (User-facing) ────────────────────────────────────────
+
+@app.route('/api/franchises', methods=['GET'])
+def api_list_franchises():
+    kinds = [k for k in (request.args.get('kind') or '').split(',') if k]   # e.g. universe,saga,anime
+    if any(k not in db.FRANCHISE_KINDS for k in kinds):
+        return jsonify({'error': 'Invalid kind'}), 400
+    return jsonify(db.list_franchises(kinds or None))
+
+
+@app.route('/api/franchises/<slug>', methods=['GET'])
+def api_get_franchise(slug):
+    f = db.get_franchise(slug)
+    if not f:
+        return jsonify({'error': 'Not found'}), 404
+    return jsonify(f)
+
+
+@app.route('/api/franchises/of/<content_id>', methods=['GET'])
+def api_franchises_of(content_id):
+    return jsonify(db.franchises_for_content(content_id))
+
+
+@app.route('/api/compact', methods=['GET'])
+def api_compact():
+    kind = request.args.get('kind') or None
+    if kind and kind not in db.COMPACT_KINDS:
+        return jsonify({'error': 'Invalid kind'}), 400
+    max_minutes = request.args.get('max_minutes', type=int)
+    return jsonify(db.compact_items(kind, max_minutes))
+
+
+@app.route('/api/me/continue', methods=['GET'])
+@login_required
+def api_continue():
+    return jsonify(db.continue_watching(session['user_id']))
+
+
+@app.route('/api/me/progress', methods=['GET'])
+@login_required
+def api_get_progress():
+    return jsonify(db.get_progress(session['user_id']))
+
+
+@app.route('/api/me/progress', methods=['PUT'])
+@login_required
+def api_set_progress():
+    data = _json_body()
+    key = data.get('key')
+    if not isinstance(key, str) or '#' not in key or len(key) > 300:
+        return jsonify({'error': 'Invalid key'}), 400
+    # Only real titles can be tracked, so a client can't fill the DB with arbitrary keys
+    if not db.get_content_by_id(key.split('#', 1)[0]):
+        return jsonify({'error': 'Unknown title'}), 400
+    db.set_progress(session['user_id'], key, bool(data.get('watched')))
+    return jsonify({'message': 'Saved'})
+
+
+@app.route('/franchise/<slug>')
+def franchise_page(slug):
+    if not _is_logged_in():
+        return redirect('/')
+    return send_from_directory(TEMPLATES_DIR, 'franchise.html')
+
+
+@app.route('/franchise-explore')
+def franchise_explore_legacy():
+    """Old ?franchise=<Title> links → new /franchise/<slug> page."""
+    return redirect('/franchise/' + db.slugify(request.args.get('franchise', '')), code=301)
+
+
+# ── CONTENT API (User-facing) ──────────────────────────────────────────
+
+@app.route('/api/content', methods=['GET'])
+def get_all_content():
+    return jsonify(db.get_all_content())
+
+
+@app.route('/api/content/<ctype>', methods=['GET'])
+def get_content_by_type(ctype):
+    valid = ('movies', 'animes', 'webSeries')
+    if ctype not in valid:
+        return jsonify({'error': 'Invalid type'}), 400
+    return jsonify(db.get_content_by_type(ctype))
+
+
+@app.route('/api/content/<ctype>/<slug>', methods=['GET'])
+def get_single_item(ctype, slug):
+    item = db.get_single_content(ctype, slug)
+    if not item:
+        return jsonify({'error': 'Not found'}), 404
+    return jsonify(item)
+
+
+# ── ADMIN AUTH API ──────────────────────────────────────────────────────
+
+@app.route('/api/admin/login', methods=['POST'])
+@limiter.limit('5/minute')
+def admin_login():
+    data = _json_body()
+    username = _str_field(data, 'username')
+    password = data['password'] if isinstance(data.get('password'), str) else ''
+
+    user_id, admin = db.find_user_by_username(username, admin_only=True)
+    if not admin or not db.check_password(password, admin['password']):
+        return jsonify({'error': 'Invalid admin credentials'}), 401
+
+    # Auto-migrate legacy SHA-256 hash to bcrypt
+    db.migrate_password_if_needed(user_id, password, admin['password'])
+
+    session['admin_id']       = user_id
+    session['admin_username'] = admin['username']
+    return jsonify({'message': 'Admin login successful', 'admin': admin['username']})
+
+
+@app.route('/api/admin/logout', methods=['POST'])
+def admin_logout():
+    session.pop('admin_id', None)
+    session.pop('admin_username', None)
+    return jsonify({'message': 'Admin logged out'})
+
+
+@app.route('/api/admin/check', methods=['GET'])
+def admin_check():
+    if 'admin_id' in session:
+        return jsonify({'logged_in': True, 'admin': session.get('admin_username')})
+    return jsonify({'logged_in': False}), 401
+
+
+# ── ADMIN DASHBOARD API ────────────────────────────────────────────────
+
+@app.route('/api/admin/stats', methods=['GET'])
+@admin_required
+def admin_stats():
+    return jsonify(db.get_content_stats())
+
+
+@app.route('/api/admin/users', methods=['GET'])
+@admin_required
+def admin_get_users():
+    return jsonify(db.list_users(admin=False))
+
+
+@app.route('/api/admin/users/<user_id>', methods=['DELETE'])
+@admin_required
+def admin_delete_user(user_id):
+    db.delete_user(user_id)
+    return jsonify({'message': 'User deleted'})
+
+
+@app.route('/api/admin/content', methods=['GET'])
+@admin_required
+def admin_get_content():
+    ctype = request.args.get('type')
+    return jsonify(db.get_content_list(ctype))
+
+
+def _bounded_int(value, lo, hi):
+    try:
+        v = int(value)
+    except (TypeError, ValueError):
+        return None
+    return v if lo <= v <= hi else None
+
+
+def _content_meta(data, existing=None):
+    """Year / runtime / seasons / format used by watch-order and One & Done pages."""
+    existing = existing or {}
+    pick = lambda k: data[k] if k in data else existing.get(k)  # noqa: E731
+    fmt = pick('format')
+    return {
+        'year':        _bounded_int(pick('year'), 1880, 2100),
+        'runtime_min': _bounded_int(pick('runtime_min'), 1, 100000),
+        'seasons':     _bounded_int(pick('seasons'), 0, 100),
+        'format':      fmt if fmt in ('film', 'series') else '',
+    }
+
+
+@app.route('/api/admin/content', methods=['POST'])
+@admin_required
+def admin_add_content():
+    data = _json_body()
+    for field in ('slug', 'type', 'title'):
+        if not data.get(field):
+            return jsonify({'error': f'Field "{field}" is required'}), 400
+
+    if data['type'] not in ('movies', 'animes', 'webSeries'):
+        return jsonify({'error': 'type must be movies, animes, or webSeries'}), 400
+
+    # slugs end up in URLs and HTML attributes, so restrict to [a-z0-9-]
+    slug = db.slugify(data['slug'])
+    if not slug:
+        return jsonify({'error': 'slug must contain letters or digits'}), 400
+
+    # Auto-derive sections from status; honour optional hero flag
+    status   = data.get('status', 'Released')
+    sections = list(STATUS_SECTIONS.get(status, ['popular', 'most-watched']))
+    if data.get('feature_hero'):
+        sections = ['head'] + sections
+
+    content_data = {
+        'slug':         slug,
+        'type':         data['type'],
+        'title':        data.get('title', ''),
+        'h-image':      data.get('h_image', data.get('h-image', '')),
+        'v-image':      data.get('v_image', data.get('v-image', '')),
+        'rating':       str(data.get('rating', 'Not Rated')),
+        'Status':       status,
+        'description':  data.get('description', ''),
+        'tags':         data.get('tags', []),
+        'cast':         data.get('cast', []),
+        'watchOptions': data.get('watchOptions', []),
+        'videoUrl':     data.get('video_url', data.get('videoUrl', '')),
+        'genreDisplay': data.get('genre_display', data.get('genreDisplay', '')),
+        'sections':     sections,
+        'franchise':    data.get('franchise', ''),
+        'language':     data.get('language', ''),
+        **_content_meta(data),
+    }
+
+    try:
+        slug = db.add_content(content_data)
+        return jsonify({'message': 'Content added', 'slug': slug}), 201
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 409
+
+
+@app.route('/api/admin/content/<content_id>', methods=['PUT'])
+@admin_required
+def admin_update_content(content_id):
+    data = _json_body()
+
+    existing = db.get_content_by_id(content_id)
+    if not existing:
+        return jsonify({'error': 'Not found'}), 404
+
+    # Re-derive sections from the (possibly new) status
+    new_status = data.get('status', data.get('Status', existing.get('Status', 'Released')))
+    new_sections = list(STATUS_SECTIONS.get(new_status, ['popular', 'most-watched']))
+    if data.get('feature_hero') or 'head' in existing.get('sections', []):
+        if 'head' not in new_sections:
+            new_sections = ['head'] + new_sections
+
+    update_data = {
+        'title':        data.get('title', existing.get('title', '')),
+        'h-image':      data.get('h_image', data.get('h-image', existing.get('h-image', ''))),
+        'v-image':      data.get('v_image', data.get('v-image', existing.get('v-image', ''))),
+        'rating':       str(data.get('rating', existing.get('rating', 'Not Rated'))),
+        'Status':       new_status,
+        'description':  data.get('description', existing.get('description', '')),
+        'tags':         data.get('tags', existing.get('tags', [])),
+        'cast':         data.get('cast', existing.get('cast', [])),
+        'watchOptions': data.get('watchOptions', existing.get('watchOptions', [])),
+        'videoUrl':     data.get('video_url', data.get('videoUrl', existing.get('videoUrl', ''))),
+        'genreDisplay': data.get('genre_display', data.get('genreDisplay', existing.get('genreDisplay', ''))),
+        'sections':     new_sections,
+        # type is part of the document _id ("{type}_{slug}"), so it can't change here
+        'type':         existing.get('type', 'movies'),
+        'franchise':    data.get('franchise', existing.get('franchise', '')),
+        **_content_meta(data, existing),
+        'language':     data.get('language', existing.get('language', '')),
+    }
+
+    db.update_content(content_id, update_data)
+    return jsonify({'message': 'Content updated'})
+
+
+# ── ADMIN FRANCHISES API ───────────────────────────────────────────────
+
+@app.route('/api/admin/franchises/<slug>', methods=['GET'])
+@admin_required
+def admin_get_franchise(slug):
+    f = db.get_franchise_raw(slug)
+    if not f:
+        return jsonify({'error': 'Not found'}), 404
+    return jsonify(f)
+
+
+@app.route('/api/admin/franchises', methods=['POST'])
+@admin_required
+def admin_create_franchise():
+    try:
+        slug = db.create_franchise(_json_body())
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    return jsonify({'message': 'Franchise created', 'slug': slug}), 201
+
+
+@app.route('/api/admin/franchises/<slug>', methods=['PUT'])
+@admin_required
+def admin_update_franchise(slug):
+    try:
+        found = db.update_franchise(slug, _json_body())
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+    if not found:
+        return jsonify({'error': 'Not found'}), 404
+    return jsonify({'message': 'Franchise updated'})
+
+
+@app.route('/api/admin/franchises/<slug>', methods=['DELETE'])
+@admin_required
+def admin_delete_franchise(slug):
+    db.delete_franchise(slug)
+    return jsonify({'message': 'Franchise deleted'})
+
+
+@app.route('/api/admin/content/<content_id>', methods=['DELETE'])
+@admin_required
+def admin_delete_content(content_id):
+    db.delete_content(content_id)
+    return jsonify({'message': 'Content deleted'})
+
+if __name__ == '__main__':
+    print("=" * 60)
+    print("  Entertainment Hub -- Full Stack Server")
+    print("  http://localhost:5000")
+    print("  Admin Panel: http://localhost:5000/admin/index.html")
+    print("=" * 60)
+    app.run(debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true',
+            host='0.0.0.0', port=5000)

@@ -1,0 +1,20 @@
+# ── Python ───────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+.env
+
+# ── Database (local dev only) ────────────
+*.db
+
+# ── OS / Editor ──────────────────────────
+.DS_Store
+Thumbs.db
+*.log
+
+# ── GCP / Docker ─────────────────────────
+.gcloudignore
+.claude-flow/
+docs/

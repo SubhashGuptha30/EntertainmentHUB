@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading...</title>
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="/static/css/play.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <link rel="shortcut icon" href="/static/images/favicon.png" type="image/x-icon" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="loader">
+            <div class="inner"></div>
+        </div>
+    </div>
+
+    <div id="main-content" style="opacity: 0; transition: opacity 0.5s ease;">
+        <div id="global-header"></div>
+
+        <!-- Head -->
+        <section class="play-container head">
+            <div class="play-hero-bg">
+                <img src="" alt="Background" id="banner-image">
+            </div>
+            <div class="play-hero-content container">
+                <img src="" alt="Poster" class="play-poster" id="poster-image"
+                    onerror="this.src='/static/images/default-poster.jpg'">
+                <div class="play-info">
+                    <div class="play-text">
+                        <h2 id="movie-title">Title</h2>
+                        <div class="tags" id="movie-tags">
+                            <!-- Tags injected here -->
+                        </div>
+                    </div>
+                    <!-- Play Button -->
+                    <div class="play-buton">
+                        <button class="play-button" id="play-btn-action">
+                            <i class='bx bx-play'></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Overlay (Moved here to escape stacking context) -->
+        <div class="video-overlay" id="video-overlay">
+            <iframe id="video-iframe" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+
+        <!-- Information -->
+        <section class="about-movie container">
+            <div class="description">
+                <h2 id="desc-title">Title</h2>
+                <p id="movie-desc">Description loading...</p>
+            </div>
+            <div class="movie-details" id="details-section">
+                <h2 class="details-heading">Details</h2>
+                <div class="details-list">
+                    <div class="detail-item">
+                        <span class="detail-label">Status</span>
+                        <span class="detail-value" id="detail-status">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Rating</span>
+                        <span class="detail-value" id="detail-rating">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Language</span>
+                        <span class="detail-value" id="detail-language">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Genre</span>
+                        <span class="detail-value" id="detail-genre">—</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Category</span>
+                        <span class="detail-value" id="detail-category">—</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cast Section (Full Width Below Description) -->
+        <section class="cast-section container" id="cast-section">
+            <h2 class="cast-heading">Cast</h2>
+            <div class="cast" id="cast-container">
+                <!-- Cast members injected here -->
+            </div>
+        </section>
+
+        <!-- Watch Options -->
+        <section class="watch-here container">
+            <h2 class="watch-title">Watch Options</h2>
+            <div class="watch-links" id="watch-container">
+                <!-- Watch links injected here -->
+            </div>
+        </section>
+
+        <!-- Related Content -->
+        <section class="movies container" id="related-section" style="display: none; padding-bottom: 4rem;">
+            <div class="heading">
+                <h2 class="heading-title">View More Like This</h2>
+            </div>
+            <div class="swiper related-swiper">
+                <div class="swiper-wrapper" id="related-container">
+                    <!-- Related injected here -->
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </section>
+
+        <!-- Copyright -->
+        <!--Footer-->
+        <div id="global-footer"></div>
+        <!--Footer-->
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Parse query params
+            const urlParams = new URLSearchParams(window.location.search);
+            const type = urlParams.get('type') || 'movies';
+            const slug = urlParams.get('slug');
+
+            if (!slug) {
+                window.location.href = '/home';
+                return;
+            }
+
+            try {
+                // Load all content from the Flask API
+                const apiRes = await fetch('/api/content');
+                if (!apiRes.ok) throw new Error('API error: ' + apiRes.status);
+                const data = await apiRes.json();
+
+                // Map URL type param to data keys
+                const typeMap = {
+                    'movies': 'movies',
+                    'animes': 'animes',
+                    'webSeries': 'webSeries',
+                    'anime': 'animes',
+                    'web-series': 'webSeries',
+                    'series': 'webSeries'
+                };
+
+                const dataKey = typeMap[type] || type;
+
+                let item = null;
+                let foundCategory = dataKey;
+                if (data[dataKey] && data[dataKey][slug]) {
+                    item = data[dataKey][slug];
+                } else {
+                    // Fallback search across all categories if type not specified or wrong
+                    for (const cat in data) {
+                        if (data[cat][slug]) {
+                            item = data[cat][slug];
+                            foundCategory = cat;
+                            break;
+                        }
+                    }
+                }
+
+                if (item) {
+                    // Populate Content
+                    document.title = `Entertainment Hub | ${item.title}`;
+                    document.getElementById('movie-title').textContent = item.title;
+                    document.getElementById('desc-title').textContent = item.title;
+                    document.getElementById('movie-desc').textContent = item.description || "No description available.";
+
+                    // Image Fallback (Horizontal ONLY for banners)
+                    const bgPoster = item['h-image'] || item['v-image'] || '/static/images/default-banner.jpg';
+                    const fgPoster = item['v-image'] || item['h-image'] || '/static/images/default-poster.jpg';
+
+                    const bannerImg = document.getElementById('banner-image');
+                    const posterImg = document.getElementById('poster-image');
+
+                    bannerImg.src = bgPoster;
+                    posterImg.src = fgPoster;
+
+                    // Tags
+                    const tagsContainer = document.getElementById('movie-tags');
+                    tagsContainer.innerHTML = '';
+                    const tags = item.tags || [];
+                    tags.forEach(tag => {
+                        const span = document.createElement('span');
+                        span.textContent = tag;
+                        tagsContainer.appendChild(span);
+                    });
+
+                    // Video
+                    const videoFrame = document.getElementById('video-iframe');
+                    const videoOverlay = document.getElementById('video-overlay');
+                    const playBtn = document.getElementById('play-btn-action');
+
+                    // Reset initial state
+                    playBtn.style.display = 'flex';
+                    videoOverlay.style.display = 'none';
+
+                    if (item.videoUrl) {
+                        let embedUrl = item.videoUrl;
+
+                        // Convert standard youtube links to embed
+                        if (embedUrl.includes('youtube.com/watch?v=')) {
+                            const videoId = new URL(embedUrl).searchParams.get('v');
+                            if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                        } else if (embedUrl.includes('youtu.be/')) {
+                            const videoId = embedUrl.split('youtu.be/')[1].split('?')[0];
+                            if (videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                        }
+
+                        videoFrame.src = embedUrl;
+
+                        const openVideo = () => {
+                            videoOverlay.style.display = 'flex';
+                            if (embedUrl.includes('youtube')) {
+                                videoFrame.src = embedUrl + (embedUrl.includes('?') ? '&' : '?') + "autoplay=1";
+                            }
+                        };
+
+                        playBtn.removeEventListener('click', openVideo);
+                        playBtn.addEventListener('click', openVideo);
+
+                        // Overlay close
+                        videoOverlay.onclick = (e) => {
+                            if (e.target === videoOverlay) {
+                                videoOverlay.style.display = 'none';
+                                const tempSrc = videoFrame.src;
+                                videoFrame.src = "";
+                                videoFrame.src = tempSrc.replace("&autoplay=1", "");
+                            }
+                        };
+                    } else {
+                        playBtn.style.display = 'none';
+                    }
+
+                    // Details (Right Pane)
+                    document.getElementById('detail-status').textContent = item.Status || 'Released';
+                    document.getElementById('detail-rating').textContent = item.rating || 'PG-13';
+                    document.getElementById('detail-language').textContent = item.language || '—';
+                    document.getElementById('detail-genre').textContent = (item.tags || []).join(', ') || '—';
+                    const categoryLabels = { movies: 'Movie', animes: 'Anime', webSeries: 'Web Series' };
+                    document.getElementById('detail-category').textContent = categoryLabels[foundCategory] || 'Movie';
+
+                    // "Part of <franchise> · #3 of 9" for every franchise containing this title
+                    fetch('/api/franchises/of/' + encodeURIComponent(item.id || `${foundCategory}_${item.slug}`))
+                        .then(r => r.ok ? r.json() : [])
+                        .then(list => {
+                            if (!list.length || document.getElementById('detail-franchise')) return;
+                            const detailItem = document.createElement('div');
+                            detailItem.className = 'detail-item';
+                            detailItem.id = 'detail-franchise';
+                            detailItem.innerHTML = `<span class="detail-label">Franchise</span>
+                                <span class="detail-value">${list.map(f => {
+                                    const step = (e, dir) => e
+                                        ? `<a href="/play?type=${encodeURIComponent(e.type)}&slug=${encodeURIComponent(e.slug)}" style="color: var(--primary);">${dir === 'prev' ? '← ' : ''}${esc(e.title)}${e.label ? ' · ' + esc(e.label) : ''}${dir === 'next' ? ' →' : ''}</a>`
+                                        : '';
+                                    const nav = [step(f.prev, 'prev'), step(f.next, 'next')].filter(Boolean).join(' &nbsp;|&nbsp; ');
+                                    return `<a href="/franchise/${encodeURIComponent(f.slug)}" style="color: var(--primary); text-decoration: underline;">${esc(f.title)}</a> · #${f.position} of ${f.total}`
+                                        + (nav ? `<br><small>${nav}</small>` : '');
+                                }).join('<br>')}</span>`;
+                            document.querySelector('.details-list').appendChild(detailItem);
+                        })
+                        .catch(() => {});
+
+                    // Cast
+                    const castContainer = document.getElementById('cast-container');
+                    castContainer.innerHTML = '';
+                    const cast = item.cast || [];
+                    if (cast.length === 0) {
+                        document.getElementById('cast-section').style.display = 'none';
+                    } else {
+                        cast.forEach(member => {
+                            const box = document.createElement('div');
+                            box.className = 'cast-box';
+                            box.innerHTML = `
+                                <img src="${member.image}" alt="${member.name}" class="cast-img" onerror="this.src='/static/images/user.png'">
+                                <div class="cast-info">
+                                    <span class="cast-title">${member.name}</span>
+                                    <div class="character-box">${member.role}</div>
+                                </div>
+                            `;
+                            castContainer.appendChild(box);
+                        });
+                    }
+
+                    // Watch Options — fetch logos from API
+                    const watchContainer = document.getElementById('watch-container');
+                    watchContainer.innerHTML = '';
+                    const watchOptions = item.watchOptions || [];
+
+                    let watchLogos = {};
+                    try {
+                        const wRes = await fetch('/api/selectors/watch_options');
+                        if (wRes.ok) watchLogos = await wRes.json();
+                    } catch (e) { /* ignore, fallback to default */ }
+
+                    watchOptions.forEach(opt => {
+                        const optLink = document.createElement('a');
+                        optLink.className = 'watch-link';
+                        let iconKey = opt.toLowerCase().replace(/\s+/g, '');
+                        const wData = watchLogos[iconKey] || {};
+                        const logoUrl = wData.logo || `https://storage.googleapis.com/e-hub-uploads/images/watch/${iconKey}.png`;
+
+                        optLink.href = `/redirect?platform=${encodeURIComponent(opt)}&title=${encodeURIComponent(item.title)}&icon=${encodeURIComponent(logoUrl)}`;
+
+                        optLink.innerHTML = `
+                            <img src="${logoUrl}" alt="${opt}" onerror="this.src='/static/images/logo.png'">
+                            <span class="watch-name">${opt}</span>
+                        `;
+                        watchContainer.appendChild(optLink);
+                    });
+
+                    // Show Main Content
+                    document.getElementById('main-content').style.opacity = '1';
+
+                    // ── LOAD RELATED CONTENT ──
+                    const flatData = [];
+                    for (const t of Object.keys(data)) {
+                        for (const s of Object.keys(data[t])) {
+                            const dt = data[t][s];
+                            dt.type = t;
+                            dt.slug = s;
+                            if (s !== item.slug) flatData.push(dt);
+                        }
+                    }
+
+                    // Score matches
+                    flatData.forEach(dt => {
+                        let score = 0;
+                        if (item.franchise && dt.franchise === item.franchise) score += 10;
+                        if (item.type === dt.type) score += 1;
+                        if (item.tags && dt.tags) {
+                            const commonTags = item.tags.filter(tag => dt.tags.includes(tag));
+                            score += commonTags.length * 2;
+                        }
+                        dt._matchScore = score;
+                    });
+
+                    const related = flatData.filter(dt => dt._matchScore > 0).sort((a, b) => b._matchScore - a._matchScore).slice(0, 10);
+
+                    if (related.length > 0) {
+                        document.getElementById('related-section').style.display = 'block';
+                        const relatedContainer = document.getElementById('related-container');
+                        relatedContainer.innerHTML = related.map(rel => {
+                            const typeLabel = categoryLabels[rel.type] || rel.type;
+                            return `
+                                <div class="swiper-slide">
+                                    <div class="movie-box">
+                                        <img src="${rel['v-image'] || rel['h-image'] || '/static/images/default-poster.jpg'}" alt="${rel.title}" class="movie-box-img" onerror="this.src='/static/images/default-poster.jpg'" />
+                                        <div class="box-text">
+                                            <div class="movie-info">
+                                                <h2 class="movie-title">${rel.title}</h2>
+                                                <span class="movie-type">${typeLabel} &middot; ${rel.rating || ''}</span>
+                                            </div>
+                                            <div class="play-btn-box" title="Play Now">
+                                                <a href="/play?type=${rel.type}&slug=${rel.slug}" class="play-btn"><i class="bx bx-right-arrow"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+
+                        // Init swiper
+                        new Swiper('.related-swiper', {
+                            slidesPerView: 1, spaceBetween: 10,
+                            navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+                            breakpoints: {
+                                320: { slidesPerView: 2, spaceBetween: 10 },
+                                580: { slidesPerView: 3, spaceBetween: 15 },
+                                900: { slidesPerView: 4, spaceBetween: 20 },
+                                1200: { slidesPerView: 5, spaceBetween: 20 }
+                            }
+                        });
+                    }
+
+                } else {
+                    document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:50px;'>Content Not Found</h1>";
+                }
+
+            } catch (err) {
+                console.error("Error loading content:", err);
+            }
+        });
+    </script>
+</body>
+
+</html>
